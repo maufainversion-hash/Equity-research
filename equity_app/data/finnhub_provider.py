@@ -181,6 +181,51 @@ def fetch_earnings_calendar(ticker: str, *,
     return df.reset_index(drop=True)
 
 
+def fetch_market_earnings_calendar(*,
+                                    from_date: Optional[str] = None,
+                                    to_date: Optional[str] = None,
+                                    ) -> pd.DataFrame:
+    """Market-wide earnings calendar (Finnhub returns everything when
+    no symbol is passed). Default window: today → +14 days."""
+    from datetime import datetime, timedelta, timezone
+    today = datetime.now(timezone.utc).date()
+    if from_date is None:
+        from_date = today.isoformat()
+    if to_date is None:
+        to_date = (today + timedelta(days=14)).isoformat()
+    payload = _get("calendar/earnings", {
+        "from": from_date, "to": to_date,
+    })
+    rows = payload.get("earningsCalendar") if isinstance(payload, dict) else None
+    if not rows:
+        return pd.DataFrame()
+    df = pd.DataFrame(rows)
+    if "date" in df.columns:
+        df["date"] = pd.to_datetime(df["date"], errors="coerce")
+        df = df.sort_values("date", ascending=True, na_position="last")
+    return df.reset_index(drop=True)
+
+
+def fetch_ipo_calendar(*, from_date: Optional[str] = None,
+                       to_date: Optional[str] = None) -> pd.DataFrame:
+    """Upcoming IPO calendar. Default window: today → +30 days."""
+    from datetime import datetime, timedelta, timezone
+    today = datetime.now(timezone.utc).date()
+    if from_date is None:
+        from_date = today.isoformat()
+    if to_date is None:
+        to_date = (today + timedelta(days=30)).isoformat()
+    payload = _get("calendar/ipo", {"from": from_date, "to": to_date})
+    rows = payload.get("ipoCalendar") if isinstance(payload, dict) else None
+    if not rows:
+        return pd.DataFrame()
+    df = pd.DataFrame(rows)
+    if "date" in df.columns:
+        df["date"] = pd.to_datetime(df["date"], errors="coerce")
+        df = df.sort_values("date", ascending=True, na_position="last")
+    return df.reset_index(drop=True)
+
+
 def fetch_price_target(ticker: str) -> dict:
     """Wall Street consensus price target (mean / high / low / num analysts)."""
     return _get("stock/price-target", {"symbol": ticker})
