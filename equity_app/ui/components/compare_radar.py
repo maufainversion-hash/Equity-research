@@ -32,6 +32,25 @@ import streamlit as st
 _TRACE_COLORS = ["#3B82F6", "#C9A961", "#10B981"]
 
 
+def _hex_to_rgba(hex_color: str, alpha: float) -> str:
+    """Convert a "#RRGGBB" string to ``rgba(r,g,b,alpha)``.
+
+    Plotly's strict colour validator rejects 8-digit hex
+    (``#RRGGBBAA``), so the fill colour has to go in as
+    rgba(). Falls back to ``rgba(128,128,128,alpha)`` on a
+    malformed input — never raises into the chart render."""
+    s = (hex_color or "").lstrip("#")
+    if len(s) != 6:
+        return f"rgba(128,128,128,{alpha})"
+    try:
+        r = int(s[0:2], 16)
+        g = int(s[2:4], 16)
+        b = int(s[4:6], 16)
+        return f"rgba({r},{g},{b},{alpha})"
+    except ValueError:
+        return f"rgba(128,128,128,{alpha})"
+
+
 def _normalize_to_100(
     value: Optional[float], all_values: list[Optional[float]],
     higher_better: bool = True,
@@ -131,8 +150,7 @@ def render_compare_radar(headlines: list) -> None:
             r=scores, theta=theta,
             name=h.ticker,
             fill="toself",
-            fillcolor=color.replace(")", ",0.18)").replace("rgb", "rgba")
-                       if color.startswith("rgb") else f"{color}30",
+            fillcolor=_hex_to_rgba(color, 0.18),
             line=dict(color=color, width=2),
             marker=dict(size=6, color=color),
             hovertext=hover,
