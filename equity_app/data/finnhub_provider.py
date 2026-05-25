@@ -59,7 +59,17 @@ def _get(endpoint: str, params: Optional[dict] = None) -> Any:
     t0 = _time.monotonic()
     try:
         r = requests.get(f"{_BASE_URL}/{endpoint}", params=full, timeout=15)
+        try:
+            from core.api_usage import record as _track
+            _track("finnhub")
+        except Exception:
+            pass
     except Exception as e:
+        try:
+            from core.api_usage import record as _track
+            _track("finnhub")           # cuenta el intento aunque haya fallado
+        except Exception:
+            pass
         elapsed = int((_time.monotonic() - t0) * 1000)
         _log(provider="finnhub", endpoint=endpoint, ticker=ticker_arg,
              success=False, response_time_ms=elapsed,

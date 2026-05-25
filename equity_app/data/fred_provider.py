@@ -72,8 +72,18 @@ def _fred_get(path: str, params: Optional[dict] = None) -> Any:
     try:
         r = requests.get(f"{_FRED_BASE}/{path}", params=full, timeout=20)
     except Exception as e:
+        try:
+            from core.api_usage import record as _track
+            _track("fred")
+        except Exception:
+            pass
         logger.debug(f"FRED request failed: {e}")
         return {}
+    try:
+        from core.api_usage import record as _track
+        _track("fred")
+    except Exception:
+        pass
     if r.status_code != 200:
         return {}
     try:

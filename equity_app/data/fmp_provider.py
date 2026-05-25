@@ -333,6 +333,11 @@ class FMPProvider(DataProvider):
 
         if _HTTP == "requests":
             r = requests.get(url, params=params, timeout=20)
+            try:
+                from core.api_usage import record as _track
+                _track("fmp")
+            except Exception:
+                pass
             status = r.status_code
             if status == 404:
                 raise TickerNotFoundError()

@@ -40,8 +40,18 @@ def _get(endpoint: str, params: Optional[dict] = None) -> Any:
     try:
         r = requests.get(f"{_BASE_URL}/{endpoint}", params=full, timeout=15)
     except Exception as e:
+        try:
+            from core.api_usage import record as _track
+            _track("marketaux")         # cuenta el intento — la cuota corre igual
+        except Exception:
+            pass
         logger.debug(f"Marketaux request failed for {endpoint}: {e}")
         return {}
+    try:
+        from core.api_usage import record as _track
+        _track("marketaux")
+    except Exception:
+        pass
     if r.status_code == 429:
         logger.warning("Marketaux daily quota hit — backing off this call")
         return {}

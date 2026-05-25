@@ -51,6 +51,7 @@ pages = [
     st.Page(str(PAGES_DIR / "4_💵_Money_Flow.py"),      title="Money Flow"),
     st.Page(str(PAGES_DIR / "5_📰_News.py"),            title="News"),
     st.Page(str(PAGES_DIR / "6_💰_Discount.py"),        title="Discount"),
+    st.Page(str(PAGES_DIR / "7_🔋_API_Usage.py"),       title="API usage"),
 ]
 
 # st.navigation with position="top" requires Streamlit >= 1.43.
