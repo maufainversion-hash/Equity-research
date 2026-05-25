@@ -1749,6 +1749,17 @@ with tab_financials:
         except ImportError:
             st.caption("openpyxl not installed — Excel export unavailable.")
 
+    # ---- Earnings quality flags (Beneish · Piotroski · Sloan) ----
+    # Cheap — runs over the in-memory income/balance/cash. Renders
+    # nothing when none of the three signals can be computed.
+    try:
+        from analysis.earnings_quality import assess_earnings_quality
+        from ui.components.quality_flags_card import render_quality_flags_card
+        _eq = assess_earnings_quality(inc, bal, cf)
+        render_quality_flags_card(_eq)
+    except Exception as _eq_exc:
+        log.debug("quality flags card failed: %s", _eq_exc)
+
     # ---- Income Statement ----
     st.markdown(
         '<div class="eq-section-label" style="margin-top:14px;">'
