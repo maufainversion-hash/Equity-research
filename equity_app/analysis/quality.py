@@ -77,7 +77,7 @@ def assess_all_quality(
     container, so its mean is taken first as a single sub-score).
     """
     eq = analyze_earnings_or_none(income, balance, cash)
-    bs = analyze_balance_or_none(balance)
+    bs = analyze_balance_or_none(income, balance)
     rv = analyze_revenue_or_none(income)
     coh = analyze_completeness_or_none(income, balance, cash)
 
@@ -130,9 +130,11 @@ def analyze_earnings_or_none(
         return None
 
 
-def analyze_balance_or_none(balance: pd.DataFrame) -> Optional[BalanceSheetQuality]:
+def analyze_balance_or_none(
+    income: pd.DataFrame, balance: pd.DataFrame,
+) -> Optional[BalanceSheetQuality]:
     try:
-        return analyze_balance_sheet_quality(balance=balance)
+        return analyze_balance_sheet_quality(income=income, balance=balance)
     except Exception:
         return None
 

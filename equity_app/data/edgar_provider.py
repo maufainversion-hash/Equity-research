@@ -46,6 +46,10 @@ _CIK_CACHE_PATH = _CACHE_DIR / "sec_cik_mapping.json"
 _CIK_CACHE_TTL_DAYS = 7
 
 _last_request_at = 0.0
+# Race guard — see fred_provider for the same pattern. SEC enforces
+# 10 req/s and threading hits via parallel_loader can burst past it.
+import threading as _threading
+_rate_lock = _threading.Lock()
 
 
 # ============================================================
@@ -60,10 +64,11 @@ def _user_agent() -> str:
 
 def _rate_limit() -> None:
     global _last_request_at
-    elapsed = time.time() - _last_request_at
-    if elapsed < SEC_RATE_LIMIT_DELAY:
-        time.sleep(SEC_RATE_LIMIT_DELAY - elapsed)
-    _last_request_at = time.time()
+    with _rate_lock:
+        elapsed = time.time() - _last_request_at
+        if elapsed < SEC_RATE_LIMIT_DELAY:
+            time.sleep(SEC_RATE_LIMIT_DELAY - elapsed)
+        _last_request_at = time.time()
 
 
 def _sec_get(url: str, *, max_retries: int = 3, timeout: int = 30) -> Any:

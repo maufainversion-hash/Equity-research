@@ -41,6 +41,12 @@ logger = logging.getLogger(__name__)
 _FRED_BASE = "https://api.stlouisfed.org/fred"
 _RATE_LIMIT_DELAY = 0.20      # 5 req/s — well under FRED's 120/min default
 _last_request_at = 0.0
+# Race guard: callers in news_aggregator + parallel_loader hit this
+# from ThreadPoolExecutor workers; without the lock concurrent
+# threads can read _last_request_at, both decide the delay was met,
+# and burst past FRED's 120/min ceiling.
+import threading as _threading
+_rate_lock = _threading.Lock()
 
 
 def _api_key() -> str:
@@ -49,10 +55,11 @@ def _api_key() -> str:
 
 def _rate_limit() -> None:
     global _last_request_at
-    elapsed = time.time() - _last_request_at
-    if elapsed < _RATE_LIMIT_DELAY:
-        time.sleep(_RATE_LIMIT_DELAY - elapsed)
-    _last_request_at = time.time()
+    with _rate_lock:
+        elapsed = time.time() - _last_request_at
+        if elapsed < _RATE_LIMIT_DELAY:
+            time.sleep(_RATE_LIMIT_DELAY - elapsed)
+        _last_request_at = time.time()
 
 
 def _fred_get(path: str, params: Optional[dict] = None) -> Any:

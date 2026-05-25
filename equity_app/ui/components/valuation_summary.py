@@ -50,14 +50,17 @@ def render_valuation_summary(results: ValuationResults) -> None:
         _row("DDM · 2-stage",
              results.ddm.intrinsic_value_per_share if results.ddm else None,
              cur, results.ddm_error or "—"),
-        _row(f"AGGREGATOR · {results.aggregator.profile.upper()}",
-             (results.aggregator.intrinsic_per_share
-              if results.aggregator
-              and pd.notna(results.aggregator.intrinsic_per_share) else None),
-             cur,
-             (f"{results.aggregator.n_models_used} models · "
-              f"{results.aggregator.confidence}"
-              if results.aggregator else "—")),
+        _row(
+            f"AGGREGATOR · {results.aggregator.profile.upper()}"
+            if results.aggregator else "AGGREGATOR",
+            (results.aggregator.intrinsic_per_share
+             if results.aggregator
+             and pd.notna(results.aggregator.intrinsic_per_share) else None),
+            cur,
+            (f"{results.aggregator.n_models_used} models · "
+             f"{results.aggregator.confidence}"
+             if results.aggregator else "—"),
+        ),
     ]
     df = pd.DataFrame(rows)
     df["Upside"] = df["Upside"].astype(float)

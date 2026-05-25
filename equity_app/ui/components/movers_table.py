@@ -259,26 +259,3 @@ def render_mover_tabs(
     )
     st.markdown("</div>", unsafe_allow_html=True)
     render_movers(sources[sel])
-
-
-def render_mover_tabs(
-    sources: dict[str, pd.DataFrame],
-    *,
-    default: str = "Gainers",
-) -> None:
-    """Pill switch for Gainers / Losers / Most active."""
-    keys = list(sources.keys())
-    if default not in keys and keys:
-        default = keys[0]
-
-    st.markdown('<div class="eq-pills">', unsafe_allow_html=True)
-    sel = st.radio(
-        "movers_view",
-        options=keys,
-        index=keys.index(default),
-        horizontal=True,
-        label_visibility="collapsed",
-        key="movers_pill",
-    )
-    st.markdown("</div>", unsafe_allow_html=True)
-    render_movers(sources[sel])

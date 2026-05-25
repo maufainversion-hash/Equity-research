@@ -104,7 +104,14 @@ def _render_single_scenario(
         )
         return
 
-    cum = result.cumulative_fcf.iloc[-1]
+    # cumulative_fcf can be empty even when fcff isn't (some forecast
+    # paths only populate one side); fall back to summing fcff instead
+    # of indexing into an empty Series.
+    _cum_series = getattr(result, "cumulative_fcf", None)
+    if _cum_series is not None and not _cum_series.empty:
+        cum = float(_cum_series.iloc[-1])
+    else:
+        cum = float(fcff.sum())
     avg = float(fcff.mean())
     span = len(fcff)
 

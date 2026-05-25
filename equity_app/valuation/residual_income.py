@@ -121,8 +121,15 @@ def run_residual_income(
     if ni_s is None or eq_s is None:
         raise InsufficientDataError("Need net income and total equity")
 
-    last_ni = float(ni_s.dropna().iloc[-1])
-    last_bv = float(eq_s.dropna().iloc[-1])
+    ni_clean = ni_s.dropna()
+    eq_clean = eq_s.dropna()
+    if ni_clean.empty or eq_clean.empty:
+        raise InsufficientDataError(
+            "Net income or equity series is all-NaN — typical of "
+            "thin SEC filers / fresh IPOs."
+        )
+    last_ni = float(ni_clean.iloc[-1])
+    last_bv = float(eq_clean.iloc[-1])
     if last_bv <= 0:
         raise ValuationError(f"Book value is non-positive ({last_bv:,.0f})")
 
