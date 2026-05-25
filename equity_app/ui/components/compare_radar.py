@@ -51,23 +51,40 @@ def _hex_to_rgba(hex_color: str, alpha: float) -> str:
         return f"rgba(128,128,128,{alpha})"
 
 
-def _normalize_to_100(
-    value: Optional[float], all_values: list[Optional[float]],
-    higher_better: bool = True,
-) -> float:
-    """Min-max scale ``value`` to 0..100 against the peer group.
+# Absolute thresholds per metric: (value at 0, value at 100).
+# A linear ramp between the two, clamped 0..100 outside.
+#
+# Why absolute and not min-max-within-the-pair: with only 2 tickers
+# min-max always plots one as 100 and the other as 0 on every axis,
+# which collapses the visual into "one full polygon, one dot" and
+# carries zero information about quality. Absolute thresholds make
+# each ticker readable on its own — a great company looks great
+# regardless of who it's compared against.
+#
+# Thresholds calibrated to equity-research convention: the "100"
+# end is roughly best-in-class; the "0" end is breakeven (or 0% for
+# scale-free metrics like ROIC). Tweak the constants if a different
+# anchor makes sense.
+_AXIS_SCALES: dict[str, tuple[float, float]] = {
+    "Gross margin":     (0.0,  70.0),
+    "Op margin":        (0.0,  35.0),
+    "FCF margin":       (0.0,  30.0),
+    "ROIC":             (0.0,  40.0),
+    "Revenue 5y CAGR":  (0.0,  25.0),
+    "Balance strength": (0.0, 100.0),     # already on a 0-100 scale
+}
 
-    Returns 50 for missing values / no spread — keeps the polygon
-    closed instead of poking towards origin and looking like a
-    "weak" axis when really we have no data."""
-    clean = [v for v in all_values if v is not None and math.isfinite(v)]
-    if not clean or value is None or not math.isfinite(value):
+
+def _normalize_to_100(value: Optional[float], axis: str) -> float:
+    """Map an absolute raw value onto a 0..100 quality scale for the
+    given axis. Missing data returns 50 so the polygon still closes."""
+    if value is None or not math.isfinite(value):
         return 50.0
-    lo, hi = min(clean), max(clean)
+    lo, hi = _AXIS_SCALES.get(axis, (0.0, 100.0))
     if hi == lo:
         return 50.0
     pct = (value - lo) / (hi - lo) * 100.0
-    return pct if higher_better else (100.0 - pct)
+    return max(0.0, min(100.0, pct))
 
 
 def _leverage_score(de: Optional[float]) -> Optional[float]:
@@ -122,18 +139,13 @@ def render_compare_radar(headlines: list) -> None:
             _leverage_score(m.get("Debt/Equity")),
         ]
 
-    # Normalise per-axis: peer-group min-max → 0..100.
-    per_axis_values: list[list[Optional[float]]] = []
-    for i in range(len(axes)):
-        per_axis_values.append([raw[h.ticker][i] for h in headlines])
-
     fig = go.Figure()
     for idx, h in enumerate(headlines):
         scores: list[float] = []
         hover: list[str] = []
         for i in range(len(axes)):
             v = raw[h.ticker][i]
-            s = _normalize_to_100(v, per_axis_values[i], higher_better=True)
+            s = _normalize_to_100(v, axes[i])
             scores.append(s)
             if v is None or not math.isfinite(v):
                 hover.append(f"{axes[i]}: —")
@@ -184,7 +196,9 @@ def render_compare_radar(headlines: list) -> None:
     st.plotly_chart(fig, width="stretch",
                     config={"displayModeBar": False})
     st.caption(
-        "Cada eje se normaliza 0–100 dentro del grupo seleccionado "
-        "(0 = peor del grupo, 100 = mejor). Balance strength se deriva "
-        "de Debt/Equity: 100 si D/E ≤ 0.25, 0 si D/E ≥ 3."
+        "Escala absoluta de calidad, no relativa al par. 100 = nivel "
+        "best-in-class del eje (Gross margin 70%, Op margin 35%, "
+        "FCF margin 30%, ROIC 40%, Revenue CAGR 25%, Balance strength = "
+        "D/E ≤ 0.25). 0 = breakeven. Cada empresa se lee por sí misma — "
+        "la forma del polígono refleja calidad, no posición relativa."
     )
