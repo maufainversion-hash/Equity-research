@@ -529,6 +529,40 @@ def run_valuation(
                                   if out.epv is not None else None),
     )
 
+    # ---- Quick valuation diagnostics ----
+    # Margin of safety vs the conservative band (range_p25).
+    if (current_price and current_price > 0
+            and np.isfinite(out.aggregator.range_p25)):
+        out.aggregator.margin_of_safety = (
+            (out.aggregator.range_p25 - current_price) / current_price
+        )
+    # DCF cross-checks: terminal-value weight + implied steady ROIC.
+    if out.dcf is not None and not getattr(out.dcf, "skipped_reason", None):
+        pv_t = float(getattr(out.dcf, "pv_terminal", float("nan")) or float("nan"))
+        pv_e = float(getattr(out.dcf, "pv_explicit", float("nan")) or float("nan"))
+        if np.isfinite(pv_t) and np.isfinite(pv_e) and (pv_t + pv_e) > 0:
+            out.aggregator.dcf_terminal_pct = pv_t / (pv_t + pv_e)
+        ronic = float(getattr(out.dcf, "ronic_terminal", float("nan")) or float("nan"))
+        if np.isfinite(ronic) and ronic > 0:
+            out.aggregator.dcf_implied_ronic = ronic
+        # Flags
+        flags: list[str] = []
+        if (out.aggregator.dcf_terminal_pct is not None
+                and out.aggregator.dcf_terminal_pct > 0.75):
+            flags.append(
+                f"Terminal value representa "
+                f"{out.aggregator.dcf_terminal_pct*100:.0f}% del PV — "
+                f"DCF muy dependiente de la perpetuidad."
+            )
+        if (out.aggregator.dcf_implied_ronic is not None
+                and out.aggregator.dcf_implied_ronic > 0.25):
+            flags.append(
+                f"Implied steady-state ROIC = "
+                f"{out.aggregator.dcf_implied_ronic*100:.1f}% — "
+                f"poco sostenible salvo moat extraordinario."
+            )
+        out.aggregator.dcf_health_flags = flags
+
     # ---- Scoring + Rating ----
     upside: Optional[float] = None
     if (np.isfinite(out.aggregator.intrinsic_per_share)

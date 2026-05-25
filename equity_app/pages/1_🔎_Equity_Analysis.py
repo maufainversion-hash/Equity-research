@@ -1366,6 +1366,21 @@ with tab_valuation:
     except Exception as _exc:
         st.caption(f"Sección de expectativa no disponible: {type(_exc).__name__}")
 
+    # ---- Valuation diagnostics: MoS + DCF cross-checks + sensitivity ----
+    try:
+        from ui.components.valuation_diagnostics_panel import (
+            render_valuation_diagnostics_cards,
+            render_sensitivity_matrix,
+        )
+        render_valuation_diagnostics_cards(results)
+        render_sensitivity_matrix(
+            ticker=active_ticker,
+            results=results,
+            current_price=current_price,
+        )
+    except Exception as _diag_exc:
+        log.debug("valuation diagnostics failed: %s", _diag_exc)
+
     # Per-model cards
     st.markdown(
         '<div class="eq-section-label" style="margin-top:18px;">'

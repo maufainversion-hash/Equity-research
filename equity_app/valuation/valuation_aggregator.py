@@ -176,6 +176,18 @@ class AggregatedValuation:
     # Human-readable explanation of the verdict / applicability call.
     # Empty string when there is nothing notable to say.
     applicability_note: str = ""
+    # ---- Quick valuation diagnostics (filled in by the pipeline) ----
+    # Margin of safety vs the conservative end of the intrinsic range
+    # (range_p25): (range_p25 − current_price) / current_price. Positive
+    # means even the cautious read sits above price.
+    margin_of_safety: Optional[float] = None
+    # DCF cross-checks: terminal value as a share of total PV, and the
+    # implied steady-state ROIC the model assumed. Flag when terminal
+    # > 75% (model is mostly forecasting the perpetuity) or implied
+    # ROIC > 25% (unrealistic for most businesses).
+    dcf_terminal_pct: Optional[float] = None
+    dcf_implied_ronic: Optional[float] = None
+    dcf_health_flags: list[str] = field(default_factory=list)
 
 
 # ============================================================
