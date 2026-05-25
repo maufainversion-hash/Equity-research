@@ -268,6 +268,11 @@ render_verdict_cards(_headlines)
 render_heatmap_table(_headlines)
 render_key_differences(_headlines)
 
+# 6-axis radar — visual fingerprint comparing margins, returns,
+# growth and balance-sheet strength.
+from ui.components.compare_radar import render_compare_radar
+render_compare_radar(_headlines)
+
 
 # ============================================================
 # Historical price loader for multiples spread (cached 6h)
