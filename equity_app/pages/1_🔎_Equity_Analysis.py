@@ -1339,6 +1339,33 @@ with tab_valuation:
         stage2_years=current_assumptions.stage2_years,
     )
 
+    # ---- Investor expectations — 4-signal synthesis ----
+    # Combines market-implied growth, sell-side consensus, current
+    # multiples and insider activity into one consolidated read.
+    # Insider call is cached so the downstream insider tab reuses it.
+    try:
+        from ui.components.investor_expectations_panel import (
+            render_investor_expectations,
+        )
+        _hist_cagr: float | None = None
+        try:
+            _rev = inc.get("revenue") if hasattr(inc, "get") else None
+            if _rev is not None:
+                _s = _rev.dropna()
+                if len(_s) >= 6 and float(_s.iloc[-6]) > 0:
+                    _hist_cagr = float(_s.iloc[-1] / _s.iloc[-6]) ** (1.0 / 5.0) - 1.0
+        except Exception:
+            _hist_cagr = None
+        render_investor_expectations(
+            ticker=active_ticker,
+            current_price=current_price,
+            implied_growth=_implied_growth_value,
+            historical_cagr=_hist_cagr,
+            info=getattr(bundle, "info", None),
+        )
+    except Exception as _exc:
+        st.caption(f"Sección de expectativa no disponible: {type(_exc).__name__}")
+
     # Per-model cards
     st.markdown(
         '<div class="eq-section-label" style="margin-top:18px;">'
@@ -2016,12 +2043,18 @@ with tab_insiders:
             from ui.components.insider_panel import render_insider_panel
             from ui.components.etf_holdings_panel import render_etf_holdings_panel
             from ui.components.sec_insiders_panel import render_sec_insiders_panel
+            # Route through the shared per-session cache so the
+            # investor-expectations panel and this tab don't both
+            # pay the analysis cost on the same render.
+            from ui.components.investor_expectations_panel import (
+                _cached_insider_activity,
+            )
 
             render_sec_insiders_panel(active_ticker)
 
             st.markdown("<div style='height:22px;'></div>",
                         unsafe_allow_html=True)
-            insider_res = analyze_insider_activity(active_ticker, months=24)
+            insider_res = _cached_insider_activity(active_ticker, months=24)
             render_insider_panel(insider_res)
 
             st.markdown("<div style='height:22px;'></div>",
