@@ -454,9 +454,17 @@ st.markdown(
 
 _LINE_COLORS = ["#3B82F6", "#C9A961", "#10B981"]
 
+# Rebased index — base year = 100 so 3 tickers with very different
+# magnitudes (e.g. GOOGL ~$100B FCF vs DIS ~$5B) become visually
+# comparable. The chart answers "who's growing faster", not "who
+# generates more cash" — the latter is already covered by Capital
+# Allocation Cumulative 5Y above.
 fig = go.Figure()
+all_years: set[int] = set()
+skipped_fcf: list[str] = []
 for i, (ticker, bundle) in enumerate(bundles.items()):
     if bundle.income.empty:
+        skipped_fcf.append(ticker)
         continue
     try:
         from analysis.financial_forecast import (
@@ -472,36 +480,68 @@ for i, (ticker, bundle) in enumerate(bundles.items()):
             inputs=inp, years=5, shares_outstanding=shares,
         )
         if result.fcff_per_year is None or result.fcff_per_year.empty:
+            skipped_fcf.append(ticker)
             continue
         years_axis = [d.year if isinstance(d, pd.Timestamp) else int(d)
                       for d in result.fcff_per_year.index]
+        all_years.update(years_axis)
+        raw_vals = result.fcff_per_year.values
+        base = float(raw_vals[0]) if len(raw_vals) > 0 else 0.0
+        if base <= 0:
+            # Negative / zero base year breaks the rebase math — can't
+            # plot a meaningful index. Skip with a note.
+            skipped_fcf.append(ticker)
+            continue
+        index_vals = [(float(v) / base) * 100.0 for v in raw_vals]
+        absolute_b = [float(v) / 1e9 for v in raw_vals]
+        hover_text = [
+            f"{ticker} {y}<br>Index: {idx:.0f}<br>FCF: ${ab:.1f}B"
+            for y, idx, ab in zip(years_axis, index_vals, absolute_b)
+        ]
         fig.add_trace(go.Scatter(
             x=years_axis,
-            y=result.fcff_per_year.values / 1e9,
+            y=index_vals,
             name=ticker, mode="lines+markers",
-            line=dict(color=_LINE_COLORS[i % len(_LINE_COLORS)], width=2),
+            line=dict(color=_LINE_COLORS[i % len(_LINE_COLORS)], width=2.2),
             marker=dict(size=8),
+            hovertext=hover_text,
+            hoverinfo="text",
         ))
     except Exception:
+        skipped_fcf.append(ticker)
         continue
+
+# Horizontal reference line at index 100 (= base year)
+if all_years:
+    fig.add_hline(y=100, line_dash="dot", line_color="#374151",
+                  line_width=1, opacity=0.6)
 
 fig.update_layout(
     plot_bgcolor="#131826", paper_bgcolor="#131826",
     font=dict(color="#9CA3AF", family="Inter, sans-serif", size=11),
     height=380,
     margin=dict(l=0, r=0, t=20, b=0),
-    yaxis=dict(title="Annual FCF ($B)", gridcolor="#1F2937", color="#6B7280"),
-    xaxis=dict(gridcolor="#1F2937", color="#6B7280"),
+    yaxis=dict(title="FCF Index (Año base = 100)",
+               gridcolor="#1F2937", color="#6B7280"),
+    xaxis=dict(gridcolor="#1F2937", color="#6B7280",
+               tickmode="linear", dtick=1,
+               tickformat="d"),
     legend=dict(orientation="h", yanchor="bottom", y=1.02,
                 xanchor="left", x=0, bgcolor="rgba(0,0,0,0)"),
 )
 st.plotly_chart(fig, width="stretch",
                 config={"displayModeBar": False})
 
+if skipped_fcf:
+    st.caption(
+        f"⚠️ FCF no proyectable para: {', '.join(skipped_fcf)} "
+        f"(FCF base ≤ 0 o sin estados disponibles)."
+    )
 st.caption(
-    "Forecast inputs default to each ticker's own historical CAGR + "
-    "3y-avg margins. WACC for the implied-growth column is fixed at "
-    "10% across all tickers for apples-to-apples comparison."
+    "Eje Y = índice rebased al año base (= 100), no $B — permite "
+    "comparar trayectorias de crecimiento cuando los tickers tienen "
+    "magnitudes muy distintas. Hover muestra el FCF absoluto en $B. "
+    "Forecast usa el CAGR histórico + márgenes 3y-avg de cada ticker."
 )
 
 
