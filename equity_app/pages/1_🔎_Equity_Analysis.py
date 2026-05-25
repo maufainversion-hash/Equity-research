@@ -1246,10 +1246,16 @@ with tab_overview:
     div_res = analyze_dividend_safety(income=inc, balance=bal, cash=cf)
     render_dividend_safety_card(div_res)
 
-    # News & Sentiment removed (P10.5) — the user reads news directly
-    # from the source. The components and analyzers (news_combined_section,
-    # news_sentiment, news_sentiment_panel) remain in git for reactivation
-    # if desired.
+    # ---- Latest news for this ticker (newest → oldest) ----
+    # Multi-source aggregator (yfinance + Finnhub + Marketaux) with
+    # dedupe and VADER sentiment enrichment. Cached 30 min via
+    # @st.cache_data so re-renders do not burn API quota.
+    st.markdown("<div style='height:22px;'></div>", unsafe_allow_html=True)
+    try:
+        from ui.components.latest_news_section import render_latest_news_section
+        render_latest_news_section(active_ticker)
+    except Exception as exc:
+        st.caption(f"Sección de noticias no disponible: {type(exc).__name__}")
 
     # ---- Segments + Geography (FMP-only) ----
     from analysis.segments import (
