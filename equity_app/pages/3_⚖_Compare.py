@@ -116,16 +116,106 @@ st.caption("Side-by-side analysis of 2-3 tickers. Reuses the cached bundle.")
 
 
 # ============================================================
-# Ticker inputs
+# Ticker inputs — País / Industria filters + 3 ticker dropdowns
 # ============================================================
+# Reuses the curated company_catalog so the user picks from a list
+# instead of typing. Country and Industry are cascading filters that
+# narrow the ticker dropdowns below.
+from data.company_catalog import (
+    countries as _catalog_countries,
+    sectors   as _catalog_sectors,
+    companies as _catalog_companies,
+    all_companies as _catalog_all,
+    company_for as _catalog_company_for,
+)
+
+_ALL = "— Todos —"
+_NONE = "— Ninguno —"
+
+# ---- Country + Industry filters ----
+filt_c, filt_s = st.columns([1, 1])
+with filt_c:
+    country_options = [_ALL] + _catalog_countries()
+    country_sel = st.selectbox("País", country_options, index=0,
+                                key="compare_country")
+with filt_s:
+    if country_sel == _ALL:
+        # Union of sectors across all countries, keeping taxonomy order.
+        from data.company_catalog import _SECTOR_ORDER as _SO
+        present = sorted({c.sector for c in _catalog_all()},
+                         key=lambda s: _SO.index(s) if s in _SO else 999)
+        sector_options = [_ALL] + present
+    else:
+        sector_options = [_ALL] + _catalog_sectors(country_sel)
+    sector_sel = st.selectbox("Industria", sector_options, index=0,
+                               key="compare_sector")
+
+# ---- Resolve the filtered company list ----
+def _filtered() -> list:
+    pool = list(_catalog_all())
+    if country_sel != _ALL:
+        pool = [c for c in pool if c.country == country_sel]
+    if sector_sel != _ALL:
+        pool = [c for c in pool if c.sector == sector_sel]
+    return sorted(pool, key=lambda c: c.name.lower())
+
+_pool = _filtered()
+if not _pool:
+    st.warning("Sin empresas para esa combinación de filtros.")
+    st.stop()
+
+
+def _label(c) -> str:
+    return f"{c.ticker} — {c.name}"
+
+
+_labels = [_label(c) for c in _pool]
+_by_label: dict[str, str] = {_label(c): c.ticker for c in _pool}
+
+# ---- Pick safe defaults that exist in the current pool ----
+# Backwards-compat with the prior AAPL / MSFT / "" pre-fills: only
+# use them when they survive the filter.
+def _idx_or_zero(preferred: str) -> int:
+    for i, c in enumerate(_pool):
+        if c.ticker.upper() == preferred.upper():
+            return i
+    return 0
+
+
+def _idx_or_first_other(preferred: str, avoid: str) -> int:
+    for i, c in enumerate(_pool):
+        if c.ticker.upper() == preferred.upper() and c.ticker != avoid:
+            return i
+    for i, c in enumerate(_pool):
+        if c.ticker != avoid:
+            return i
+    return 0
+
+
+_default1 = _idx_or_zero("AAPL")
+_default2 = _idx_or_first_other("MSFT", _pool[_default1].ticker)
+
 c1, c2, c3 = st.columns(3)
-t1 = c1.text_input("Ticker 1", "AAPL").upper().strip()
-t2 = c2.text_input("Ticker 2", "MSFT").upper().strip()
-t3 = c3.text_input("Ticker 3 (optional)", "").upper().strip()
+with c1:
+    sel1 = st.selectbox("Ticker 1", _labels, index=_default1,
+                         key=f"compare_t1_{country_sel}_{sector_sel}")
+with c2:
+    sel2 = st.selectbox("Ticker 2", _labels, index=_default2,
+                         key=f"compare_t2_{country_sel}_{sector_sel}")
+with c3:
+    sel3 = st.selectbox("Ticker 3 (opcional)", [_NONE] + _labels, index=0,
+                         key=f"compare_t3_{country_sel}_{sector_sel}")
+
+t1 = _by_label.get(sel1, "")
+t2 = _by_label.get(sel2, "")
+t3 = "" if sel3 == _NONE else _by_label.get(sel3, "")
 
 tickers = [t for t in (t1, t2, t3) if t]
+# De-dupe while preserving order — selecting the same name twice
+# would otherwise load the bundle twice for the same ticker.
+tickers = list(dict.fromkeys(tickers))
 if len(tickers) < 2:
-    st.info("Enter at least 2 tickers to compare.")
+    st.info("Elegí al menos 2 tickers distintos para comparar.")
     st.stop()
 
 
