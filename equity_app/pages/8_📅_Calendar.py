@@ -382,8 +382,37 @@ else:
 # Section 3 — IPO calendar (card list)
 # ============================================================
 st.markdown("<br>", unsafe_allow_html=True)
-_section_header("🚀", "IPOs · próximos 30 días",
-                "Calendario de salidas a bolsa · vía Finnhub")
+_section_header("🚀", "IPOs · ventana extendida (−7 / +90 días)",
+                "Salidas a bolsa recientes + próximas · vía Finnhub")
+
+_STATUS_COLORS = {
+    "priced":   ("#10B98122", "#10B981"),         # green — done deal
+    "expected": ("#3B82F622", "#60A5FA"),         # blue — upcoming
+    "filed":    ("#C9A96122", "#C9A961"),         # gold — S-1 filed
+    "withdrawn": ("#EF444422", "#F87171"),        # red — pulled
+}
+
+
+def _status_chip(status: str) -> str:
+    s = (status or "").lower().strip()
+    bg, fg = _STATUS_COLORS.get(s, ("#33415522", "#94A3B8"))
+    label = s.upper() if s else "—"
+    return (
+        f'<span style="display:inline-block;padding:1px 6px;'
+        f'border-radius:3px;background:{bg};color:{fg};'
+        f'font-size:9px;font-weight:700;letter-spacing:0.06em;">'
+        f'{label}</span>'
+    )
+
+
+def _ipo_size_value(v) -> float:
+    """For sorting — coerce missing/invalid to 0 so they sink to bottom."""
+    try:
+        f = float(v)
+        return f if f > 0 else 0.0
+    except (TypeError, ValueError):
+        return 0.0
+
 
 try:
     from data.finnhub_provider import (
@@ -401,14 +430,23 @@ try:
         if idf.empty:
             st.caption("Sin IPOs anunciadas en la ventana.")
         else:
+            # Sort by deal size desc — the user cares more about a $1B
+            # listing in 60 days than a $20M in 5 days. Tie-break by date.
+            if "totalSharesValue" in idf.columns:
+                idf = idf.copy()
+                idf["_size"] = idf["totalSharesValue"].apply(_ipo_size_value)
+                idf = idf.sort_values(
+                    by=["_size", "date"], ascending=[False, True],
+                ).drop(columns=["_size"])
+
             cards: list[str] = []
-            for _, row in idf.head(20).iterrows():
+            for _, row in idf.head(40).iterrows():
                 d_ts = row.get("date")
                 d_d = d_ts.date() if pd.notna(d_ts) else None
                 days, lab = _days_to(d_d) if d_d else (10**9, "—")
                 border, accent = _urgency_color(days)
                 sym = str(row.get("symbol") or "—")
-                name = str(row.get("name") or "")[:38]
+                name = str(row.get("name") or "")[:42]
                 exch = str(row.get("exchange") or "")
                 price = str(row.get("price") or "—")
                 size = row.get("totalSharesValue")
@@ -430,10 +468,11 @@ try:
                     f'<div style="font-size:12px;color:#cbd5e1;'
                     f'white-space:nowrap;overflow:hidden;'
                     f'text-overflow:ellipsis;margin-bottom:6px;">{name}</div>'
-                    f'<div style="font-size:11px;color:#94A3B8;">'
-                    f'{_fmt_date(d_d)} · {exch} · {status}'
+                    f'<div style="display:flex;gap:6px;align-items:center;'
+                    f'font-size:11px;color:#94A3B8;margin-bottom:4px;">'
+                    f'{_fmt_date(d_d)} · {exch} {_status_chip(status)}'
                     f'</div>'
-                    f'<div style="font-size:11px;color:#94A3B8;margin-top:4px;">'
+                    f'<div style="font-size:11px;color:#94A3B8;">'
                     f'Precio: <b style="color:#cbd5e1;">{price}</b> · '
                     f'Tamaño: <b style="color:#cbd5e1;">{size_txt}</b>'
                     f'</div>'
@@ -446,7 +485,12 @@ try:
                 + "".join(cards) + '</div>',
                 unsafe_allow_html=True,
             )
-            st.caption(f"Mostrando {min(20, len(idf))} de {len(idf)} IPOs.")
+            st.caption(
+                f"Ordenado por tamaño de deal · mostrando "
+                f"{min(40, len(idf))} de {len(idf)} IPOs. Finnhub free "
+                f"tier cubre mayormente US listings con S-1 ya filed — "
+                f"deals globales o SPAC mergers pueden no aparecer."
+            )
 except Exception as e:
     st.warning(f"IPOs no disponibles: {type(e).__name__} — {e}",
                icon="⚠️")

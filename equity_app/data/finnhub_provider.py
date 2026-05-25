@@ -207,14 +207,21 @@ def fetch_market_earnings_calendar(*,
 
 
 def fetch_ipo_calendar(*, from_date: Optional[str] = None,
-                       to_date: Optional[str] = None) -> pd.DataFrame:
-    """Upcoming IPO calendar. Default window: today → +30 days."""
+                       to_date: Optional[str] = None,
+                       lookback_days: int = 7) -> pd.DataFrame:
+    """IPO calendar. Default window: last 7 days → +90 days.
+
+    The wider forward window (90d, was 30d) materially improves
+    visibility — Finnhub's free tier typically only shows a handful
+    of US issues at a time. Including a small lookback (7d) lets
+    recently-priced names also show up so the user sees ongoing
+    activity, not just future."""
     from datetime import datetime, timedelta, timezone
     today = datetime.now(timezone.utc).date()
     if from_date is None:
-        from_date = today.isoformat()
+        from_date = (today - timedelta(days=lookback_days)).isoformat()
     if to_date is None:
-        to_date = (today + timedelta(days=30)).isoformat()
+        to_date = (today + timedelta(days=90)).isoformat()
     payload = _get("calendar/ipo", {"from": from_date, "to": to_date})
     rows = payload.get("ipoCalendar") if isinstance(payload, dict) else None
     if not rows:
