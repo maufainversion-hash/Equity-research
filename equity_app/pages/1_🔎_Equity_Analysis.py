@@ -1716,18 +1716,20 @@ with tab_financials:
         "Growth":       "growth",
     }[view_mode_label]
 
-    # Quarterly statements for TTM column (hybrid view only)
+    # Quarterly statements for TTM column — fetched in every view
+    # mode (was hybrid-only). The renderer ignores TTM in
+    # common-size / growth views, so the extra fetch is only
+    # actually consumed by Analyst + Absolute.
     inc_q = bal_q = cf_q = None
-    if view_mode == "hybrid":
-        try:
-            from data.fmp_provider import FMPProvider
-            _fmp = FMPProvider()
-            inc_q = _fmp.fetch_income_statement_quarterly(active_ticker)
-            bal_q = _fmp.fetch_balance_sheet_quarterly(active_ticker)
-            cf_q = _fmp.fetch_cash_flow_quarterly(active_ticker)
-        except Exception as e:
-            # TTM cells will render as "—"
-            log.debug("quarterly statements fetch failed: %s", e)
+    try:
+        from data.fmp_provider import FMPProvider
+        _fmp = FMPProvider()
+        inc_q = _fmp.fetch_income_statement_quarterly(active_ticker)
+        bal_q = _fmp.fetch_balance_sheet_quarterly(active_ticker)
+        cf_q = _fmp.fetch_cash_flow_quarterly(active_ticker)
+    except Exception as e:
+        # TTM cells will render as "—"
+        log.debug("quarterly statements fetch failed: %s", e)
 
     with fin_r2:
         try:
@@ -1759,7 +1761,10 @@ with tab_financials:
         build_income_chart(inc5, height=200),
         width="stretch", config={"displayModeBar": False},
     )
-    render_income_statement(inc5, view=view_mode, quarterly=inc_q)
+    # cagr_source = full uncapped series so 5y/10y CAGR work even
+    # though the visible table is capped to 5 columns.
+    render_income_statement(inc5, view=view_mode, quarterly=inc_q,
+                            cagr_source=inc)
 
     # ---- Balance Sheet ----
     st.markdown(
@@ -1771,7 +1776,8 @@ with tab_financials:
         build_balance_chart(bal5, height=200),
         width="stretch", config={"displayModeBar": False},
     )
-    render_balance_sheet(bal5, view=view_mode, quarterly=bal_q)
+    render_balance_sheet(bal5, view=view_mode, quarterly=bal_q,
+                         cagr_source=bal)
 
     # ---- Cash Flow ----
     st.markdown(
@@ -1783,7 +1789,8 @@ with tab_financials:
         build_fcf_chart(cf5, income=inc5, height=200),
         width="stretch", config={"displayModeBar": False},
     )
-    render_cash_flow(cf5, view=view_mode, quarterly=cf_q)
+    render_cash_flow(cf5, view=view_mode, quarterly=cf_q,
+                     cagr_source=cf)
 
     # ---- Financial Ratios (kept as st.dataframe — already legible) ----
     st.markdown(

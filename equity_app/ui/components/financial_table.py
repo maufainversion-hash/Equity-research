@@ -258,6 +258,7 @@ def render_financial_table(
     show_ttm: bool = True,
     show_cagr: bool = True,
     show_sparkline: bool = True,
+    cagr_source: Optional[pd.DataFrame] = None,
 ) -> None:
     """
     Args:
@@ -298,7 +299,15 @@ def render_financial_table(
     in_abs = (view == "absolute")
     add_yoy   = show_yoy   and in_abs and n >= 2
     add_ttm   = show_ttm   and in_abs and ttm is not None
-    add_cagr  = show_cagr  and in_abs and n >= 6              # 5y CAGR needs 6 points
+    # CAGR source — use the broader series (typically the bundle's
+    # uncapped income/balance/cash) so the 5y CAGR works even when
+    # the visible table is capped to 5 columns. Falls back to df.
+    _cagr_src = (cagr_source if cagr_source is not None
+                 and not cagr_source.empty else df)
+    _cagr_n = len(_cagr_src.index)
+    add_cagr_5  = show_cagr and in_abs and _cagr_n >= 6       # 5y CAGR
+    add_cagr_10 = show_cagr and in_abs and _cagr_n >= 11      # 10y CAGR
+    add_cagr  = add_cagr_5 or add_cagr_10
     add_spark = show_sparkline and in_abs and n >= 2
 
     # ---- Build header ----
@@ -319,14 +328,14 @@ def render_financial_table(
         header_cells.append(
             f'<th style="{_TH_BASE_STYLE} text-align:right; color:#C9A961;">TTM</th>'
         )
-    if add_cagr:
+    if add_cagr_5:
         header_cells.append(
             f'<th style="{_TH_BASE_STYLE} text-align:right;">5Y CAGR</th>'
         )
-        if n >= 11:                                          # only show 10Y if data covers it
-            header_cells.append(
-                f'<th style="{_TH_BASE_STYLE} text-align:right;">10Y CAGR</th>'
-            )
+    if add_cagr_10:
+        header_cells.append(
+            f'<th style="{_TH_BASE_STYLE} text-align:right;">10Y CAGR</th>'
+        )
     if add_yoy:
         header_cells.append(
             f'<th style="{_TH_BASE_STYLE} text-align:right; color:#C9A961;">YoY</th>'
@@ -339,7 +348,7 @@ def render_financial_table(
     )
 
     # Total extra columns (excl. label) used to span section headers
-    n_extra = sum((add_spark, add_ttm, add_cagr, (add_cagr and n >= 11), add_yoy))
+    n_extra = sum((add_spark, add_ttm, add_cagr_5, add_cagr_10, add_yoy))
     total_cols = n + n_extra + 1
 
     # ---- Build body rows ----
@@ -411,20 +420,22 @@ def render_financial_table(
                 f'font-weight:{font_weight};">{text}</td>'
             )
 
-        # CAGR columns (5y always when add_cagr; 10y only when add_cagr and data covers it)
-        if add_cagr:
+        # CAGR columns — pulled from the broader cagr_source so the
+        # 5y CAGR works even when the visible table only shows 5y.
+        if add_cagr_5:
             if key in CAGR_ELIGIBLE_ROWS:
                 cells.append(_format_pct_cell(
-                    _cagr_for(df, key, 5), color_by_sign=True,
+                    _cagr_for(_cagr_src, key, 5), color_by_sign=True,
                 ))
-                if n >= 11:
-                    cells.append(_format_pct_cell(
-                        _cagr_for(df, key, 10), color_by_sign=True,
-                    ))
             else:
                 cells.append(f'<td style="{_RIGHT_CELL} color:#4B5563;">—</td>')
-                if n >= 11:
-                    cells.append(f'<td style="{_RIGHT_CELL} color:#4B5563;">—</td>')
+        if add_cagr_10:
+            if key in CAGR_ELIGIBLE_ROWS:
+                cells.append(_format_pct_cell(
+                    _cagr_for(_cagr_src, key, 10), color_by_sign=True,
+                ))
+            else:
+                cells.append(f'<td style="{_RIGHT_CELL} color:#4B5563;">—</td>')
 
         # YoY column (absolute view only)
         if add_yoy:
@@ -595,9 +606,13 @@ def _render_hybrid(
     ttm: Optional[pd.Series],
     show_ttm: bool,
     show_cagr: bool,
+    cagr_source: Optional[pd.DataFrame] = None,
 ) -> None:
     df = df.sort_index()
     periods: list[pd.Timestamp] = list(df.index)
+    # CAGR is pulled from the broader uncapped series when available.
+    _cagr_src = (cagr_source if cagr_source is not None
+                 and not cagr_source.empty else df)
 
     # --- header ---
     header_cells: list[str] = [
@@ -655,7 +670,7 @@ def _render_hybrid(
                         and spec.base_row in CAGR_ELIGIBLE_ROWS):
                     for p in (5, 10):
                         cells.append(_format_pct_cell(
-                            _cagr_for(df, spec.base_row, p),
+                            _cagr_for(_cagr_src, spec.base_row, p),
                             color_by_sign=True,
                         ))
                 else:
@@ -704,7 +719,7 @@ def _render_hybrid(
             if key in CAGR_ELIGIBLE_ROWS:
                 for p in (5, 10):
                     cells.append(_format_pct_cell(
-                        _cagr_for(df, key, p), color_by_sign=True,
+                        _cagr_for(_cagr_src, key, p), color_by_sign=True,
                     ))
             else:
                 cells.append(f'<td style="{_RIGHT_CELL} color:#4B5563; {border}">—</td>')
@@ -745,6 +760,7 @@ def render_income_statement(
     show_ttm: bool = True,
     show_cagr: bool = True,
     show_sparkline: bool = True,
+    cagr_source: Optional[pd.DataFrame] = None,
 ) -> None:
     if df is None or df.empty:
         st.info("No income statement data available.")
@@ -755,6 +771,7 @@ def render_income_statement(
             df, layout=INCOME_STATEMENT_LAYOUT,
             table_label="INCOME STATEMENT ($USD)",
             ttm=ttm, show_ttm=show_ttm, show_cagr=show_cagr,
+            cagr_source=cagr_source,
         )
         return
     render_financial_table(
@@ -762,6 +779,7 @@ def render_income_statement(
         base_keys=("revenue",),
         ttm=ttm, show_ttm=show_ttm, show_cagr=show_cagr,
         show_sparkline=show_sparkline,
+        cagr_source=cagr_source,
         table_label="INCOME STATEMENT ($USD)",
     )
 
@@ -774,6 +792,7 @@ def render_balance_sheet(
     show_ttm: bool = True,
     show_cagr: bool = True,
     show_sparkline: bool = True,
+    cagr_source: Optional[pd.DataFrame] = None,
 ) -> None:
     if df is None or df.empty:
         st.info("No balance sheet data available.")
@@ -784,6 +803,7 @@ def render_balance_sheet(
             df, layout=BALANCE_SHEET_LAYOUT,
             table_label="BALANCE SHEET ($USD)",
             ttm=ttm, show_ttm=show_ttm, show_cagr=show_cagr,
+            cagr_source=cagr_source,
         )
         return
     render_financial_table(
@@ -791,6 +811,7 @@ def render_balance_sheet(
         base_keys=("totalAssets",),
         ttm=ttm, show_ttm=show_ttm, show_cagr=show_cagr,
         show_sparkline=show_sparkline,
+        cagr_source=cagr_source,
         table_label="BALANCE SHEET ($USD)",
     )
 
@@ -803,6 +824,7 @@ def render_cash_flow(
     show_ttm: bool = True,
     show_cagr: bool = True,
     show_sparkline: bool = True,
+    cagr_source: Optional[pd.DataFrame] = None,
 ) -> None:
     if df is None or df.empty:
         st.info("No cash flow data available.")
@@ -813,6 +835,7 @@ def render_cash_flow(
             df, layout=CASH_FLOW_LAYOUT,
             table_label="CASH FLOW ($USD)",
             ttm=ttm, show_ttm=show_ttm, show_cagr=show_cagr,
+            cagr_source=cagr_source,
         )
         return
     render_financial_table(
@@ -820,5 +843,6 @@ def render_cash_flow(
         base_keys=("revenue",),                  # CF / revenue is conventional
         ttm=ttm, show_ttm=show_ttm, show_cagr=show_cagr,
         show_sparkline=show_sparkline,
+        cagr_source=cagr_source,
         table_label="CASH FLOW ($USD)",
     )
