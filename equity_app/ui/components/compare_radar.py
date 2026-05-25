@@ -102,6 +102,17 @@ def _leverage_score(de: Optional[float]) -> Optional[float]:
     return 100.0 * (1.0 - (de - 0.25) / (3.0 - 0.25))
 
 
+def _name_root(name: str) -> str:
+    """Strip share-class suffixes so "Alphabet Inc. — Class A" and
+    "Alphabet Inc. — Class C" reduce to the same root for duplicate
+    detection."""
+    s = (name or "").lower()
+    for marker in (" — ", " - ", " (", " class "):
+        if marker in s:
+            s = s.split(marker, 1)[0]
+    return s.strip().rstrip(",.")
+
+
 def render_compare_radar(headlines: list) -> None:
     """Render a polar radar chart comparing the headline metrics.
 
@@ -114,12 +125,6 @@ def render_compare_radar(headlines: list) -> None:
         import plotly.graph_objects as go
     except ImportError:
         return
-
-    st.markdown(
-        '<div class="eq-section-label" style="margin-top:18px;">'
-        'RADAR · 6-AXIS PROFILE</div>',
-        unsafe_allow_html=True,
-    )
 
     axes = [
         "Gross margin", "Op margin", "FCF margin",
@@ -139,8 +144,59 @@ def render_compare_radar(headlines: list) -> None:
             _leverage_score(m.get("Debt/Equity")),
         ]
 
+    # Drop tickers that have <3 usable metrics — plotting them would
+    # be a flat polygon-of-50s that just clutters the chart and the
+    # legend. Most common offender: provider returned an empty bundle
+    # (e.g. GOOG when GOOGL already pulled the financials).
+    skipped: list[str] = []
+    usable: list = []
+    for h in headlines:
+        n_finite = sum(1 for v in raw[h.ticker]
+                       if v is not None and math.isfinite(v))
+        if n_finite < 3:
+            skipped.append(h.ticker)
+        else:
+            usable.append(h)
+
+    if len(usable) < 2:
+        # Not enough material for a useful radar — render nothing,
+        # but tell the user why.
+        st.markdown(
+            '<div class="eq-section-label" style="margin-top:18px;">'
+            'RADAR · 6-AXIS PROFILE</div>',
+            unsafe_allow_html=True,
+        )
+        st.caption(
+            "Radar omitido: no hay suficientes datos por ticker para "
+            "trazarlo. Probablemente uno o más tickers caen en clases "
+            "de acciones cuyos financials no están disponibles "
+            "(ej.: clase A vs clase C del mismo emisor)."
+        )
+        return
+
+    # Same-issuer pair detection (e.g. GOOG + GOOGL). Warn the user;
+    # don't filter — they explicitly chose both.
+    name_roots = [_name_root(h.name) for h in usable]
+    dupes: list[str] = []
+    seen: dict[str, str] = {}
+    for h, root in zip(usable, name_roots):
+        if root and root in seen:
+            dupes.append(f"{seen[root]} y {h.ticker}")
+        else:
+            seen[root] = h.ticker
+
+    st.markdown(
+        '<div class="eq-section-label" style="margin-top:18px;">'
+        'RADAR · 6-AXIS PROFILE</div>',
+        unsafe_allow_html=True,
+    )
+
+    # Lower the fill alpha when 3 traces are stacked — keeps each
+    # polygon distinguishable instead of muddying into one shape.
+    fill_alpha = 0.18 if len(usable) <= 2 else 0.10
+
     fig = go.Figure()
-    for idx, h in enumerate(headlines):
+    for idx, h in enumerate(usable):
         scores: list[float] = []
         hover: list[str] = []
         for i in range(len(axes)):
@@ -162,8 +218,8 @@ def render_compare_radar(headlines: list) -> None:
             r=scores, theta=theta,
             name=h.ticker,
             fill="toself",
-            fillcolor=_hex_to_rgba(color, 0.18),
-            line=dict(color=color, width=2),
+            fillcolor=_hex_to_rgba(color, fill_alpha),
+            line=dict(color=color, width=2.2),
             marker=dict(size=6, color=color),
             hovertext=hover,
             hoverinfo="text+name",
@@ -195,6 +251,22 @@ def render_compare_radar(headlines: list) -> None:
     )
     st.plotly_chart(fig, width="stretch",
                     config={"displayModeBar": False})
+    # Warnings (skipped tickers + same-issuer pairs) — surface them so
+    # the user understands why the chart looks different from input.
+    if skipped:
+        st.warning(
+            f"Omitidos del radar por datos insuficientes: "
+            f"{', '.join(skipped)}. Probable caso de clases de acción "
+            f"sin financials independientes (ej.: GOOG vs GOOGL).",
+            icon="⚠️",
+        )
+    if dupes:
+        st.info(
+            f"Aviso: {', '.join(dupes)} parecen ser distintas clases "
+            f"del mismo emisor — sus polígonos van a coincidir.",
+            icon="ℹ️",
+        )
+
     st.caption(
         "Escala absoluta de calidad, no relativa al par. 100 = nivel "
         "best-in-class del eje (Gross margin 70%, Op margin 35%, "
