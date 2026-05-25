@@ -2,9 +2,12 @@
 Final analyst rating — combines composite score, upside vs aggregator,
 and dispersion confidence into one of:
 
-    STRONG BUY · BUY · HOLD · SELL · STRONG SELL
+    STRONG BUY · BUY · HOLD · SELL · STRONG SELL · N/A
 
 Logic (in order):
+    0. N/A         — aggregator flagged not_applicable (growth stock
+                     where ≥ half of classical models cannot justify
+                     the price; mechanical SELL would be misleading)
     1. STRONG BUY  — upside ≥ +30% AND composite ≥ 70
     2. BUY         — upside ≥ +10% AND composite ≥ 55
     3. STRONG SELL — upside ≤ −30%
@@ -22,7 +25,7 @@ from typing import Optional, Literal
 from core.constants import RATING_THRESHOLDS
 
 
-Verdict = Literal["STRONG BUY", "BUY", "HOLD", "SELL", "STRONG SELL"]
+Verdict = Literal["STRONG BUY", "BUY", "HOLD", "SELL", "STRONG SELL", "N/A"]
 
 
 # ============================================================
@@ -38,7 +41,8 @@ class Rating:
 
     @property
     def color(self) -> str:
-        return _COLORS[self.verdict]
+        # Default to neutral if an unknown verdict ever slips through.
+        return _COLORS.get(self.verdict, "var(--accent)")
 
 
 _COLORS: dict[str, str] = {
@@ -47,6 +51,7 @@ _COLORS: dict[str, str] = {
     "HOLD":        "var(--accent)",
     "SELL":        "var(--losses)",
     "STRONG SELL": "var(--losses)",
+    "N/A":         "var(--accent)",
 }
 
 
@@ -58,14 +63,37 @@ def rate(
     composite: float,
     upside: Optional[float],
     confidence: str = "high",
+    not_applicable: bool = False,
+    applicability_note: str = "",
 ) -> Rating:
     """
     Args:
         composite:   weighted score in 0-100 (from ScoreBreakdown.composite)
         upside:      (intrinsic − price) / price; None if not computable
         confidence:  "high" | "medium" | "low" (from AggregatedValuation)
+        not_applicable: aggregator flag — when True, the verdict is N/A
+                     regardless of upside (classical models cannot
+                     justify the market price; reverse-DCF implied
+                     growth is the correct read instead).
+        applicability_note: rationale to surface in the UI when N/A.
     """
     t = RATING_THRESHOLDS
+
+    # ---- N/A short-circuit ---------------------------------------
+    # Hits before any upside/composite logic — a growth stock where
+    # ≥ half of classical models clip above the price would otherwise
+    # be a mechanical STRONG SELL, which is the wrong message.
+    if not_applicable:
+        reasoning = (applicability_note or
+                     "Modelos clásicos no aplicables al perfil de la empresa. "
+                     "Usar el implied growth del reverse-DCF.")
+        return Rating(
+            verdict="N/A",
+            composite=float(composite),
+            upside=float(upside if upside is not None else 0.0),
+            confidence=confidence,
+            reasoning=reasoning,
+        )
 
     if upside is None:
         verdict: Verdict = "HOLD"

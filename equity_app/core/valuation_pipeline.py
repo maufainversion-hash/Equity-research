@@ -546,5 +546,7 @@ def run_valuation(
         composite=out.score.composite,
         upside=upside,
         confidence=out.aggregator.confidence,
+        not_applicable=getattr(out.aggregator, "not_applicable", False),
+        applicability_note=getattr(out.aggregator, "applicability_note", ""),
     )
     return out

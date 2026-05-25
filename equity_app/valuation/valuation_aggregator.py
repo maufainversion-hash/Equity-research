@@ -6,11 +6,28 @@ inter-quartile range (p25, p75), and a confidence flag.
 Each model contributes its per-share intrinsic value. Profile-specific
 weights from :data:`PROFILE_WEIGHTS` decide how heavily to load each.
 Models that failed (returned None) get their weight redistributed
-across survivors. Models whose output is more than ``sanity_clip_threshold``
-off the current market price are penalised (weight × 0.3) on the
-assumption that they're misapplied to this business model rather than
-revealing a real mispricing — the user-visible result is therefore
-robust to a single broken model dragging the aggregate to absurd values.
+across survivors.
+
+Sanity clip is *asymmetric and profile-aware* (see
+:data:`PROFILE_CLIP_CONFIG`):
+
+- For growth profiles (young/high/mature_growth) the **below** bound
+  is loose or disabled — models legitimately produce values far below
+  price because LTM cash flows do not capture the growth that the
+  market is paying for. Penalising those would force the aggregator
+  to invent an absurd "SELL" verdict for every growth stock.
+- For mature/cyclical/declining profiles both bounds are tight —
+  there's no reason a well-applied DCF on a stable business should
+  diverge from price by more than ~60%; if it does, the model is
+  likely misapplied.
+
+When ≥ half of the surviving models for a growth profile get clipped
+above the upper bound (i.e. the market is paying multiples that no
+traditional model can justify on current fundamentals), the
+aggregator returns ``not_applicable=True``. The downstream rater
+then emits a "N/A" verdict instead of a mechanical SELL — the
+correct read is "use the reverse-DCF implied growth as the headline",
+not "the stock is overvalued by 90%".
 """
 from __future__ import annotations
 from dataclasses import dataclass, field
@@ -84,6 +101,47 @@ PROFILE_WEIGHTS: dict[str, dict[str, float]] = {
 
 
 # ============================================================
+# Profile → (above_threshold, below_threshold) for sanity clip
+# ============================================================
+# Asymmetric clip: how far above price (above) and below price (below)
+# a model can fall before being penalised. ``None`` disables that side.
+#
+# Rationale by profile:
+# - young_growth / high_growth: cash-flow models *will* give values
+#   far below price (the market discounts growth they can't see).
+#   Disable the below side entirely; only clip extreme upside outliers.
+# - mature_growth: still some growth premium expected — loose both
+#   sides, but keep them.
+# - mature_stable / cyclical / declining: any large gap is a sign of
+#   model misapplication, not real mispricing — tight clip.
+# - bank / insurance / reit: specialised models (RI/DDM); other models
+#   are noise. Strict clip prevents non-applicable models from
+#   contributing.
+# - default: 0.60 symmetric (back-compat with prior fixed behavior).
+PROFILE_CLIP_CONFIG: dict[str, tuple[Optional[float], Optional[float]]] = {
+    "young_growth":    (2.00, None),
+    "high_growth":     (1.50, None),
+    "mature_growth":   (0.85, 0.85),
+    "mature_stable":   (0.60, 0.60),
+    "cyclical":        (0.60, 0.60),
+    "declining":       (0.60, 0.60),
+    "bank":            (0.50, 0.50),
+    "insurance":       (0.50, 0.50),
+    "reit":            (0.50, 0.50),
+    # legacy keys
+    "growth_tech":     (1.50, None),
+    "steady_compounder": (0.60, 0.60),
+    "dividend_payer":  (0.60, 0.60),
+    "default":         (0.60, 0.60),
+}
+
+# Profiles where "models priced way below market" is expected behavior
+# (growth premium not captured by LTM cash-flow models). When ≥ half
+# of survivors get clipped *above* on one of these, the verdict is N/A.
+_GROWTH_PROFILES = frozenset({"young_growth", "high_growth", "growth_tech"})
+
+
+# ============================================================
 # Result dataclass
 # ============================================================
 @dataclass
@@ -109,6 +167,15 @@ class AggregatedValuation:
     # Cyclical normalization signal: "above_cycle" | "at_cycle" | "below_cycle"
     # — derived from EPV's normalization_factor (current_nopat / normalized).
     normalization_signal: Optional[str] = None
+    # ---- Applicability flag ----
+    # True when ≥ half of surviving growth-profile models get clipped
+    # above the upper bound — i.e. the market is paying multiples no
+    # cash-flow model can justify. The rating layer reads this and
+    # emits "N/A" instead of a mechanical SELL.
+    not_applicable: bool = False
+    # Human-readable explanation of the verdict / applicability call.
+    # Empty string when there is nothing notable to say.
+    applicability_note: str = ""
 
 
 # ============================================================
@@ -167,13 +234,24 @@ def aggregate(
             confidence="low", profile=profile_key, n_models_used=0,
         )
 
-    # ---- Sanity clip ----
+    # ---- Sanity clip (asymmetric + profile-aware) ----
+    # Resolve (above, below) bounds: prefer profile config; fall back to
+    # the legacy fixed ``sanity_clip_threshold`` if profile is unknown.
+    above_thr, below_thr = PROFILE_CLIP_CONFIG.get(
+        profile_key, (sanity_clip_threshold, sanity_clip_threshold))
+
     clipped_set: set[str] = set()
+    clipped_above: set[str] = set()
     if current_price is not None and np.isfinite(current_price) and current_price > 0:
-        lo_bound = current_price * (1.0 - sanity_clip_threshold)
-        hi_bound = current_price * (1.0 + sanity_clip_threshold)
+        hi_bound = (current_price * (1.0 + above_thr)
+                    if above_thr is not None else float("inf"))
+        lo_bound = (current_price * max(0.0, 1.0 - below_thr)
+                    if below_thr is not None else 0.0)
         for k, v in survivors.items():
-            if v < lo_bound or v > hi_bound:
+            if v > hi_bound:
+                clipped_set.add(k)
+                clipped_above.add(k)
+            elif v < lo_bound:
                 clipped_set.add(k)
         sane = {k: v for k, v in survivors.items() if k not in clipped_set}
         # Fallback: if clipping leaves <2 sane models, include the clipped
@@ -183,6 +261,38 @@ def aggregate(
         usable = sane
     else:
         usable = dict(survivors)
+
+    # ---- Applicability flag ----
+    # The same underlying problem (cash-flow models can't justify a
+    # growth stock's price) can show up two ways:
+    #   (a) Models clip *above* the price (rare — when the model
+    #       happens to compute a value 1.5x+ price).
+    #   (b) Models cluster far *below* the price (PLTR-style: 5 of 5
+    #       give ~$10 against a $137 print). Asymmetric clip lets them
+    #       survive — but the resulting intrinsic is meaningless.
+    # In either case the mechanical verdict would be a wrong SELL/N/A
+    # is the correct read.
+    not_applicable = False
+    applicability_note = ""
+    if profile_key in _GROWTH_PROFILES and len(survivors) >= 2:
+        trigger_above = len(clipped_above) >= max(2, len(survivors) // 2)
+        trigger_below = False
+        if (current_price is not None and np.isfinite(current_price)
+                and current_price > 0):
+            below_thr_px = current_price * 0.50          # < half of price
+            n_below = sum(1 for v in survivors.values() if v < below_thr_px)
+            # ⅔ of surviving classical models give << price → the cluster
+            # is signal, not noise from a single broken model.
+            trigger_below = n_below >= max(2, (len(survivors) * 2) // 3)
+        if trigger_above or trigger_below:
+            not_applicable = True
+            applicability_note = (
+                f"Modelos clásicos no aplicables al perfil "
+                f"{profile_key}: el mercado descuenta crecimiento "
+                f"que los flujos actuales no capturan. La lectura "
+                f"central es el implied growth del reverse-DCF, no "
+                f"el intrinsic mecánico."
+            )
 
     # ---- Weights ----
     raw_w = {k: base_weights.get(k, 0.0) for k in usable}
@@ -263,4 +373,6 @@ def aggregate(
         n_models_used=len(usable),
         value_of_growth_premium=value_of_growth_premium,
         normalization_signal=normalization_signal,
+        not_applicable=not_applicable,
+        applicability_note=applicability_note,
     )

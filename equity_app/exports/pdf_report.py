@@ -65,6 +65,7 @@ _VERDICT_ES = {
     "HOLD":        "MANTENER",
     "SELL":        "VENTA",
     "STRONG SELL": "VENTA FUERTE",
+    "N/A":         "N/A",
 }
 _VERDICT_COLOR = {
     "STRONG BUY":  GAINS,
@@ -72,6 +73,7 @@ _VERDICT_COLOR = {
     "HOLD":        GOLD,
     "SELL":        LOSSES,
     "STRONG SELL": LOSSES,
+    "N/A":         GOLD,
 }
 _CONFIDENCE_ES = {"high": "Alta", "medium": "Media", "low": "Baja"}
 

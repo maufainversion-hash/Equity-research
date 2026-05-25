@@ -23,6 +23,7 @@ _VERDICT_MD = {            # colour the verdict label in markdown
     "HOLD":        ":orange[HOLD]",
     "SELL":        ":red[SELL]",
     "STRONG SELL": ":red[**STRONG SELL**]",
+    "N/A":         ":orange[N/A]",
 }
 _REGION_ORDER = ("North America", "Europe", "Asia", "Latin America")
 

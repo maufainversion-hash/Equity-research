@@ -22,6 +22,7 @@ _VERDICT_COLOR = {
     "HOLD":        "var(--accent)",
     "SELL":        "var(--losses)",
     "STRONG SELL": "var(--losses)",
+    "N/A":         "var(--accent)",
 }
 
 # Damodaran lifecycle stage → display label. Falls back to title-case of
