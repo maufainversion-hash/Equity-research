@@ -240,15 +240,33 @@ def _extract_metrics(ticker: str, bundle) -> dict:
 rows = [_extract_metrics(t, b) for t, b in bundles.items()]
 df = pd.DataFrame(rows)
 
-# Render transposed — metrics as rows, tickers as columns. More natural
-# for visual comparison than tickers-as-rows.
-st.markdown(
-    '<div class="eq-section-label" style="margin-top:14px;">'
-    'SIDE-BY-SIDE</div>',
-    unsafe_allow_html=True,
+# ============================================================
+# Verdict cards + heatmap side-by-side + key differences
+# ============================================================
+# Replaces the old st.dataframe with three richer pieces:
+#   1. one snapshot card per ticker (profile chip + headline metrics)
+#   2. heatmap side-by-side table (best in green, worst in red)
+#   3. key differences bullet list (rule-based, material gaps only)
+from ui.components.compare_summary import (
+    build_headlines, render_verdict_cards, render_heatmap_table,
+    render_key_differences,
 )
-display = df.set_index("Ticker").T
-st.dataframe(display, width="stretch")
+
+# Reuse the implied_growth values that _extract_metrics already
+# computed via _try_implied_growth — avoid a second reverse-DCF pass.
+_implied_for_summary: dict[str, Optional[float]] = {
+    t: _try_implied_growth(
+        b,
+        (b.quote.get("price") if b.quote else None),
+        ((b.info or {}).get("sharesOutstanding")
+         or (b.info or {}).get("shares_outstanding")),
+    )
+    for t, b in bundles.items()
+}
+_headlines = build_headlines(bundles, _implied_for_summary)
+render_verdict_cards(_headlines)
+render_heatmap_table(_headlines)
+render_key_differences(_headlines)
 
 
 # ============================================================
