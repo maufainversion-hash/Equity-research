@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parent.parent
 
 # packages where we want an __init__.py
 PACKAGES = [
-    "core", "data", "analysis", "valuation", "scoring", "portfolio",
+    "core", "data", "analysis", "valuation", "scoring",
     "ui", "ui/components", "ui/charts",
     "exports", "tests", "tests/fixtures", "scripts",
 ]
@@ -66,15 +66,6 @@ FILES: dict[str, str] = {
     "scoring/scorer.py": "Sector-normalized scoring (percentiles within sector). Components: growth, profitability, solvency, EQ, valuation.",
     "scoring/rating.py": "STRONG BUY / BUY / HOLD / SELL / STRONG SELL with confidence based on dispersion across valuation models.",
 
-    # ---------- portfolio ----------
-    "portfolio/optimizer.py": "PyPortfolioOpt wrapper: max-sharpe, min-vol, sortino, equal-weight, HRP.",
-    "portfolio/black_litterman.py": "Black-Litterman with user views, equilibrium implied returns, view confidence matrix.",
-    "portfolio/shrinkage.py": "Ledoit-Wolf shrinkage (sklearn.covariance.LedoitWolf) and exponentially-weighted covariance.",
-    "portfolio/constraints.py": "Position size limits, sector caps, turnover constraints, long-only/short, country caps.",
-    "portfolio/garch_volatility.py": "GARCH(1,1) via arch library; produces forward volatility forecasts for VaR.",
-    "portfolio/var_calculator.py": "Parametric/Historic/Monte-Carlo VaR-95% and CVaR (Expected Shortfall).",
-    "portfolio/backtest.py": "Walk-forward, point-in-time backtester. Compares against S&P500, equal-weight, 60/40.",
-
     # ---------- ui/components ----------
     "ui/components/realtime_quote.py": "st.fragment(run_every=N) component for auto-refreshing real-time quotes from Finviz.",
     "ui/components/valuation_card.py": "Reusable terminal-style valuation card (label, value, accent, sub).",
@@ -89,7 +80,6 @@ FILES: dict[str, str] = {
     "ui/charts/price_vs_intrinsic.py": "Price line vs intrinsic horizontal line vs Monte-Carlo bands.",
     "ui/charts/monte_carlo_distribution.py": "Histogram of MC intrinsic distribution with current price marker.",
     "ui/charts/sensitivity_heatmap.py": "DCF sensitivity heatmap WACC × terminal growth.",
-    "ui/charts/efficient_frontier.py": "Efficient frontier with individual assets, max-sharpe, min-vol markers.",
     "ui/charts/drawdown_chart.py": "Equity curve + underwater drawdown chart for backtest results.",
 
     "ui/styles.py": "Bloomberg-style CSS constants and inject_css() helper used across pages.",
@@ -107,7 +97,6 @@ FILES: dict[str, str] = {
     "tests/test_comparables.py": "Comparables filtering (IQR, winsorize) and median behavior under outliers.",
     "tests/test_earnings_quality.py": "Beneish/Piotroski/Sloan against published examples.",
     "tests/test_wacc.py": "Beta regression, Hamada relevering, market-value capital structure.",
-    "tests/test_portfolio.py": "Sum-of-weights = 1, max-sharpe vs min-vol Sharpe ranking, constraint enforcement.",
     "tests/test_finviz_provider.py": "Finviz provider unit tests with mocked finvizfinance responses.",
     "tests/test_fmp_provider.py": "FMP provider unit tests with mocked HTTP responses.",
     "tests/test_ticker_not_found.py": "Verifies the LITERAL error message — see requirements section 3, rule #1.",

@@ -28,10 +28,6 @@ scikit-learn>=1.3
 arch>=6.2
 numpy-financial>=1.0
 
-# ---- Portfolio optimization
-PyPortfolioOpt>=1.5
-riskfolio-lib>=5.0
-
 # ---- NLP / sentiment (heavy — optional at deploy time via extras)
 transformers>=4.36
 torch>=2.0
