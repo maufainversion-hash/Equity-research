@@ -652,93 +652,174 @@ _add(Lesson(
     category=_cat_for("dcf"),
     hook=_hook_for("dcf"),
     definition=(
-        "Discounted Cash Flow (DCF) calcula el valor intrínseco de una "
-        "empresa como el valor presente de sus flujos de caja futuros, "
-        "descontados a una tasa que refleja el riesgo. Es la encarnación "
-        "matemática de la idea de Graham/Williams: 'el valor de cualquier "
-        "activo es el valor presente de los flujos de caja que generará "
-        "en el resto de su vida'.\n\n"
-        "Estructura básica:\n"
-        "  · Proyectar FCF para N años explícitos (típico 5-10).\n"
-        "  · Calcular un terminal value para todo lo que viene después.\n"
-        "  · Descontar todo al presente usando el WACC.\n"
-        "  · Restar deuda neta, dividir por shares → intrinsic value por acción."
+        "**DCF (Discounted Cash Flow)** es la manera más usada de "
+        "estimar cuánto vale una empresa. La idea es simple: una "
+        "empresa vale la plata que va a generar en el futuro, traída "
+        "al día de hoy.\n\n"
+        "¿Por qué 'traída al día de hoy'? Porque **un dólar hoy vale "
+        "más que un dólar dentro de 5 años**. Si te ofrezco $1.000 "
+        "hoy o $1.000 en 5 años, agarrás los de hoy — los podés "
+        "invertir, gastar o ponerlos a generar interés. A ese ajuste "
+        "se lo llama **descontar** (de ahí el nombre 'discounted').\n\n"
+        "El armado del DCF tiene 4 pasos:\n\n"
+        "  1. **Proyectar el flujo de caja libre** (FCF — la plata "
+        "real que la empresa puede sacar del negocio) durante los "
+        "próximos 5 a 10 años.\n"
+        "  2. **Estimar un 'valor terminal'**: lo que viene después "
+        "del año 10. Es lo más impreciso del modelo.\n"
+        "  3. **Descontar todo al presente** usando una tasa que "
+        "refleja el riesgo de esa empresa (se llama **WACC** — costo "
+        "promedio del capital).\n"
+        "  4. **Restar la deuda neta y dividir por la cantidad de "
+        "acciones** → te queda el 'valor intrínseco' por acción.\n\n"
+        "Si ese valor da más alto que el precio de mercado, en "
+        "teoría la acción está barata. Si da más bajo, está cara."
     ),
     why_matters=(
-        "DCF te obliga a hacer explícitas las assumptions que el mercado "
-        "está descontando: crecimiento, márgenes, reinversión, riesgo. "
-        "Si el precio de mercado implica 25% de crecimiento durante 10 "
-        "años, vos sabés qué tan ambicioso es eso vs el historial. El "
-        "DCF no es para 'comprar cuando intrinsic > price' mecánicamente — "
-        "es para entender la **brecha entre narrativa y números** "
-        "(Damodaran)."
+        "Lo más importante del DCF no es el número final — es que te "
+        "obliga a **hacer explícitas las suposiciones** sobre la "
+        "empresa: cuánto va a crecer, qué márgenes va a tener, "
+        "cuánta plata va a reinvertir.\n\n"
+        "Cuando una acción cotiza a un precio determinado, "
+        "implícitamente el mercado está apostando a ciertas suposiciones. "
+        "Por ejemplo, si Tesla cotiza a $1 billón, el mercado está "
+        "diciendo 'creo que esta empresa va a crecer X% por Y años'. "
+        "El DCF te permite **traducir esa apuesta a números** y "
+        "preguntarte: ¿es razonable? ¿es delirio?\n\n"
+        "Ese es el verdadero valor del DCF: no te dice 'compra' o "
+        "'vende'. Te dice qué está descontado en el precio, y vos "
+        "decidís si la apuesta es razonable o no."
     ),
     how_pros_analyze=(
-        "1. **3-stage DCF** (Damodaran/Koller): high growth → fade → terminal. "
-        "Reflejaa la realidad: las empresas no crecen 30% para siempre.\n"
-        "2. **Terminal value scrutiny**: en un DCF típico, 60-80% del valor "
-        "está en el TV. Si vos no entendés tu g_terminal (≤ growth nominal "
-        "del economy, típicamente 2-3%) tu DCF es ruido.\n"
-        "3. **Sensitivity matrix**: WACC × g terminal en una grilla 5×5. "
-        "Si una variación de 50bp en WACC mueve el intrinsic 30%, tu "
-        "modelo es frágil — cobrá ese riesgo con margin of safety mayor.\n"
-        "4. **Reverse DCF**: solvé para qué crecimiento implica el precio "
-        "actual. Damodaran prefiere esto al DCF normal — más honesto.\n"
-        "5. **No usar DCF para bancos / aseguradoras / REITs**: requieren "
-        "modelos especializados (RI, DDM, FFO multiples)."
+        "Acá van las 5 cosas en las que te tenés que enfocar cuando "
+        "hagas o leas un DCF:\n\n"
+        "**1. Usar 3 etapas, no una sola.**\n"
+        "Las empresas no crecen al mismo ritmo siempre. Lo normal "
+        "es modelar tres fases: una de crecimiento alto (los "
+        "primeros 5-10 años), una de transición (donde el "
+        "crecimiento baja gradualmente) y una de crecimiento "
+        "perpetuo más bajo (el 'terminal').\n\n"
+        "**2. Mirar bien el valor terminal.**\n"
+        "Acá viene el dato incómodo: en un DCF típico, **el 60-80% "
+        "del valor total viene del valor terminal**, no de los años "
+        "que proyectaste explícitamente. Eso significa que todo el "
+        "modelo es muy sensible a esa única suposición. Regla "
+        "básica: el crecimiento perpetuo (g terminal) no puede ser "
+        "más alto que el crecimiento de la economía (2-3% en países "
+        "desarrollados). Si lo es, estás asumiendo que la empresa "
+        "eventualmente se come al mundo entero.\n\n"
+        "**3. Hacer una matriz de sensibilidad.**\n"
+        "Probar qué pasa con el valor intrínseco si cambiás un "
+        "poquito la tasa de descuento (WACC) o el crecimiento "
+        "perpetuo. Si moviendo 0.5% el WACC el valor se mueve 30%, "
+        "tu modelo es **frágil** — necesitás un margen de seguridad "
+        "más grande antes de comprar.\n\n"
+        "**4. Usar el DCF al revés (Reverse DCF).**\n"
+        "En vez de calcular el valor y compararlo con el precio, "
+        "preguntate: '¿qué crecimiento tendría que tener esta "
+        "empresa para justificar el precio actual?'. Si la respuesta "
+        "es '25% por 10 años', estás comprando una empresa que "
+        "necesita ser increíble para no decepcionarte.\n\n"
+        "**5. No usar DCF para todo.**\n"
+        "El DCF no sirve para bancos, aseguradoras o REITs (fondos "
+        "inmobiliarios). Esos sectores tienen modelos propios. Para "
+        "todo lo demás, el DCF es la herramienta base."
     ),
     key_metrics=[
-        ("WACC", "Costo promedio ponderado del capital. CAPM + cost of debt."),
-        ("g (high growth)", "Crecimiento de la fase explícita — anclado al histórico."),
-        ("g (terminal)", "Crecimiento perpetuo. Hard cap = growth nominal del PIB (~2-3%)."),
-        ("Reinvestment rate", "g / ROIC. Cuánto del NOPAT se reinvierte para sostener g."),
-        ("Terminal value % of total PV", "Si >75%, tu DCF está casi todo en assumptions de muy largo plazo."),
-        ("Implied steady-state ROIC", "ROIC en perpetuidad. >25% es asumir un moat extraordinario."),
+        ("WACC (tasa de descuento)",
+         "El 'costo del dinero' de la empresa. Empresas riesgosas "
+         "tienen WACC alto (10-12%); estables, bajo (6-8%)."),
+        ("g (crecimiento de los primeros años)",
+         "Cuánto va a crecer la empresa en la fase de expansión. "
+         "Tiene que estar anclado al histórico, no a la fantasía."),
+        ("g terminal (crecimiento perpetuo)",
+         "Tope: el crecimiento nominal de la economía (~2-3%). "
+         "Más es matemáticamente absurdo a largo plazo."),
+        ("Tasa de reinversión",
+         "Cuánto de las ganancias la empresa necesita reinvertir "
+         "para sostener su crecimiento. Negocios capital-intensivos "
+         "(industriales) reinvierten mucho; tech / software, poco."),
+        ("% del valor que viene del Terminal Value",
+         "Si pasa del 75%, casi todo tu DCF es una apuesta sobre "
+         "el largo plazo. Frágil."),
+        ("ROIC implícito en steady state",
+         "El retorno sobre el capital que estás asumiendo a "
+         "perpetuidad. Más de 25% sin un moat (ventaja competitiva) "
+         "claro es ciencia ficción."),
     ],
     bullish_vs_bearish=[
-        ("Sensitivity matrix relativamente plana",
-         "Pequeños cambios en WACC/g cambian el intrinsic >25% (modelo frágil)"),
-        ("Terminal value <70% del valor total",
-         "Terminal value >80% — casi todo el valor en perpetuidad"),
-        ("g terminal ≤ crecimiento nominal economy",
-         "g terminal > 4% (implica que la empresa pasa al PIB en perpetuidad)"),
-        ("Reverse DCF muestra growth implícito alcanzable",
-         "Reverse DCF requiere >25% CAGR por 10 años para justificar precio"),
-        ("ROIC steady-state plausible (10-15%)",
-         "ROIC steady-state >25% sin moat estructural claro"),
+        ("Cambios chicos en suposiciones → cambios chicos en valor (modelo robusto)",
+         "Cambios chicos en suposiciones → cambios grandes en valor (modelo frágil)"),
+        ("Terminal value <70% del total",
+         "Terminal value >80% (casi toda la valuación es la perpetuidad)"),
+        ("g terminal ≤ crecimiento del PIB",
+         "g terminal >4% (implica que la empresa absorbe la economía)"),
+        ("El reverse DCF muestra un crecimiento implícito alcanzable",
+         "El reverse DCF requiere >25% de crecimiento por 10 años"),
+        ("ROIC steady-state razonable (10-15%)",
+         "ROIC steady-state >25% sin ventaja competitiva clara"),
     ],
     valuation_impact=(
-        "El DCF es self-referential: cambia el WACC 100bp y el intrinsic se "
-        "mueve 15-25%. Cambia el g terminal 50bp y se mueve 10-15%. Por eso "
-        "Damodaran insiste: no es un punto, es un rango. La mejor práctica "
-        "es presentar el DCF junto a una sensitivity matrix y un reverse "
-        "DCF — eso da contexto. Un DCF point estimate sin rango es ingenuo."
+        "El DCF tiene una propiedad incómoda: **es muy sensible a "
+        "las suposiciones**.\n\n"
+        "- Si cambiás el WACC 1% (de 9% a 10%), el valor intrínseco "
+        "se mueve 15-25%.\n"
+        "- Si cambiás el g terminal 0.5% (de 2.5% a 3%), se mueve "
+        "10-15%.\n\n"
+        "Por eso un DCF nunca debería presentarse como **un solo "
+        "número**. Siempre tiene que ir acompañado de una matriz de "
+        "sensibilidad (qué pasa si cambian las suposiciones) y un "
+        "reverse DCF (qué supone el precio actual). Un analista que "
+        "te dice 'esta acción vale exactamente $87.50 según mi DCF' "
+        "te está vendiendo certeza que no existe."
     ),
     case_study=(
-        "**Reverse DCF clásico — Amazon ~2001**: la empresa cotizaba a una "
-        "valuación que implicaba mantener crecimiento >40% por 15 años. "
-        "El consenso decía 'imposible'. Resultó posible — pero el bear de "
-        "2001-2002 ofreció igual una entrada con margin of safety amplio.\n\n"
-        "**Contraejemplo — Cisco 2000**: cotizaba a P/E 100+ y el reverse "
-        "DCF requería ~35% CAGR por 10 años, en una industria que ya "
-        "facturaba $300B globalmente. Era matemáticamente improbable. "
-        "Bajó 80% en 2 años."
+        "**Amazon a principios de 2001** es un caso famoso. La "
+        "empresa cotizaba a una valuación que, si la pasabas por un "
+        "reverse DCF, implicaba **mantener crecimiento del 40% "
+        "anual durante 15 años**. Todo el mundo decía 'imposible'. "
+        "Sin embargo, Amazon lo logró — y los que compraron en el "
+        "bear market de 2001-2002 con descuento ganaron una "
+        "fortuna.\n\n"
+        "**El contraejemplo es Cisco en el año 2000.** Cotizaba a "
+        "P/E (precio sobre ganancias) de más de 100. El reverse DCF "
+        "decía que necesitaba crecer 35% anual por 10 años en una "
+        "industria que ya facturaba $300B globalmente — "
+        "matemáticamente improbable. La acción cayó 80% en 2 años.\n\n"
+        "Moraleja: el DCF no garantiza nada, pero te muestra qué "
+        "tan optimista o pesimista es el mercado. A vos te toca "
+        "decidir si la apuesta es razonable."
     ),
     common_mistakes=[
-        "Usar terminal growth > crecimiento nominal del PIB. Termina implicando que la empresa absorbe la economía.",
-        "Capex de mantenimiento subestimado. Si CapEx < D&A en steady state, la base productiva se erosiona.",
-        "Ignorar dilución por SBC. El intrinsic per share se calcula sobre shares diluidos, no las actuales.",
-        "Un solo escenario (base case). Bull/base/bear da contexto y probabilidades.",
-        "Modelar empresas cíclicas en peak earnings. Hay que normalizar through-the-cycle.",
-        "Aplicar DCF a bancos. Usar Residual Income o DDM en su lugar.",
+        "Poner un crecimiento terminal mayor al PIB. Matemáticamente "
+        "termina implicando que la empresa absorbe la economía entera.",
+        "Olvidarse del CapEx de mantenimiento (la inversión que la "
+        "empresa necesita solo para no decrecer). Si lo subestimás, "
+        "estás asumiendo que el negocio funciona solo.",
+        "Ignorar la dilución por acciones que se emiten para "
+        "empleados (SBC — Stock-Based Compensation). El valor "
+        "intrínseco se calcula sobre TODAS las acciones que van a "
+        "existir, no solo las actuales.",
+        "Hacer un solo escenario. Conviene siempre armar tres: bull "
+        "(optimista), base (normal), bear (pesimista) — para tener "
+        "contexto.",
+        "Hacer DCF sobre empresas cíclicas (acereras, mineras, "
+        "petroleras) usando las ganancias del año pico. Hay que "
+        "normalizar al promedio del ciclo.",
+        "Aplicar DCF a bancos. No sirve — usá Residual Income o DDM.",
     ],
     mental_model=(
-        "Damodaran: 'A DCF model is a story translated into numbers.' Si "
-        "tu DCF dice que Tesla vale $1.5T, tu story tiene que sostener "
-        "ese número (cuántos autos, qué margen, qué duración del moat). "
-        "Si no podés contar la story coherentemente, no creas el número. "
-        "El proceso de hacer el DCF vale más que el output — te fuerza "
-        "a confrontar tus assumptions."
+        "Hay una idea que conviene tener siempre presente: **un DCF "
+        "es una historia traducida a números**. Si tu DCF dice que "
+        "Tesla vale $1.5 billones, esa historia tiene que aguantar "
+        "el número: cuántos autos va a vender, con qué margen, "
+        "durante cuánto tiempo va a mantener su ventaja competitiva. "
+        "Si no podés contar esa historia de manera coherente, **no "
+        "le creas al número**.\n\n"
+        "Y algo más: el proceso de hacer el DCF te enseña más que "
+        "el resultado. Te fuerza a sentarte a pensar en serio sobre "
+        "el negocio. Esa es la verdadera utilidad — el output es "
+        "secundario."
     ),
     books=[_BOOK_DAMODARAN_VALUATION, _BOOK_MCKINSEY_VALUATION,
            _BOOK_KLARMAN_MOS],
