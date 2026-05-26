@@ -121,7 +121,7 @@ def render_movers(
     # change_pct conditional colour. The dark theme already tints the
     # change column appropriately via the format spec.
     st.dataframe(
-        display[cols_order] if not sparklines else display[cols_order],
+        display[cols_order],
         column_config=_column_config_full(
             include_sector="sector" in cols_order,
             include_spark="spark" in cols_order,

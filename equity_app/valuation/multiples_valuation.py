@@ -206,7 +206,9 @@ def run_multiples_valuation(
     if not np.isfinite(g_st):
         g_st = 0.025
     # La perpetuidad nunca puede crecer por encima del descuento.
-    g_st = min(g_st, ke - 0.005, wacc - 0.005)
+    # Tampoco puede ser negativa: implicaría payout >100% sostenido y
+    # rompe el numerador (1+g) de la perpetuidad.
+    g_st = max(0.0, min(g_st, ke - 0.005, wacc - 0.005))
     g_hi = max(g_hi, g_st)        # la fase explícita no es más lenta que la estable
     t = float(reorg.avg_tax_rate_3y) if np.isfinite(reorg.avg_tax_rate_3y) else 0.21
 
@@ -246,7 +248,12 @@ def run_multiples_valuation(
         capex_share = capex_last / ebitda_last
         dwc_share = dwc_last / ebitda_last
         fcff_ratio = (1.0 - t) * (1.0 - da_share) - capex_share - dwc_share
-        if fcff_ratio > 0:
+        # Sanity gate: if D&A or capex is anomalously high vs EBITDA,
+        # the FCFF ratio is unreliable even if it stays barely positive.
+        # Common culprit: capex-heavy growth year or loss-making op
+        # where EBITDA is small relative to depreciation.
+        _sane_components = (da_share <= 1.0 and capex_share <= 1.5)
+        if fcff_ratio > 0 and _sane_components:
             evebitda_raw = _two_stage_multiple(
                 cf_ratio_high=fcff_ratio, cf_ratio_stable=fcff_ratio,
                 g_high=g_hi, g_stable=g_st, n=explicit_years, r=float(wacc),

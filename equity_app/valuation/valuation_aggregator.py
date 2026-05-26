@@ -286,16 +286,21 @@ def aggregate(
     # is the correct read.
     not_applicable = False
     applicability_note = ""
-    if profile_key in _GROWTH_PROFILES and len(survivors) >= 2:
-        trigger_above = len(clipped_above) >= max(2, len(survivors) // 2)
+    if profile_key in _GROWTH_PROFILES and len(survivors) >= 1:
+        # When only 1 model survives, ≥1 clipped-above is enough — the
+        # lone survivor saying "price is unjustifiable" IS the signal.
+        clip_min = max(1, len(survivors) // 2) if len(survivors) >= 2 else 1
+        trigger_above = len(clipped_above) >= clip_min
         trigger_below = False
         if (current_price is not None and np.isfinite(current_price)
                 and current_price > 0):
             below_thr_px = current_price * 0.50          # < half of price
             n_below = sum(1 for v in survivors.values() if v < below_thr_px)
             # ⅔ of surviving classical models give << price → the cluster
-            # is signal, not noise from a single broken model.
-            trigger_below = n_below >= max(2, (len(survivors) * 2) // 3)
+            # is signal, not noise from a single broken model. For a
+            # single survivor that's < half of price, that's also signal.
+            below_min = max(1, (len(survivors) * 2) // 3) if len(survivors) >= 2 else 1
+            trigger_below = n_below >= below_min
         if trigger_above or trigger_below:
             not_applicable = True
             applicability_note = (
@@ -333,7 +338,12 @@ def aggregate(
 
     # ---- CV-scaled band (back-compat range_low / range_high) ----
     cv_values = np.array(list(usable.values()), dtype=float)
-    cv = float(cv_values.std(ddof=0) / cv_values.mean()) if cv_values.mean() > 0 else 0.0
+    # Sample std (ddof=1) — we treat the surviving models as a sample of
+    # plausible intrinsic estimates, not the population. ddof=0 was
+    # systematically tilting the confidence verdict toward "high".
+    _ddof = 1 if len(cv_values) >= 2 else 0
+    cv = (float(cv_values.std(ddof=_ddof) / cv_values.mean())
+          if cv_values.mean() > 0 else 0.0)
 
     threshold = float(RATING_THRESHOLDS["low_confidence_dispersion"])
     if cv >= threshold:

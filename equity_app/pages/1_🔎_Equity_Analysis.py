@@ -2333,8 +2333,7 @@ if base_assumptions.warnings:
 # ============================================================
 st.markdown("<div style='height:24px;'></div>", unsafe_allow_html=True)
 st.caption(
-    "Demo data: AAPL / MSFT / JPM via local fixtures. Live prices and "
-    "FMP fundamentals will replace the hard-coded values when the live "
-    "provider is wired in. Save assumptions per-ticker via the panel above. "
-    "This is not investment advice."
+    "Datos en vivo de FMP / Finnhub / yfinance. Las assumptions de "
+    "valuación se guardan por ticker en el panel superior. "
+    "Este análisis no constituye recomendación de inversión."
 )

@@ -44,7 +44,11 @@ def _ret_ytd(prices: pd.Series) -> Optional[float]:
         return None
     last = s.iloc[-1]
     last_dt = s.index[-1]
-    yr_start = pd.Timestamp(year=last_dt.year, month=1, day=1)
+    # Match index tz (yfinance often returns tz-aware indices). A
+    # tz-naive Timestamp compared against a tz-aware index throws
+    # TypeError ("Cannot compare tz-naive and tz-aware datetime-like").
+    _tz = getattr(s.index, "tz", None)
+    yr_start = pd.Timestamp(year=last_dt.year, month=1, day=1, tz=_tz)
     past = s[s.index >= yr_start]
     if past.empty:
         return None

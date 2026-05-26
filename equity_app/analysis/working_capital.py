@@ -143,15 +143,20 @@ def compute_ccc_history(
     cogs  = _get(income, "cost_of_revenue")
     rec   = _get(balance, "receivables")
     inv   = _get(balance, "inventory")
-    # Accounts payable is rarely surfaced as a direct alias in our ratios
-    # module — fall back to current_liabilities as a proxy if missing.
+    # Accounts payable: try the direct field first. DO NOT fall back to
+    # current_liabilities — CL is typically 3-5× AP (it bundles accrued
+    # expenses, short-term debt, etc.), so the resulting DPO inflates
+    # dramatically and the whole CCC reads way better than reality. If
+    # AP isn't available, return empty so the UI shows "—" instead of
+    # a misleading number.
     ap_alias = (
         balance.get("accountPayables")
         if "accountPayables" in balance.columns
         else None
     )
     if ap_alias is None:
-        ap_alias = _get(balance, "current_liabilities")
+        # Try the snake_case alias that core.ratios uses.
+        ap_alias = _get(balance, "accounts_payable")
 
     if rev is None or rec is None or inv is None or ap_alias is None or cogs is None:
         return pd.DataFrame()

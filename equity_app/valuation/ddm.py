@@ -280,7 +280,12 @@ def two_stage(
         raise InsufficientDataError("Most recent DPS is non-positive")
 
     if stage1_growth is None:
-        cg = cagr(s)
+        # Cap the window: a fresh dividend payer with 3y history would
+        # otherwise stretch CAGR over 3y; a 20-yr payer would average a
+        # long-ago boom into the projection. 5y window matches the
+        # codebase convention.
+        _periods = min(5, max(1, len(s) - 1))
+        cg = cagr(s, periods=_periods)
         stage1_growth = cg if np.isfinite(cg) else g_t
     g1 = float(np.clip(
         stage1_growth,

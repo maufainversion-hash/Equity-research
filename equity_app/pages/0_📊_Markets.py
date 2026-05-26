@@ -266,9 +266,8 @@ else:
                   sparklines=sparklines)
 
 
-# Footer note about deferred sections
+# Footer pointer to the dedicated calendar
 st.caption(
-    "Earnings calendar and macro-event calendar require a live FMP / "
-    "Trading Economics endpoint that isn't wired yet — they land when "
-    "the data layer comes online."
+    "Para earnings, FOMC meetings, IPOs y eventos macro — ver el tab "
+    "**📅 Calendar** en la navegación."
 )

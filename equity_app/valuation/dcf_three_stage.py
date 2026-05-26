@@ -356,7 +356,22 @@ def run_dcf(
 
     # ---- G) Reinvestment / FCFF ----
     # Damodaran: g = RR x ROIC -> RR = g / ROIC.
-    roic_explicit = float(reorg.latest_roic) if np.isfinite(reorg.latest_roic) else wacc
+    # When latest ROIC is negative (loss-making business), masking it
+    # with WACC produces a meaningless RR for a company destroying
+    # capital. Skip DCF instead — the value of growth at negative ROIC
+    # is genuinely negative, and the aggregator should rely on the
+    # other models (EPV/multiples/RI) for that case.
+    if not np.isfinite(reorg.latest_roic):
+        roic_explicit = wacc
+    elif reorg.latest_roic <= 0:
+        return _skipped(
+            f"DCF skipped — latest ROIC is {reorg.latest_roic*100:.1f}% "
+            "(value destruction). The model would extrapolate negative "
+            "economics; EPV / multiples / RI handle this case better.",
+            wacc=wacc, lifecycle_stage=stage,
+        )
+    else:
+        roic_explicit = float(reorg.latest_roic)
     # Terminal RONIC: Koller convention. Mature companies converge to a
     # small (0-200bp) spread over WACC, not the spot ROIC. The clamp
     # both floors (WACC) and caps (current ROIC) the assumption.

@@ -272,7 +272,12 @@ def _build_target_fundamentals(
         ebitda=_pick(last_inc, "ebitda"),
         book_value=_pick(last_bal, "totalStockholdersEquity", "totalEquity"),
         shares_outstanding=shares,
-        cash=_pick(last_bal, "cashAndCashEquivalents") or 0.0,
+        # Cash: FMP / yfinance sometimes only ship the broader
+        # "cashAndShortTermInvestments" field. Falling back silently to
+        # 0 inflated net debt on cash-rich tech names and depressed the
+        # comparables-implied per-share value.
+        cash=(_pick(last_bal, "cashAndCashEquivalents",
+                     "cashAndShortTermInvestments") or 0.0),
         debt=_pick(last_bal, "totalDebt") or 0.0,
     )
 

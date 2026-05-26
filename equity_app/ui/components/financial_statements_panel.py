@@ -156,7 +156,7 @@ def _render_statement_table(
         )
         for col in df.columns:
             val = df.loc[line_key, col]
-            color = _color_for_value(val, view) if is_subtotal else _color_for_value(val, view)
+            color = _color_for_value(val, view)
             cells += (
                 '<td style="padding:8px 14px; text-align:right; '
                 f'color:{color}; font-variant-numeric:tabular-nums; '

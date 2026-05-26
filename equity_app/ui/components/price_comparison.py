@@ -27,6 +27,27 @@ logger = logging.getLogger(__name__)
 
 
 _DOWNSIDE = "rgba(184,115,51,1)"
+
+
+@st.cache_data(ttl=21600, show_spinner=False)
+def _risk_free_pct() -> float:
+    """US 10Y Treasury yield as a Sharpe-ratio risk-free reference.
+
+    Cached 6h so the FRED call only fires once a session. Falls back
+    to 4.5 (the prior hardcoded value) on any failure so the panel
+    never breaks just because the macro data is offline."""
+    try:
+        from data.fred_provider import fetch_series
+        s = fetch_series("DGS10")
+        if s is not None and not s.empty:
+            last = float(s.dropna().iloc[-1])
+            if 0 < last < 25:                # sanity range
+                return last
+    except Exception:
+        pass
+    return 4.5
+
+
 _PERIOD_DAYS: dict[str, Optional[int]] = {
     "1M":  30,
     "3M":  90,
@@ -119,7 +140,9 @@ def _summary_rows(prices: pd.DataFrame, tickers: list[str]) -> list[dict]:
             continue
         vol_ann = float(daily.std() * (252 ** 0.5) * 100.0)
         avg_daily_ann = float(daily.mean() * 252 * 100.0)
-        rf_pct = 4.5  # rough US 10Y proxy
+        # Live US 10Y from FRED instead of a hardcoded 4.5% — was
+        # systematically wrong on every non-current period.
+        rf_pct = _risk_free_pct()
         sharpe = ((avg_daily_ann - rf_pct) / vol_ann) if vol_ann > 0 else float("nan")
         # Max drawdown over the period
         cum = (1.0 + daily).cumprod()

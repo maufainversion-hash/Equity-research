@@ -36,7 +36,7 @@ def _peer_chip(symbol: str) -> str:
         'margin:0 6px 6px 0; border:1px solid var(--border); '
         'border-radius:14px; font-size:11px; font-weight:600; '
         'color:var(--text-secondary); letter-spacing:0.4px; '
-        'background:var(--surface-2);">'
+        'background:var(--surface-raised);">'
         f'{symbol}'
         '</span>'
     )

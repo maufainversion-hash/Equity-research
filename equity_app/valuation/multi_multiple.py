@@ -247,7 +247,9 @@ def run_multi_multiple_valuation(
             avg_price = float(np.mean(valid_prices))
             median_price = float(np.median(valid_prices))
             pv = avg_price / ((1.0 + discount_rate) ** years_forward)
-            if current_price > 0:
+            # CAGR is undefined when avg_price or current_price is <= 0
+            # — the (a/b)^(1/n) expression produces a complex / NaN.
+            if current_price > 0 and avg_price > 0:
                 try:
                     cagr = (avg_price / current_price) ** (1.0 / years_forward) - 1.0
                 except (ValueError, ZeroDivisionError):
