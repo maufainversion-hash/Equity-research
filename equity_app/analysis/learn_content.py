@@ -6250,41 +6250,1421 @@ _add(Lesson(
     ],
 ))
 
-# Macro (stubs)
-_stub("interest_rates",
-      [_BOOK_DALIO_PRINCIPLES, _BOOK_JPM_GUIDE], [], [])
-_stub("credit_spreads",
-      [_BOOK_MARKS_MARKET_CYCLE,
-       Book(title="The Bond Book", author="Annette Thau", year=2010,
-            chapter_hint="Caps. sobre HY + IG",
-            why="Texto de referencia para entender bond markets.")],
-      [], [_Q_MARKS_RISK])
-_stub("gdp",
-      [_BOOK_JPM_GUIDE, _BOOK_DALIO_PRINCIPLES], [], [])
-_stub("unemployment",
-      [_BOOK_DALIO_PRINCIPLES, _BOOK_JPM_GUIDE], [], [])
-_stub("monetary_policy",
-      [_BOOK_DALIO_PRINCIPLES,
-       Book(title="The Lords of Easy Money", author="Christopher Leonard",
-            year=2022, chapter_hint="Toda",
-            why="La Fed desde adentro post-2008.")],
-      [Video(title="How the Federal Reserve Works",
-             channel="Federal Reserve", minutes=30, url="",
-             why="Material oficial introductorio.")],
-      [])
-_stub("fiscal_policy",
-      [_BOOK_DALIO_PRINCIPLES, _BOOK_JPM_GUIDE], [], [])
-_stub("liquidity",
-      [_BOOK_MARKS_MARKET_CYCLE, _BOOK_DALIO_PRINCIPLES], [], [])
-_stub("recession_indicators",
-      [_BOOK_MARKS_MARKET_CYCLE, _BOOK_DALIO_PRINCIPLES], [], [])
-_stub("dollar_strength",
-      [_BOOK_JPM_GUIDE], [], [])
-_stub("commodity_cycles",
-      [Book(title="The Prize", author="Daniel Yergin", year=1991,
-            chapter_hint="Historia de ciclos de oil",
-            why="Caso paradigmático de commodity cycle.")],
-      [], [])
+# ============================================================
+# Batch 4 — Macro & economía
+# ============================================================
+
+# ---------- Interest rates ----------
+_add(Lesson(
+    slug="interest_rates",
+    label=_label_for("interest_rates"),
+    category=_cat_for("interest_rates"),
+    hook=_hook_for("interest_rates"),
+    definition=(
+        "Las tasas de interés son el precio del dinero — cuánto "
+        "se paga por prestar capital en el tiempo. Distinguir:\n\n"
+        "  · **Nominal vs real**: nominal incluye inflation; real "
+        "= nominal − inflation. **Las decisiones reales se "
+        "basan en tasas reales**.\n"
+        "  · **Risk-free (Treasury)** vs **risky (corporate, "
+        "EM, etc.)**.\n"
+        "  · **Short-term (Fed Funds) vs long-term (10Y, 30Y)**: "
+        "controladas por distintos mecanismos.\n"
+        "  · **Curve shape**: 2Y vs 10Y spread — lección "
+        "aparte (yield curve).\n\n"
+        "El nivel + shape de tasas drivea: discount rates, "
+        "borrowing costs, FX, asset allocation."
+    ),
+    why_matters=(
+        "Tasas son el master input macro. Damodaran: 'risk-free "
+        "rate es el ingrediente más importante de toda valuación'. "
+        "Una variación de 100bp en 10Y treasury mueve discount "
+        "rates 50-100bp, y eso mueve growth stock valuations "
+        "15-30%. El régimen 2009-2021 (ZIRP) habilitó valuations "
+        "extremas; el régimen 2022+ (tasas normales) los "
+        "comprimió. Saber leer rates = leer el ambiente que "
+        "valida o invalida tu thesis."
+    ),
+    how_pros_analyze=(
+        "1. **Real vs nominal**: usar real rates para inversión "
+        "decisions, nominal para borrowing comparison.\n"
+        "2. **Decompose 10Y**: real rate (TIPS) + breakeven "
+        "inflation. Sumar = nominal 10Y. Each componente "
+        "cuenta distinta story.\n"
+        "3. **Term premium**: premio por holding longer-duration "
+        "bonds. Históricamente positivo; was negative durante "
+        "QE 2015-2020.\n"
+        "4. **Forward curve**: mercado descuenta tasas futuras. "
+        "Compare vs Fed dot plot — gaps revelan expectations.\n"
+        "5. **Real rate impact on equity**: real rate up = "
+        "growth stocks compress más que value (cash flows "
+        "distantes valen menos).\n"
+        "6. **Currency effects**: cuando US rates >> ROW rates, "
+        "USD strengthens — impacts multinational earnings."
+    ),
+    key_metrics=[
+        ("US 10Y Treasury (nominal)",
+         "Históricamente 3-6%. 2009-2021 anormalmente bajo. "
+         "Actualmente ~4-5% es 'normal'."),
+        ("Real 10Y (TIPS)",
+         "Equity discount rate driver. >1.5% = restrictive · "
+         "<0% = stimulative."),
+        ("Fed Funds rate (target)",
+         "Short-end controlada por Fed. ZIRP 0-0.25% vs "
+         "normalized 3-5%."),
+        ("Breakeven inflation 5Y / 10Y",
+         "Mercado expects inflation. Anchor cuando estable; "
+         "alarma cuando moves."),
+        ("2Y-10Y spread (curve slope)",
+         "Inversión predict recession. Ver yield_curve."),
+        ("Term premium",
+         "Compensation for duration. Positive = healthy."),
+    ],
+    bullish_vs_bearish=[
+        ("Real rates moderate (0-1.5%) — equity-friendly",
+         "Real rates restrictive (>2%) — pressures multiples"),
+        ("Breakevens anclados ~2-2.5%",
+         "Breakevens desanclando >3% (Fed pierde credibilidad)"),
+        ("Term premium positivo (healthy bond market)",
+         "Term premium negativo / curva invertida (recession signal)"),
+        ("Forwards y dots converging",
+         "Forwards muy divergentes de Fed (uncertainty alta)"),
+        ("Rate cycle cerca de pivot dovish",
+         "Rate cycle en pivot hawkish (early)"),
+    ],
+    valuation_impact=(
+        "Risk-free rate es input directo del WACC. WACC = "
+        "Rf + β × (ERP) + cost of debt × leverage. Un cambio "
+        "de 100bp en Rf cambia WACC ~50-80bp → intrinsic "
+        "value ±10-20%. Para growth stocks (cash flows lejanos), "
+        "sensitivity es mayor. Por eso 2022 rate hike crashó "
+        "Nasdaq 33% mientras S&P value cayó solo 6%."
+    ),
+    case_study=(
+        "**2009-2021 — el régimen ZIRP**: Fed Funds 0%, 10Y "
+        "0.5-3%. Real rates negativas la mitad del período. "
+        "Equity multiples expandieron: S&P P/E pasó de 10 a 25. "
+        "Growth tech P/S pasó de 5 a 20. Casi todo el bull "
+        "market 2009-2021 fue MULTIPLE EXPANSION drivada por "
+        "rate decline.\n\n"
+        "**2022 — el reset**: Fed subió 525bp en 18 meses. 10Y "
+        "pasó de 1.5% a 4.5%. Nasdaq -33%, growth tech -50% to "
+        "-70%. Multiple compression brutal. Lección: cuando "
+        "rate environment cambia, todas las valuations "
+        "se ajustan inmediatamente."
+    ),
+    common_mistakes=[
+        "Confundir nominal con real. Real rate es lo que importa para inversión.",
+        "Asumir que tasas low forever. 2009-2021 fue anomalía histórica.",
+        "Ignorar el impact en USD (rates altos → USD strong → MNCs pressured).",
+        "Aplicar mismo discount rate (Ke) a través de rate cycles. Ke debe ajustar.",
+        "Subestimar la duration sensitivity de growth stocks.",
+    ],
+    mental_model=(
+        "Buffett: 'interest rates are like gravity for asset "
+        "prices. Cuando gravity is low (rates low), assets fly "
+        "high. Cuando gravity rises (rates rise), assets fall'. "
+        "Pensá rates como el campo gravitacional de tu "
+        "valuación. Cuando rates cambian, los multiples no "
+        "pueden quedarse iguales — la fysics del valor presente "
+        "se ajusta."
+    ),
+    books=[_BOOK_DALIO_PRINCIPLES, _BOOK_JPM_GUIDE,
+           _BOOK_DAMODARAN_VALUATION,
+           Book(title="The Bond Book", author="Annette Thau",
+                year=2010, chapter_hint="Caps. 1-5 — yield curve "
+                                          "mechanics",
+                why="Texto referencia de bond market.")],
+    videos=[
+        Video(title="Ray Dalio · How the Economic Machine Works",
+              channel="Bridgewater", minutes=30,
+              url="https://www.youtube.com/watch?v=PHe0bXAIuk0",
+              why="Mejor explicación del rate cycle."),
+    ],
+    quotes=[
+        Quote(text="Interest rates are like gravity for asset "
+                   "valuations. The lower they go, the more lift "
+                   "you can have.",
+              author="Warren Buffett",
+              source="Berkshire 2017 annual meeting"),
+        Quote(text="The risk-free rate is the most important "
+                   "number in finance — it's the gravity of all "
+                   "valuation.",
+              author="Aswath Damodaran",
+              source="NYU Stern lectures"),
+        _Q_MARKS_RISK,
+    ],
+))
+# ---------- Credit spreads ----------
+_add(Lesson(
+    slug="credit_spreads",
+    label=_label_for("credit_spreads"),
+    category=_cat_for("credit_spreads"),
+    hook=_hook_for("credit_spreads"),
+    definition=(
+        "Credit spread = yield del bono corporate − yield del "
+        "Treasury equivalent. Es la **prima de riesgo** que "
+        "exige el mercado por prestarle a una empresa vs al "
+        "gobierno.\n\n"
+        "Tipos por rating:\n"
+        "  · **Investment Grade (IG)**: AAA-BBB-. Spread "
+        "típico 100-200bp.\n"
+        "  · **High Yield (HY) / Junk**: BB+ y below. Spread "
+        "300-1000bp+.\n"
+        "  · **Distressed**: spreads >1000bp. Probabilidad de "
+        "default alta.\n\n"
+        "El spread refleja: probability of default × loss given "
+        "default + risk premium + liquidity premium."
+    ),
+    why_matters=(
+        "Credit spreads son el LEADING INDICATOR más fuerte del "
+        "stress económico. Spreads widen ANTES de recesión, "
+        "equities cayendo, y noticias adversas. Howard Marks: "
+        "'when HY spreads exceed 700bp, you're approaching "
+        "panic; when they exceed 1000bp, the opportunity of a "
+        "lifetime might be near'. Saber leer spreads = saber "
+        "leer el credit cycle."
+    ),
+    how_pros_analyze=(
+        "1. **IG vs HY spread trend**: ambos pueden widen pero "
+        "HY widens proportionally más en stress.\n"
+        "2. **Historical context**: average IG spread ~120bp, "
+        "average HY ~500bp. >700bp HY = stress; >1000bp = "
+        "distress.\n"
+        "3. **CDX indices**: CDX IG, CDX HY — tradable indices "
+        "del credit market. Spread sobre estos = market read.\n"
+        "4. **Spread vs equity volatility (VIX)**: típicamente "
+        "correlacionados. Divergence = warning.\n"
+        "5. **Default rates**: cuando defaults > 6% (HY market), "
+        "stress severo. Histórico avg ~3-4%.\n"
+        "6. **CCC-rated subset**: el extremo riesgoso. Spreads CCC "
+        "son leading-leading indicator del credit cycle."
+    ),
+    key_metrics=[
+        ("IG corporate spread (bp)",
+         "<100 tight · 100-200 normal · >250 widening."),
+        ("HY spread (bp)",
+         "<400 tight · 400-600 normal · 700-1000 stress · "
+         ">1000 distress."),
+        ("CCC spread (bp)",
+         "Extreme: <1000 normal · >1500 panic."),
+        ("HY default rate (12m forward)",
+         "<3% normal · 3-6% rising · >6% recession-level."),
+        ("Spread Z-score (vs 5y history)",
+         "Z > +1.5 = stressed levels."),
+        ("CDX HY vs S&P 500 correlation",
+         "Tightening together = risk-on; diverging = warning."),
+    ],
+    bullish_vs_bearish=[
+        ("Spreads tightening (risk-on regime)",
+         "Spreads widening (early warning of stress)"),
+        ("HY spreads <500bp + IG <130bp",
+         "HY spreads >800bp (recession signal)"),
+        ("Default rates trending down",
+         "Default rates climbing >5%"),
+        ("Spreads divergen positively from VIX",
+         "Spreads lead VIX higher (credit market sees stress first)"),
+        ("HY new issuance healthy + accessible",
+         "HY market closed (issuers can't refinance)"),
+    ],
+    valuation_impact=(
+        "Para empresas con HY debt, spreads dictate refinancing "
+        "cost. Spread 700bp + Treasury 4% = 11% borrowing cost. "
+        "Si la empresa rolla deuda, ese cost hit earnings. "
+        "Spreads en stress también pricen ratings downgrades "
+        "anticipadas. En valuation, equity de empresas leveraged "
+        "es residual claim — cuando spreads widen, equity value "
+        "comprime desproporcionalmente (option-like behavior)."
+    ),
+    case_study=(
+        "**2008 — Lehman crisis**: HY spreads pasaron de "
+        "500bp (mid-2007) a 2,000bp (Dec 2008). S&P cayó 50%. "
+        "Los que compraron HY en peak spreads ganaron 100%+ en "
+        "los siguientes 18 meses. Lección: spreads >>>1000bp = "
+        "generational opportunity (pero requiere capital + "
+        "fortaleza emocional).\n\n"
+        "**2020 COVID**: HY spreads jumped 800bp in 3 weeks "
+        "(March). Fed intervino agresivamente (announced bond "
+        "buying program). Spreads tightening en 2 meses. "
+        "Equities subieron en sincronía. Lección: policy "
+        "response matters a credit cycle."
+    ),
+    common_mistakes=[
+        "Mirar solo equity market sin credit signal. Credit lidera.",
+        "Confiar en ratings agencies. Lag credit cycle.",
+        "Asumir que tight spreads = no risk. Tight spreads = COMPLACENCY = setup for stress.",
+        "Confundir spread movement (delta) con spread level. Pequeños movimientos en spreads tight = más significativos que big movements en wide.",
+        "Pasar por alto que CDX positions y derivatives pueden cascade — 2008 example.",
+    ],
+    mental_model=(
+        "Marks: 'when investors think there is no risk, that's "
+        "when there is the most risk'. Spreads tight = riesgo "
+        "underpriced = setup for widening. Spreads wide = "
+        "riesgo overpriced = setup for tightening (oportunidad). "
+        "Pensá credit spreads como sentiment thermometer del "
+        "professional money — más confiable que VIX o AAII "
+        "surveys."
+    ),
+    books=[_BOOK_MARKS_MARKET_CYCLE,
+           Book(title="The Bond Book", author="Annette Thau",
+                year=2010, chapter_hint="Caps. sobre HY + IG",
+                why="Texto referencia bond market."),
+           _BOOK_DALIO_PRINCIPLES,
+           Book(title="Distressed Debt Analysis",
+                author="Stephen Moyer", year=2005,
+                chapter_hint="Caps. sobre cycles + opportunities",
+                why="Manual de cómo se invierte en credit "
+                     "stress.")],
+    videos=[
+        Video(title="Howard Marks on Credit Cycles",
+              channel="Oaktree memos", minutes=45, url="",
+              why="Marks ha vivido múltiples credit cycles "
+                   "y los explica claro."),
+    ],
+    quotes=[
+        _Q_MARKS_RISK,
+        Quote(text="Credit spreads are the EKG of the financial "
+                   "markets. When they widen, the patient is "
+                   "stressed.",
+              author="Howard Marks",
+              source="Oaktree memos"),
+        Quote(text="When everyone wants to lend, that's exactly "
+                   "when they shouldn't. When everyone refuses to "
+                   "lend, that's when the opportunity is.",
+              author="Howard Marks",
+              source="The Most Important Thing"),
+    ],
+))
+# ---------- GDP ----------
+_add(Lesson(
+    slug="gdp",
+    label=_label_for("gdp"),
+    category=_cat_for("gdp"),
+    hook=_hook_for("gdp"),
+    definition=(
+        "Gross Domestic Product (GDP) es la medición agregada del "
+        "output económico de un país. Composición (US economy):\n\n"
+        "  · **Consumption (C)**: ~68% del GDP. Driver dominante.\n"
+        "  · **Investment (I)**: ~18%. Capex + housing + "
+        "inventory. Most cyclical.\n"
+        "  · **Government (G)**: ~17%. Fiscal-driven.\n"
+        "  · **Net Exports (NX)**: ~-3%. US es net importer.\n\n"
+        "  · **Real GDP** = Nominal − inflation. La métrica que "
+        "importa para growth real.\n"
+        "  · **GDP nowcasting** (Atlanta Fed): proyección real-"
+        "time usando los datos releases.\n"
+        "  · **Growth vs level**: si GDP crece 2% pero está 5% "
+        "below potential, hay slack."
+    ),
+    why_matters=(
+        "GDP es el master indicator del economic cycle. Recession "
+        "técnica = 2 trimestres consecutivos de real GDP "
+        "negativo. NBER (oficial) usa más métricas pero GDP es "
+        "la headline. Equity earnings correlacionan ~0.7 con "
+        "GDP growth — y las correciones del market a menudo "
+        "preceden GDP signals."
+    ),
+    how_pros_analyze=(
+        "1. **Real vs nominal**: nominal incluye inflation. "
+        "Real es lo que importa para growth verdadero.\n"
+        "2. **Composition**: ¿quién impulsa GDP? Consumption "
+        "(durable) vs government (transitorio).\n"
+        "3. **Output gap**: GDP actual vs potential. >0% = "
+        "overheating; <0% = slack (room for growth + low inflation).\n"
+        "4. **Productivity vs labor**: GDP growth = labor "
+        "growth + productivity growth. Long-term sostenibilidad "
+        "depende de productivity.\n"
+        "5. **Nowcasting**: Atlanta Fed GDPNow + NY Fed Nowcast "
+        "reportan real-time. Gap con consensus drives bond moves.\n"
+        "6. **International comparison**: US GDP growth typically "
+        "2-3%, EM 5-7%, developed Europe/Japan 1-2%. Premium "
+        "vs growth diferencial."
+    ),
+    key_metrics=[
+        ("Real GDP growth (QoQ annualized %)",
+         "<0% recession · 1-2% slow · 2-3% trend · >3% strong."),
+        ("Real GDP growth (YoY %)",
+         "Smoothed comparison. <0% recession · 2-3% normal."),
+        ("Nominal GDP growth (%)",
+         "Real + inflation. Drivea revenue growth aggregate."),
+        ("Output gap (%)",
+         "GDP actual / potential. <0% slack · >0% overheating."),
+        ("GDP per capita growth",
+         "Real well-being indicator. Excluye population growth."),
+        ("Composition contributions (pp)",
+         "C + I + G + NX contributions. Identify driver."),
+    ],
+    bullish_vs_bearish=[
+        ("Real GDP growth 2-3% + productivity-driven",
+         "Real GDP <0% (recession technical) or stuck <1%"),
+        ("Output gap negative (slack remaining)",
+         "Output gap positive >2% (overheating + inflation risk)"),
+        ("Consumption robust + investment recovering",
+         "Government-dependent + consumption weakening"),
+        ("Productivity growth >1.5%",
+         "Productivity stagnant (long-term growth limited)"),
+        ("Nowcasting consistent positivo",
+         "Nowcasts revising down quickly"),
+    ],
+    valuation_impact=(
+        "Aggregate equity earnings growth ≈ Nominal GDP growth + "
+        "100-200bp (operating leverage). Si nominal GDP grow "
+        "5% (3% real + 2% inflation), expect S&P EPS ~6-7%. "
+        "Real GDP es input fundamental para corporate revenues. "
+        "Equity multiples también correlacionan: mercado paga "
+        "premium when growth strong + steady, descuento "
+        "when slow/recessionary."
+    ),
+    case_study=(
+        "**Post-COVID rebound 2021**: Real GDP +5.7% (highest "
+        "since 1984). Equity rally +27% in 2021. Pero output gap "
+        "se cerró rápido → inflation accelerated → Fed forced "
+        "tightening en 2022. Caso de fast recovery generating "
+        "secondary tightening.\n\n"
+        "**1970s — stagflation**: real GDP growth ~2.5% avg pero "
+        "inflation 7%+. Nominal GDP looked OK pero real wealth "
+        "destruction. Equity returns 1966-1982 = 0% in real "
+        "terms. Lección: real metrics matter, not nominal."
+    ),
+    common_mistakes=[
+        "Confundir nominal con real. En high inflation, nominal exagera.",
+        "Reaccionar a un trimestre. GDP es volátil cuarter-to-cuarter; trend matters.",
+        "Ignorar revisions. Initial GDP estimates often revised significativamente.",
+        "Asumir que GDP growth = stock market growth. Correlación 0.7 (not 1).",
+        "Pasar por alto productivity. Sin productivity, GDP growth caps at population growth.",
+    ],
+    mental_model=(
+        "GDP es la marca registrada del overall economic cycle, "
+        "pero como inversor te interesan los COMPONENTS — quién "
+        "está driving el growth y por cuánto tiempo. Consumption "
+        "lidera, investment amplifies, government is transient, "
+        "trade is secondary. Decompose, don't just observe headline."
+    ),
+    books=[_BOOK_JPM_GUIDE, _BOOK_DALIO_PRINCIPLES,
+           Book(title="Macroeconomics",
+                author="N. Gregory Mankiw", year=2021,
+                chapter_hint="Caps. 1-3 — measurement + cycles",
+                why="Texto académico standard.")],
+    videos=[
+        Video(title="Ray Dalio · How the Economic Machine Works",
+              channel="Bridgewater", minutes=30,
+              url="https://www.youtube.com/watch?v=PHe0bXAIuk0",
+              why="Mejor visualización del cycle."),
+    ],
+    quotes=[
+        Quote(text="Economists have correctly predicted nine of "
+                   "the last five recessions.",
+              author="Paul Samuelson",
+              source="(atribuido — sobre la dificultad de leer "
+                     "GDP en tiempo real)"),
+        _Q_MARKS_RISK,
+        _Q_BUFFETT_PRICE_VALUE,
+    ],
+))
+# ---------- Unemployment ----------
+_add(Lesson(
+    slug="unemployment",
+    label=_label_for("unemployment"),
+    category=_cat_for("unemployment"),
+    hook=_hook_for("unemployment"),
+    definition=(
+        "Unemployment rate = unemployed / labor force. Pero hay "
+        "métricas:\n\n"
+        "  · **U-3** (headline): unemployed actively looking. "
+        "La cifra reportada. ~3-5% normal US.\n"
+        "  · **U-6** (broader): incluye discouraged + part-time "
+        "for economic reasons. Más representative del slack real.\n"
+        "  · **Participation rate**: % población working-age en "
+        "labor force. Trending down (aging, retirement).\n"
+        "  · **Employment-to-population ratio**: complementario "
+        "a U-3.\n"
+        "  · **Wage growth**: salary inflation. Driver de core "
+        "services inflation.\n"
+        "  · **Jobless claims** (weekly): leading indicator high-"
+        "frequency."
+    ),
+    why_matters=(
+        "Unemployment es DUAL mandate de la Fed (junto con "
+        "price stability). Cuando uno sube, el otro suele bajar "
+        "(Phillips curve). El nivel + trend determina monetary "
+        "policy stance. Para el market: low unemployment + "
+        "tight labor = wage pressure → inflation → tightening; "
+        "rising unemployment = recession risk → easing."
+    ),
+    how_pros_analyze=(
+        "1. **NAIRU comparison**: Non-Accelerating Inflation "
+        "Rate of Unemployment ~4-4.5% US. Below NAIRU = "
+        "inflation pressure; above = slack.\n"
+        "2. **Sahm Rule**: si 3m moving avg unemployment sube "
+        "0.5pp+ vs prior 12m low, recession started. Empirically "
+        "robust desde 1970s.\n"
+        "3. **Wage growth vs productivity**: si wages > "
+        "productivity, margin pressure + inflation risk.\n"
+        "4. **Participation rate trend**: 'discouraged workers' "
+        "leave labor force in downturns — distort headline U-3.\n"
+        "5. **Sectoral analysis**: tech layoffs vs services "
+        "hiring tells different stories. Beware of headline.\n"
+        "6. **Initial jobless claims** (weekly): leading "
+        "indicator. >300K rising = stress; <200K = tight labor."
+    ),
+    key_metrics=[
+        ("U-3 unemployment (%)",
+         "<4% tight · 4-5% normal · >5% rising / recession-ish."),
+        ("U-6 broader (%)",
+         "Includes discouraged + part-time. Always higher than "
+         "U-3. Gap matters."),
+        ("Participation rate (%)",
+         "Trending ~62-63% US (declining due to aging)."),
+        ("Wage growth YoY (%)",
+         "2-3% = stable inflation · 4%+ = pressure · 5%+ "
+         "= inflation problem."),
+        ("Initial jobless claims (weekly)",
+         "<200K tight · 200-300K normal · >350K recession-ish."),
+        ("Sahm Rule indicator",
+         "Trigger when 3m avg U-3 rises 0.5pp+ above prior 12m "
+         "low. Triggered → recession started."),
+    ],
+    bullish_vs_bearish=[
+        ("U-3 ~4-5% + low wage growth (stable)",
+         "U-3 tightening below 3.5% (wage pressure builds)"),
+        ("Wage growth aligned with productivity",
+         "Wage > productivity (margin pressure)"),
+        ("Participation increasing (recovery)",
+         "Discouraged workers leaving labor force"),
+        ("Claims stable / trending down",
+         "Claims spike (early signal of slowdown)"),
+        ("Sahm Rule NOT triggered",
+         "Sahm Rule triggered (recession likely started)"),
+    ],
+    valuation_impact=(
+        "Unemployment trends drivean wage growth → margins → "
+        "earnings. Empresas labor-intensive (retail, hospitality) "
+        "más sensitive. En tight labor (low U-3), wage pressure "
+        "comprime márgenes. En slack labor (high U-3), unit "
+        "labor costs fall. Para macro positioning: rising "
+        "unemployment + Sahm trigger = de-risk equities, add "
+        "duration (bonds rally on Fed cuts)."
+    ),
+    case_study=(
+        "**2024 Sahm Rule trigger**: U-3 pasó de 3.4% (low) "
+        "a 4.3% (Aug 2024) — Sahm Rule triggered. Historic "
+        "track record: recession dentro de 12 meses 9 de 9 "
+        "veces. Fed empezó cutting en Sept 2024. El equity "
+        "market subió en anticipación de cuts.\n\n"
+        "**1970s**: U-3 alcanzó 9% en 1975 y 10.8% en 1982. "
+        "Combined con inflation alta = 'misery index'. Equity "
+        "returns terriblemente (real returns 0% 1966-82). "
+        "Lección: cuando unemployment + inflation ambos altos, "
+        "stagflation, equities pierden."
+    ),
+    common_mistakes=[
+        "Confiar solo en U-3 sin chequear U-6 o participation.",
+        "Ignorar wage growth — es el connector con inflation.",
+        "Reaccionar a un dato mensual. Tendencia 3-6m matters.",
+        "Subestimar el Sahm Rule. Tracking récord excellent.",
+        "Asumir que low unemployment = strong economy. Could be tight labor + low growth simultaneously (stagflation setup).",
+    ],
+    mental_model=(
+        "Unemployment es el conector entre la economy real y "
+        "monetary policy. Fed targets dual mandate — sin "
+        "entender unemployment dynamics, no podés anticipate "
+        "policy moves. Y policy moves drivean rates, que "
+        "drivean valuations. Es la cadena causal del macro: "
+        "labor → inflation → policy → rates → valuations."
+    ),
+    books=[_BOOK_DALIO_PRINCIPLES, _BOOK_JPM_GUIDE,
+           Book(title="The Wage Curve",
+                author="David Blanchflower", year=1994,
+                chapter_hint="Phillips curve modernized",
+                why="Texto académico de unemployment-wage "
+                     "relationship.")],
+    videos=[
+        Video(title="The Sahm Rule Explained",
+              channel="CFA Institute / Bloomberg",
+              minutes=10, url="",
+              why="Claudia Sahm explica su own indicator."),
+    ],
+    quotes=[
+        Quote(text="The labor market is the gateway between the "
+                   "real economy and the financial markets — "
+                   "everything important flows through it.",
+              author="Janet Yellen",
+              source="Fed Chair / Treasury Secretary"),
+        _Q_MARKS_RISK,
+    ],
+))
+# ---------- Monetary policy ----------
+_add(Lesson(
+    slug="monetary_policy",
+    label=_label_for("monetary_policy"),
+    category=_cat_for("monetary_policy"),
+    hook=_hook_for("monetary_policy"),
+    definition=(
+        "Monetary policy es el manejo de tasas de interés + money "
+        "supply por el banco central (Fed, ECB, BoJ, etc.). "
+        "Herramientas:\n\n"
+        "  · **Fed Funds rate**: tasa overnight inter-bank. La "
+        "tasa principal de política.\n"
+        "  · **Open market operations**: comprar/vender bonds para "
+        "ajustar reserves.\n"
+        "  · **Quantitative Easing (QE)**: buying long-duration "
+        "assets para press long rates down.\n"
+        "  · **Quantitative Tightening (QT)**: shrinking balance "
+        "sheet.\n"
+        "  · **Forward guidance**: communicate future policy.\n"
+        "  · **Discount window**: emergency lending to banks.\n\n"
+        "Reaction function: Fed responds to inflation (price "
+        "stability) + employment (full employment) — dual mandate."
+    ),
+    why_matters=(
+        "Monetary policy drivea risk-free rate, que drivea TODO "
+        "el discount rate de los valuations. La Fed es el actor "
+        "más influyente en los markets — más que cualquier "
+        "empresa o country. 'Don't fight the Fed' es la regla "
+        "cardinal. 2009-2021 QE made everything go up; 2022 "
+        "tightening crashed everything. Saber leer la Fed = "
+        "saber leer el mercado."
+    ),
+    how_pros_analyze=(
+        "1. **Fed dot plot**: en cada FOMC, los miembros publican "
+        "their projections de fed funds future. Median dot = "
+        "consensus.\n"
+        "2. **SEP** (Summary of Economic Projections): GDP, "
+        "unemployment, PCE inflation projections. Cambios "
+        "QoQ revelan policy stance.\n"
+        "3. **Powell tone**: 'hawkish' (tightening bias) vs "
+        "'dovish' (easing bias). Listen to press conferences.\n"
+        "4. **Fed Funds Futures**: market-implied path. "
+        "Compare vs dot plot — divergence = uncertainty.\n"
+        "5. **Real-time mandate score**: inflation vs target "
+        "(2%) y unemployment vs NAIRU. Where Fed thinks they "
+        "are determines next move.\n"
+        "6. **QE/QT balance sheet trajectory**: tracking via "
+        "weekly H.4.1 release."
+    ),
+    key_metrics=[
+        ("Fed Funds target rate",
+         "ZIRP = 0-0.25% · accommodative <2.5% · neutral "
+         "~2.5-3.5% · restrictive >4%."),
+        ("Fed dot plot median (12m forward)",
+         "Mercado consensus de Fed path."),
+        ("Real Fed Funds rate",
+         "Nominal − PCE core. >0% restrictive · <0% "
+         "stimulative."),
+        ("Fed balance sheet (USD trillion)",
+         "$8T+ es post-COVID era · normalizing toward $6T."),
+        ("Core PCE YoY (Fed's preferred)",
+         "Target 2%. Above = tightening bias · below = easing "
+         "bias."),
+        ("Implied Fed cuts/hikes (Fed funds futures)",
+         "Market expects next 12m. Update real-time."),
+    ],
+    bullish_vs_bearish=[
+        ("Fed easing cycle starting (cuts begin)",
+         "Fed tightening cycle starting (hikes begin)"),
+        ("Powell dovish + dots pivoting down",
+         "Powell hawkish + dots pivoting up"),
+        ("Real Fed Funds rate ≤ 0% (stimulative)",
+         "Real Fed Funds rate > 2% (highly restrictive)"),
+        ("QE active / balance sheet expanding",
+         "QT active / balance sheet shrinking"),
+        ("Fed mandate balance: inflation falling + employment OK",
+         "Mandate stress: inflation high + unemployment rising "
+         "(stagflation forces tough choices)"),
+    ],
+    valuation_impact=(
+        "Fed easing = lower rates = higher discount rate "
+        "compression = multiples expand. The 2009-2021 bull "
+        "market was largely Fed-driven (multiple expansion 10x → "
+        "25x P/E S&P). Reverse: 2022 tightening crashed "
+        "multiples. Para equity allocation: easing cycle → add "
+        "growth/duration; tightening cycle → add value/short-"
+        "duration/cash."
+    ),
+    case_study=(
+        "**2008-2021 QE era**: Fed balance sheet grew $1T to "
+        "$8T. S&P P/E expanded 10x to 25x. Multiple expansion "
+        "= ~60% of equity returns. Without QE the multiples "
+        "would've been much lower.\n\n"
+        "**2022 tightening**: Fed raised 525bp en 18 meses, "
+        "balance sheet shrinking $1T. S&P P/E comprimió de "
+        "23x to 17x. -33% Nasdaq drawdown. Lección: cuando "
+        "Fed pivots, todo el asset universe se reprice. "
+        "Don't fight the Fed."
+    ),
+    common_mistakes=[
+        "Ignorar el dot plot. Es la comunicación más explícita Fed-market.",
+        "Asumir Fed responds only to data. Reaction function evolves (Yellen vs Powell distintos).",
+        "Confiar en consensus 'soft landing'. History rarely soft.",
+        "Anchored a un policy regime (ZIRP forever). Cambia.",
+        "Confundir hawkish/dovish words con actions. Watch the dot plot + actual decisions.",
+    ],
+    mental_model=(
+        "Powell es el most important person en the world for "
+        "asset prices. Cada palabra que dice en FOMC press "
+        "conference mueve trillions. Pensá monetary policy "
+        "como el tide — when the Fed tide es rising (QE), "
+        "all boats lift; when it's falling (QT), revealed "
+        "qué barcos no tienen anclas (overleveraged, "
+        "money-losing speculation). Don't fight the Fed."
+    ),
+    books=[_BOOK_DALIO_PRINCIPLES,
+           Book(title="The Lords of Easy Money",
+                author="Christopher Leonard", year=2022,
+                chapter_hint="Toda",
+                why="La Fed desde adentro post-2008."),
+           Book(title="The Power and Independence of the Federal "
+                       "Reserve",
+                author="Peter Conti-Brown", year=2016,
+                chapter_hint="Caps. on institutional structure",
+                why="Texto académico sobre Fed independence.")],
+    videos=[
+        Video(title="How the Federal Reserve Works",
+              channel="Federal Reserve", minutes=30, url="",
+              why="Material oficial introductorio."),
+        Video(title="Ray Dalio · How the Economic Machine Works",
+              channel="Bridgewater", minutes=30,
+              url="https://www.youtube.com/watch?v=PHe0bXAIuk0",
+              why="Cycle + policy interplay."),
+    ],
+    quotes=[
+        Quote(text="The Fed is the only place where the cure for "
+                   "every economic ailment is more medicine.",
+              author="Christopher Leonard",
+              source="The Lords of Easy Money"),
+        Quote(text="Don't fight the Fed.",
+              author="Martin Zweig",
+              source="Investment classic — Wall Street folklore"),
+        Quote(text="Policy works with long and variable lags.",
+              author="Milton Friedman",
+              source="(atribuido — sobre policy timing)"),
+    ],
+))
+# ---------- Fiscal policy ----------
+_add(Lesson(
+    slug="fiscal_policy",
+    label=_label_for("fiscal_policy"),
+    category=_cat_for("fiscal_policy"),
+    hook=_hook_for("fiscal_policy"),
+    definition=(
+        "Fiscal policy = manejo del government spending + "
+        "taxation. Drivers:\n\n"
+        "  · **Budget balance**: Revenues − Expenditures. Surplus "
+        "(+) reduce demand · Deficit (-) inject demand.\n"
+        "  · **Debt-to-GDP**: stock cumulativo. US ~120%, "
+        "Japan ~260%, Germany ~65%.\n"
+        "  · **Fiscal multiplier**: $1 government spend generates "
+        "$X in GDP. ~0.5-1.5 depending on environment.\n"
+        "  · **Automatic stabilizers**: unemployment "
+        "benefits, progressive tax — expand in recession.\n"
+        "  · **Discretionary stimulus**: tax cuts, infrastructure "
+        "(BIL/IRA in US).\n\n"
+        "Unlike monetary policy (Fed), fiscal policy is "
+        "politically driven — much slower to deploy."
+    ),
+    why_matters=(
+        "Post-COVID, fiscal policy se volvió el principal driver "
+        "macro junto a monetary. CARES Act ($2T) + American "
+        "Rescue Plan ($1.9T) + IRA + CHIPS Act = $7T+ en "
+        "fiscal stimulus. Eso prevented depresión pero "
+        "triggered inflación high 2021-22. Saber leer fiscal "
+        "deficit dynamics es essential para anticipar both "
+        "growth y inflation."
+    ),
+    how_pros_analyze=(
+        "1. **Deficit/GDP trajectory**: US ran 6-7% deficits "
+        "post-COVID — históricamente only in war. "
+        "Sustainability question.\n"
+        "2. **Interest expense as % budget**: US interest "
+        "expense $1T+ annually now. Crowding out other "
+        "spending.\n"
+        "3. **Multiplier context**: stimulus during slack = "
+        "high multiplier. Stimulus en pleno empleo = inflation "
+        "primarily.\n"
+        "4. **Composition**: infrastructure (long-term productive) "
+        "vs transfers (short-term consumption) → very different "
+        "multipliers.\n"
+        "5. **Political feasibility**: divided govt → "
+        "gridlock → limited fiscal action. Unified govt → big "
+        "packages possible.\n"
+        "6. **Debt servicing as % budget**: when interest "
+        "expense crowds out discretionary, fiscal flexibility "
+        "gone."
+    ),
+    key_metrics=[
+        ("Fiscal deficit / GDP (%)",
+         "Recession-era: 5-10% · normal: 2-4% · surplus < 0%."),
+        ("Federal debt / GDP (%)",
+         "Pre-2008: 60% · 2024: 120% US · Japan 260% (extreme)."),
+        ("Interest expense / Revenue (%)",
+         "10-15% manageable · >20% crowding out · 30% crisis "
+         "territory."),
+        ("Fiscal impulse",
+         "ΔDeficit/GDP YoY. Positive = stimulus · negative = drag."),
+        ("Primary balance",
+         "Deficit excluding interest. Better measure de "
+         "structural position."),
+        ("Cyclically-adjusted deficit",
+         "Removing auto stabilizers. Shows discretionary "
+         "stance."),
+    ],
+    bullish_vs_bearish=[
+        ("Fiscal stimulus durante slack (growth-supportive)",
+         "Fiscal austerity durante recession (recession deeper)"),
+        ("Stimulus on productive investment (R&D, infra)",
+         "Stimulus on transfer / consumption only"),
+        ("Debt/GDP stabilizing or falling",
+         "Debt/GDP escalating without sign of stabilization"),
+        ("Interest expense manageable",
+         "Interest expense >20% revenues (debt trap risk)"),
+        ("Political consensus possible",
+         "Divided gov't / gridlock during crisis"),
+    ],
+    valuation_impact=(
+        "Fiscal stimulus boosts aggregate demand → corporate "
+        "revenues. But large deficits → bond supply → higher "
+        "yields → discount rate compression on equities. Net "
+        "effect depends on magnitude. Sectoral: fiscal "
+        "infrastructure helps industrials, defense; transfer "
+        "helps consumer staples. Tax policy direct hit corporate "
+        "earnings (TCJA 2017 boosted EPS ~10%)."
+    ),
+    case_study=(
+        "**2008 ARRA + 2020 CARES**: $800B (2009) + $2T "
+        "(2020). Multipliers tactical. ARRA muted (slack "
+        "post-GFC); CARES + ARP overshooting (rapid recovery "
+        "+ supply constraints → inflation high). Lección: "
+        "magnitude matters, but TIMING + CAPACITY also "
+        "matter.\n\n"
+        "**Japan 1990s-2024**: fiscal deficits permanentes "
+        "30+ años. Debt/GDP 260%. Pero rates stayed near zero "
+        "(BoJ QE). Lección: high debt doesn't necesariamente "
+        "trigger crisis — depende del CB behavior + currency "
+        "régime."
+    ),
+    common_mistakes=[
+        "Equating high debt with imminent crisis. Doesn't have to be.",
+        "Ignorar el monetary-fiscal interplay. Both work together (or against).",
+        "Asumir todos los stimulus packages tienen mismo multiplier.",
+        "Confiar en deficit headline sin checking interest expense burden.",
+        "Pasar por alto el sectoral impact (infrastructure vs transfer vs tax cuts).",
+    ],
+    mental_model=(
+        "Dalio: 'cuando un país tiene su own currency, debt en "
+        "esa currency, y central bank willing to print, "
+        "el default es virtualmente impossible — pero la "
+        "devaluación / inflation es el alternative'. Pensá "
+        "fiscal policy + monetary policy juntos: cuando "
+        "ambos accommodate, asset prices fly + inflation "
+        "risk. Cuando ambos restrict, asset prices fall + "
+        "recession risk."
+    ),
+    books=[_BOOK_DALIO_PRINCIPLES, _BOOK_JPM_GUIDE,
+           Book(title="Principles for Dealing with the Changing "
+                       "World Order",
+                author="Ray Dalio", year=2021,
+                chapter_hint="Fiscal + monetary cycles long-term",
+                why="Dalio sobre debt cycles seculares."),
+           Book(title="The Deficit Myth",
+                author="Stephanie Kelton", year=2020,
+                chapter_hint="MMT framework",
+                why="View heterodox sobre fiscal capacity.")],
+    videos=[
+        Video(title="Ray Dalio · The Big Debt Cycle",
+              channel="Bridgewater", minutes=40, url="",
+              why="Mejor explicación de fiscal-monetary interplay."),
+    ],
+    quotes=[
+        Quote(text="There are decades where nothing happens, and "
+                   "there are weeks where decades happen.",
+              author="Vladimir Lenin (atribuido)",
+              source="Aplica a fiscal regime changes"),
+        Quote(text="A nation that lives beyond its means will "
+                   "eventually face the music — but the timing "
+                   "is uncertain.",
+              author="Ray Dalio",
+              source="Principles for Navigating Big Debt Crises"),
+        _Q_DAMODARAN_STORY,
+    ],
+))
+# ---------- Liquidity ----------
+_add(Lesson(
+    slug="liquidity",
+    label=_label_for("liquidity"),
+    category=_cat_for("liquidity"),
+    hook=_hook_for("liquidity"),
+    definition=(
+        "Liquidity en macro = la cantidad de cash / "
+        "near-cash circulando en el sistema. Múltiples "
+        "métricas:\n\n"
+        "  · **M2 money supply**: cash + checking + savings + "
+        "small CDs. Crecimiento M2 anticipa nominal demand.\n"
+        "  · **Fed balance sheet**: QE expande, QT contrae.\n"
+        "  · **Reverse Repo (RRP)**: cuando RRP cae, dinero "
+        "sale del 'parking' Fed y va al mercado.\n"
+        "  · **Bank reserves**: deposits banks at Fed. "
+        "Higher reserves = more lending capacity.\n"
+        "  · **Financial conditions indices** (Goldman, "
+        "Chicago Fed): aggregate measure de rates + spreads + "
+        "vol + dollar.\n\n"
+        "Liquidity es 'el agua del market' — sin ella, asset "
+        "prices struggle to float."
+    ),
+    why_matters=(
+        "Marks: 'cycles in liquidity are far more impactful "
+        "than cycles in earnings'. Cuando liquidity expande, "
+        "asset prices rise mecánicamente. Cuando contrae, "
+        "asset prices fall — independent of fundamentals. "
+        "El bull 2009-2021 fue largely liquidity-driven (QE "
+        "expansion). El bear 2022 fue liquidity contraction. "
+        "Track liquidity = track market direction medium-term."
+    ),
+    how_pros_analyze=(
+        "1. **M2 YoY growth**: histórico ~6-7%. Post-COVID "
+        "spiked 27% (2021). Now -3% (2024). Tracks "
+        "available capital.\n"
+        "2. **Fed balance sheet trajectory**: expansion vs "
+        "shrinkage. $8.9T peak → $7T (2024). Each $T less = "
+        "liquidity removed.\n"
+        "3. **Reverse Repo (RRP)**: $2.5T peak (2022) cuando "
+        "QT estaba absorbiendo liquidity. RRP cayendo = "
+        "liquidity volviendo al market.\n"
+        "4. **Financial Conditions Index**: tracks ~6 "
+        "variables. Tight conditions (FCI > 0) = pressure on "
+        "equity multiples.\n"
+        "5. **TGA (Treasury General Account)**: cuando Treasury "
+        "balance crece, drena liquidity; when shrinks, "
+        "release liquidity.\n"
+        "6. **Global liquidity**: $-funded carry trades + "
+        "China credit impulse + ECB / BoJ stance."
+    ),
+    key_metrics=[
+        ("M2 YoY growth (%)",
+         "Normal: 5-8% · spike post-COVID: 27% · current "
+         "contracting: -3%."),
+        ("Fed balance sheet ($T)",
+         "Peak $8.9T · normalized target ~$6-7T."),
+        ("RRP outstanding ($T)",
+         "$2.5T (2022 peak) shrinking to $400B (2024) = "
+         "liquidity returning."),
+        ("Financial Conditions Index (Goldman)",
+         "<0 easy · 0 neutral · >0 tight."),
+        ("Global liquidity proxy",
+         "Sum of major CB balance sheets + China credit "
+         "impulse."),
+        ("USD strength (DXY)",
+         "Strong dollar tightens global liquidity."),
+    ],
+    bullish_vs_bearish=[
+        ("M2 growing + Fed easing",
+         "M2 contracting + Fed tightening"),
+        ("RRP shrinking + reserves stable",
+         "RRP exhausted + reserves draining"),
+        ("FCI easing (negative drift)",
+         "FCI tightening (positive drift)"),
+        ("Global liquidity expanding (multiple CBs easing)",
+         "Synchronized global tightening"),
+        ("Dollar weakening (export liquidity globally)",
+         "Dollar surge (drains global liquidity)"),
+    ],
+    valuation_impact=(
+        "Liquidity drivea risk asset prices independently of "
+        "fundamentals. QE = liquidity in → assets up. QT = "
+        "liquidity out → assets down. Para equity: liquidity "
+        "expansion supports multiple expansion; contraction "
+        "comprime. Para crypto + speculative assets: even MORE "
+        "liquidity-sensitive than equities (Bitcoin -75% durante "
+        "QT 2022)."
+    ),
+    case_study=(
+        "**2020 Pandemic QE**: Fed expanded balance sheet $3T "
+        "in 3 meses (March-June 2020). M2 spiked 25%. S&P "
+        "recovered 60% en 6 meses. Everything else: Bitcoin "
+        "10x, growth tech 3x, SPACs everywhere. Pure liquidity "
+        "trade.\n\n"
+        "**2022 QT + tightening**: Fed started balance sheet "
+        "shrinkage. M2 turned negative for first time desde "
+        "1930s. Liquidity-sensitive assets crashed: ARK "
+        "innovation -70%, Bitcoin -75%, SPACs -90%. Quality "
+        "(blue chips with profits) held better. Lección: "
+        "liquidity matters, but quality compounding through "
+        "liquidity cycles."
+    ),
+    common_mistakes=[
+        "Pasar por alto liquidity tracking. Es leading indicator macro.",
+        "Confiar solo en Fed actions sin chequear M2 + RRP dynamics.",
+        "Asumir liquidity = monetary policy. Fiscal + global flows también.",
+        "Ignorar dollar strength impact on global liquidity (EM stress).",
+        "Confundir specific asset liquidity (volume) con macro liquidity.",
+    ],
+    mental_model=(
+        "Marks: 'cycles in attitudes about risk are far more "
+        "impactful than cycles in earnings'. Liquidity es la "
+        "manifestación tangible de risk appetite. Cuando "
+        "liquidity expands, risk appetite expands → assets "
+        "fly. Cuando contracts, risk aversion → assets fall. "
+        "Pensá liquidity como el viento que sopla a favor o "
+        "en contra de todas las valuations."
+    ),
+    books=[_BOOK_MARKS_MARKET_CYCLE, _BOOK_DALIO_PRINCIPLES,
+           Book(title="The Lords of Easy Money",
+                author="Christopher Leonard", year=2022,
+                chapter_hint="Toda la parte sobre QE post-2008",
+                why="La era moderna del liquidity-driven market.")],
+    videos=[
+        Video(title="Understanding Global Liquidity",
+              channel="Real Vision / Macro Voices",
+              minutes=40, url="",
+              why="Track multiple CB balance sheets + global "
+                   "flows."),
+    ],
+    quotes=[
+        Quote(text="The most important determinant of market "
+                   "movements is the level of liquidity.",
+              author="Stanley Druckenmiller",
+              source="Duquesne Family Office (multiple "
+                     "interviews)"),
+        _Q_MARKS_RISK,
+        Quote(text="Liquidity is the lifeblood of markets — "
+                   "fundamentals matter, but liquidity decides "
+                   "when fundamentals get to matter.",
+              author="Howard Marks (paráfrasis)",
+              source="Mastering the Market Cycle"),
+    ],
+))
+# ---------- Recession indicators ----------
+_add(Lesson(
+    slug="recession_indicators",
+    label=_label_for("recession_indicators"),
+    category=_cat_for("recession_indicators"),
+    hook=_hook_for("recession_indicators"),
+    definition=(
+        "Recesión técnica = 2 trimestres consecutivos de real "
+        "GDP negativo. Recesión oficial (NBER) usa más métricas. "
+        "Los indicadores que mejor predicen + tiempos:\n\n"
+        "  · **Yield curve inversion (2Y/10Y)**: 12-18 meses "
+        "antes. 9-of-9 record desde 1955.\n"
+        "  · **Sahm Rule** (unemployment): triggers cuando "
+        "recession ya empezó.\n"
+        "  · **LEI (Conference Board)**: 10 leading indicators. "
+        "Negative YoY = recession warning.\n"
+        "  · **Credit spreads widening**: real-time stress "
+        "indicator.\n"
+        "  · **ISM Manufacturing PMI <45**: industrial "
+        "contraction.\n"
+        "  · **Initial jobless claims rising trend**.\n"
+        "  · **Housing starts collapsing**: rate-sensitive "
+        "sector hits first."
+    ),
+    why_matters=(
+        "Equity markets typically peak 6-12 meses ANTES de "
+        "recession start. Selling at peak vs holding through "
+        "downturn = enormous difference en returns. Por eso "
+        "todos los pros track recession indicators. Pero "
+        "también: 'economists have correctly predicted 9 of "
+        "the last 5 recessions' — many false signals. Saber "
+        "cuáles indicators son robustos vs noisy es key."
+    ),
+    how_pros_analyze=(
+        "1. **Yield curve (2Y/10Y)**: la más reliable. "
+        "Inverted >3 months = recession warning. Recession "
+        "typically 12-18m later. Re-steepening AFTER "
+        "inversion = recession imminent.\n"
+        "2. **Sahm Rule**: U-3 3m avg rises 0.5pp+ vs 12m "
+        "low. Triggers DURING recession start, not "
+        "anticipates.\n"
+        "3. **LEI YoY negative for 3+ months**: high "
+        "conviction signal.\n"
+        "4. **Composite check**: any single indicator gives "
+        "false signals. Use multiple. Rule of thumb: 3+ "
+        "indicators flashing = high conviction.\n"
+        "5. **Coincident indicators**: NFP, industrial "
+        "production, retail sales — confirm where you ARE "
+        "(not anticipate).\n"
+        "6. **Lagging indicators**: unemployment rate level, "
+        "core CPI — peak DURING recession or after."
+    ),
+    key_metrics=[
+        ("Yield curve 2Y/10Y spread (bp)",
+         "<0 inverted (recession warning) · 12-18m lead."),
+        ("Sahm Rule indicator",
+         "Triggered when U-3 3m avg rises 0.5pp+ above prior "
+         "12m low. Recession started."),
+        ("LEI YoY (%)",
+         ">0 expansion · -3% to 0% slowdown · <-3% recession-"
+         "likely."),
+        ("ISM Manufacturing PMI",
+         ">50 expansion · 45-50 weak · <45 recession-like."),
+        ("HY credit spreads (bp)",
+         "Widening trend = stress. >700bp = severe."),
+        ("Initial jobless claims (4wk avg)",
+         "Trending up = stress · >300K consistente = "
+         "recession-ish."),
+    ],
+    bullish_vs_bearish=[
+        ("Multiple indicators steady / improving",
+         "3+ indicators triggering simultaneously"),
+        ("Curve normalized (not inverted)",
+         "Curve inverted >6m → re-steepening (imminent risk)"),
+        ("LEI positive",
+         "LEI negative 3+ months"),
+        ("Claims stable",
+         "Claims rising trend"),
+        ("Soft data (sentiment) bad pero hard data ok",
+         "Hard data (NFP, ISM) deteriorating"),
+    ],
+    valuation_impact=(
+        "Equity peaks 6-12m antes de recession start. EPS "
+        "peaks AT recession start. Multiples compress through "
+        "recession. Best practice: when 3+ recession "
+        "indicators flash, reduce risk exposure (raise cash, "
+        "shift to defensive: utilities/staples/healthcare, add "
+        "duration via bonds). Cuando indicators turn from "
+        "trough = re-add risk (cyclicals + tech)."
+    ),
+    case_study=(
+        "**2007**: yield curve inverted July 2006. Recession "
+        "began December 2007 — 17 meses lag (textbook). "
+        "Equity peaked Oct 2007. Los que vendieron en mid-2007 "
+        "evitaron 50% drawdown.\n\n"
+        "**2022-2024**: yield curve inverted July 2022 (long "
+        "inversion ever). Recession 'predicted' por casi todos "
+        "para 2023. Pero economía resistió (massive fiscal "
+        "spending + post-COVID savings + AI boom). Recesión "
+        "todavía no oficial 2024. Lección: rules of thumb "
+        "fallan ocasionalmente — always use multiple indicators "
+        "+ context."
+    ),
+    common_mistakes=[
+        "Confiar en un solo indicator. Use composite.",
+        "Selling immediately on curve inversion. 12-18m lag matters.",
+        "Asumir post-COVID cycle is normal cycle. May not be.",
+        "Anchoring 'esta vez es diferente' después de false signals.",
+        "Ignorar leading indicators porque 'they've been wrong'. They eventually right.",
+    ],
+    mental_model=(
+        "Marks: 'no podemos predecir el futuro, pero podemos "
+        "prepararnos para él'. Recession indicators no son crystal "
+        "ball — son probability adjusters. Cuando 3+ flash, "
+        "probability de recession es high enough que valgan la "
+        "pena los hedges. Nunca esperes confirmación (en "
+        "recession) — es too late."
+    ),
+    books=[_BOOK_MARKS_MARKET_CYCLE, _BOOK_DALIO_PRINCIPLES,
+           _BOOK_JPM_GUIDE,
+           Book(title="The Conference Board LEI Methodology",
+                author="Conference Board", year=2024,
+                chapter_hint="Description del LEI",
+                why="Documentation del indicator más comprehensivo.")],
+    videos=[
+        Video(title="Yield Curve and Recessions Explained",
+              channel="The Plain Bagel / Bloomberg",
+              minutes=20, url="",
+              why="Track record + mechanics."),
+    ],
+    quotes=[
+        _Q_MARKS_RISK,
+        Quote(text="There are decades where nothing happens and "
+                   "weeks where decades happen — and recessions "
+                   "tend to compress decades into months.",
+              author="Vladimir Lenin (atribuido)",
+              source="Aplicable a inflection points"),
+        Quote(text="Economists have correctly predicted nine of "
+                   "the last five recessions.",
+              author="Paul Samuelson",
+              source="(attributed - sobre dificultad "
+                     "predictiva)"),
+    ],
+))
+# ---------- Dollar strength ----------
+_add(Lesson(
+    slug="dollar_strength",
+    label=_label_for("dollar_strength"),
+    category=_cat_for("dollar_strength"),
+    hook=_hook_for("dollar_strength"),
+    definition=(
+        "USD strength se mide vs basket de currencies (DXY) o "
+        "vs trade-weighted dollar (BIS, Fed broad index). El "
+        "dollar es el centro del sistema financiero global:\n\n"
+        "  · ~60% global reserves\n"
+        "  · ~50% global trade invoiced en USD\n"
+        "  · ~80% of EM debt in USD\n\n"
+        "Por eso USD strength affects EVERYTHING globalmente:\n"
+        "  · Commodities priced in USD (strong $ → falling "
+        "commodities)\n"
+        "  · EM debt servicing (strong $ → EM stress)\n"
+        "  · Multinational earnings (strong $ → US MNCs "
+        "headwind)\n"
+        "  · Global liquidity (strong $ → tighter globally)"
+    ),
+    why_matters=(
+        "Druckenmiller: 'the dollar is the most important "
+        "thing in macro'. Strong dollar = drag on EM equities + "
+        "commodities + US multinational EPS. Weak dollar = "
+        "tailwind. Saber leer USD trends = position for global "
+        "rotation. EM equities outperform desarrollados típicamente "
+        "during weak dollar periods (2003-2007, 2017-2020)."
+    ),
+    how_pros_analyze=(
+        "1. **Real effective exchange rate (REER)**: inflation-"
+        "adjusted. Better measure de competitiveness.\n"
+        "2. **DXY (USD index)**: vs 6 major currencies. Most-"
+        "watched. Trading range ~85-115.\n"
+        "3. **Interest rate differentials**: cuando US rates >> "
+        "Europe/Japan, USD attractive. Currently widening "
+        "favoring USD.\n"
+        "4. **Trade balance**: persistent US deficit weakens "
+        "dollar long-term — but in moments other factors "
+        "dominate.\n"
+        "5. **Risk sentiment**: USD = safe-haven en panics. "
+        "Stress globally → USD rallies (counter-intuitive).\n"
+        "6. **Carry trades**: USD-funded carry into EM. When "
+        "unwound, USD rallies hard (2022 EM stress)."
+    ),
+    key_metrics=[
+        ("DXY index",
+         "<95 weak · 95-105 normal · >105 strong · >110 "
+         "extremely strong."),
+        ("REER (real effective exchange rate)",
+         "Inflation-adjusted. Above LT avg = overvalued."),
+        ("US-Europe rate diff (10Y)",
+         "Wider diff = USD stronger. Currently ~150bp+."),
+        ("US-Japan rate diff",
+         "Drive del carry. Wider = USD/JPY rallying."),
+        ("EM currencies vs USD (cumulative %)",
+         "Indicador de EM stress. Strong USD = EM "
+         "selling."),
+        ("Gold vs USD",
+         "Inversely correlated typically. Both rising "
+         "= ambiguous (inflation hedge mode)."),
+    ],
+    bullish_vs_bearish=[
+        ("USD weak (DXY <100, REER below avg)",
+         "USD strong (DXY >107, REER above avg)"),
+        ("US rates converging with ROW",
+         "US rates diverging widely from ROW"),
+        ("Trade balance improving",
+         "Trade deficit widening"),
+        ("Risk-on regime (USD profit-taking)",
+         "Risk-off panic (USD safe-haven rally)"),
+        ("EM currencies stable (no carry stress)",
+         "EM currencies crashing (carry trade unwinds)"),
+    ],
+    valuation_impact=(
+        "Strong USD impact: US multinationals report -3% to "
+        "-8% EPS drag (S&P 500 ~30% revenue international). "
+        "EM equities sell off because of (a) capital outflow "
+        "and (b) USD-denominated debt servicing cost rise. "
+        "Commodities fall because priced in USD. Para "
+        "positioning: weak USD = overweight EM + commodities; "
+        "strong USD = overweight US large-cap defensives."
+    ),
+    case_study=(
+        "**2022 dollar surge**: DXY went from 95 to 114 (peak "
+        "Sept 2022). Drivers: aggressive Fed tightening + "
+        "European energy crisis + risk-off. EM currencies "
+        "collapsed (TRY -45%, PEN -10%, etc.). EM equities "
+        "-25%. Gold -10% in USD terms. Caso textbook "
+        "of strong USD damaging global asset classes.\n\n"
+        "**Contraejemplo — 2003-2008**: DXY weakened "
+        "from 100 to 70. EM equities crushed it (Brazil +1000%, "
+        "China +500%). Commodities super-cycle (oil $30 → $147). "
+        "Buying anything ex-US in weak USD periodo = generational "
+        "winner."
+    ),
+    common_mistakes=[
+        "Pasar por alto el dollar impact on multinational earnings.",
+        "Asumir EM equities cheap es enough — necesitás USD weak para tailwind.",
+        "Confundir nominal con real USD strength. REER matters más.",
+        "Ignorar carry trade dynamics (USD funded into EM).",
+        "Asumir USD strength durará 'forever' en cycle peak.",
+    ],
+    mental_model=(
+        "Druckenmiller: 'el dollar es el ocean en el cual todos "
+        "los financial assets float. Cuando the ocean rises "
+        "(strong USD), todo lo demás appears smaller (cheaper "
+        "in USD)'. Pero también: ocean rising drowns swimmers "
+        "(EM, commodities). Pensá USD trends como el "
+        "background condition de todo macro positioning."
+    ),
+    books=[_BOOK_JPM_GUIDE, _BOOK_DALIO_PRINCIPLES,
+           Book(title="The Almighty Dollar",
+                author="Dharshini David", year=2018,
+                chapter_hint="Cómo el dollar drivea trade globally",
+                why="Accessible intro al USD system."),
+           Book(title="Eurodollar University",
+                author="Jeff Snider", year=2023,
+                chapter_hint="Caps. on USD plumbing",
+                why="Cómo el global dollar shadow system "
+                     "realmente funciona.")],
+    videos=[
+        Video(title="Stanley Druckenmiller on the Dollar",
+              channel="Real Vision / The Compound",
+              minutes=30, url="",
+              why="Druckenmiller built his career trading USD."),
+    ],
+    quotes=[
+        Quote(text="The dollar is the most important price in the "
+                   "world.",
+              author="Stanley Druckenmiller",
+              source="Multiple interviews"),
+        Quote(text="When the dollar rallies, something somewhere "
+                   "breaks.",
+              author="Anonymous macro PM",
+              source="Wall Street folklore"),
+        _Q_MARKS_RISK,
+    ],
+))
+# ---------- Commodity cycles ----------
+_add(Lesson(
+    slug="commodity_cycles",
+    label=_label_for("commodity_cycles"),
+    category=_cat_for("commodity_cycles"),
+    hook=_hook_for("commodity_cycles"),
+    definition=(
+        "Commodities (oil, gas, copper, gold, agricultural) "
+        "operan en super-cycles 15-25 años + minicycles 3-7 "
+        "años. Mechanics:\n\n"
+        "  · **Demand**: driven by GDP growth (developed + EM), "
+        "energy transition, geopolitics.\n"
+        "  · **Supply**: requires HUGE capex + long lead times "
+        "(7-10 years para nuevas mines). Supply response es slow.\n"
+        "  · **Inventory cycle**: 2-3 año oscillation around "
+        "long-term trend.\n"
+        "  · **Super-cycle**: 1970s, 2000s, potentially 2020s "
+        "(energy transition + geopolitical realignment).\n\n"
+        "Critical: commodity prices son MEAN-REVERTING en the "
+        "long term (eventualmente nuevo supply comes online), "
+        "pero pueden stay above/below mean por años."
+    ),
+    why_matters=(
+        "Commodity cycles drive sectoral rotation. Strong "
+        "commodity cycle = energy/materials/EM equity "
+        "outperformance. Weak commodity cycle = tech / "
+        "consumer outperformance. Geopolitical events (Ukraine "
+        "2022, Iran, China) trigger commodity moves materially. "
+        "Y secular trends (energy transition, deglobalization) "
+        "redefine commodity demand fundamentals."
+    ),
+    how_pros_analyze=(
+        "1. **Supply/demand balance**: cuál side moves faster? "
+        "Demand quick to change (recession kills); supply slow.\n"
+        "2. **Cost curve**: marginal producer cost = floor. "
+        "Saudi oil ~$30; US shale ~$60; deepwater ~$70+. Price "
+        "below marginal = supply destruction.\n"
+        "3. **Inventory levels**: builds vs draws. Crude oil "
+        "DOE inventories weekly = high-frequency signal.\n"
+        "4. **Backwardation vs contango**: futures curve shape. "
+        "Backwardation (spot > forward) = tight market.\n"
+        "5. **Financialization**: ETFs + futures speculation "
+        "amplifies cycles beyond fundamentals (oil 2022, "
+        "wheat 2022).\n"
+        "6. **Capex discipline (or lack)**: when commodity high, "
+        "companies SHOULD reduce capex (counter-cyclical). "
+        "When low, increase (acquire cheap). Pre-2014 they "
+        "did opposite — capex bingo at peak. Post-2014: "
+        "more discipline."
+    ),
+    key_metrics=[
+        ("Spot price vs long-term avg",
+         "Tells you cycle position. >2 std above = peak risk."),
+        ("Cost curve marginal producer",
+         "Floor del price. Below = supply destruction."),
+        ("Inventories (days of consumption)",
+         "Tight market: low days · oversupply: high days."),
+        ("Futures curve shape",
+         "Backwardation tight · contango loose."),
+        ("Capex / Operating cash flow",
+         ">100% = bingo (peak signal) · <60% = discipline "
+         "(potential trough)."),
+        ("Speculative net positioning (CFTC)",
+         "Extreme long = overbought; extreme short = "
+         "oversold."),
+    ],
+    bullish_vs_bearish=[
+        ("Price below marginal cost → supply destruction",
+         "Price above peak historical → demand destruction"),
+        ("Inventories tight + backwardation",
+         "Inventories elevated + contango"),
+        ("Industry capex disciplined",
+         "Capex bingo (industry-wide)"),
+        ("Demand surprise (China stimulus, EM growth)",
+         "Demand destruction (recession, substitution)"),
+        ("Geopolitical disruption supply",
+         "Geopolitical resolution supply normalization"),
+    ],
+    valuation_impact=(
+        "Commodity stocks NEVER cotizan on LTM earnings (in "
+        "peak earnings, multiples are LOW; in trough, HIGH "
+        "or negative). USE through-cycle FCF / NAV of "
+        "reserves / midcycle commodity prices. Por eso "
+        "energy + materials cotizan structurally lower P/E "
+        "than overall market — incorporates cyclicality."
+    ),
+    case_study=(
+        "**2000-2008 commodity super-cycle**: oil $20 → $147, "
+        "copper $0.70 → $4.00, etc. Driver: China growth + "
+        "underinvestment 1990s. EM equities +500%, commodity "
+        "majors 10x.\n\n"
+        "**2014-2020 commodity bust**: oil $107 → -$37 "
+        "(briefly!). Capex bingo at peak meant supply overhang "
+        "for 6 años. Many oil names lost 70-80%. Lección: "
+        "in commodities, the cure for high prices is high "
+        "prices.\n\n"
+        "**2022 supply shock**: Ukraine + sanctions Russia. "
+        "Oil $130, gas surge in Europe 10x. Defense stocks "
+        "rerated. Saudi Aramco mejor performing major cap "
+        "globally. Geopolitical shocks = fastest path to "
+        "commodity moves."
+    ),
+    common_mistakes=[
+        "Aplicar DCF on LTM commodity earnings.",
+        "Buying commodity stocks at peak earnings (low P/E trap).",
+        "Asumiendo super-cycle continues forever (always ends).",
+        "Confiar en management's peak-cycle CapEx assumptions.",
+        "Ignorar substitution / demand destruction at high prices.",
+    ],
+    mental_model=(
+        "Saudis say: 'la mejor cura para precios altos son "
+        "precios altos; la mejor cura para precios bajos son "
+        "precios bajos'. Self-correcting nature de commodities. "
+        "Pero: timing es ELUSIVE. Cycles pueden last 7-15 años. "
+        "Better mental model: identify quality producers que "
+        "survive trough + thrive in peak. Don't try to time "
+        "perfectly."
+    ),
+    books=[
+        Book(title="The Prize", author="Daniel Yergin", year=1991,
+             chapter_hint="Historia + estructura de oil cycles",
+             why="The book on commodity history."),
+        Book(title="The New Map", author="Daniel Yergin", year=2020,
+             chapter_hint="Energy transition + geopolitics modern",
+             why="Yergin updated for 2020s realities."),
+        _BOOK_MARKS_MARKET_CYCLE,
+        Book(title="The Great Super Cycle",
+             author="David Skarica", year=2010,
+             chapter_hint="Caps. on commodity super-cycles",
+             why="Framework for super-cycle analysis."),
+    ],
+    videos=[
+        Video(title="Commodity Super-Cycles",
+              channel="Real Vision / Macro Voices",
+              minutes=45, url="",
+              why="Pro macro PMs discuss cycle dynamics."),
+    ],
+    quotes=[
+        Quote(text="The cure for high prices is high prices; the "
+                   "cure for low prices is low prices.",
+              author="Saudi oil minister (variations atribuidas)",
+              source="OPEC ministerial meetings"),
+        _Q_MARKS_RISK,
+        Quote(text="In commodity bull markets, demand surprises "
+                   "are the main upside; in commodity bear "
+                   "markets, supply discipline is the main upside.",
+              author="Anonymous commodities PM",
+              source="Industry adage"),
+    ],
+))
 
 # Mercado (stubs)
 _stub("risk_on_off",
