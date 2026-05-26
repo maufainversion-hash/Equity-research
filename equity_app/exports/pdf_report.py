@@ -1846,7 +1846,13 @@ def build_research_pdf(
             ai.update(ai_payload)
         except Exception as exc:
             log.debug("AI narrative skipped: %s", exc)
-    _ai_pool.shutdown(wait=False)
+            # Cancel the future so the worker can exit cleanly
+            # instead of finishing the Gemini call into the void.
+            _ai_future.cancel()
+    # wait=True ensures the worker thread is joined before this
+    # function returns. Previously wait=False leaked one thread per
+    # PDF generation when Gemini overran the 60s timeout.
+    _ai_pool.shutdown(wait=True)
 
     # Secciones AI-dependientes — con ``ai`` ya poblado.
     for i, (builder, keep, needs_ai) in enumerate(section_specs):

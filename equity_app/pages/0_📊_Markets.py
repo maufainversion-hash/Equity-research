@@ -100,8 +100,7 @@ for col, sym in zip(cols, USA_ROW):
 
 if all(v.get("last") is None for v in indices.values()):
     st.info(
-        "No se pudieron cargar los datos de mercado. "
-        "Intentá de nuevo en unos segundos.",
+        "Market data unavailable right now. Retry in a few seconds.",
         icon="⚠",
     )
 

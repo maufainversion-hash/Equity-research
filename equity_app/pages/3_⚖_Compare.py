@@ -136,7 +136,7 @@ _NONE = "— Ninguno —"
 filt_c, filt_s = st.columns([1, 1])
 with filt_c:
     country_options = [_ALL] + _catalog_countries()
-    country_sel = st.selectbox("País", country_options, index=0,
+    country_sel = st.selectbox("Country", country_options, index=0,
                                 key="compare_country")
 with filt_s:
     if country_sel == _ALL:
@@ -147,7 +147,7 @@ with filt_s:
         sector_options = [_ALL] + present
     else:
         sector_options = [_ALL] + _catalog_sectors(country_sel)
-    sector_sel = st.selectbox("Industria", sector_options, index=0,
+    sector_sel = st.selectbox("Industry", sector_options, index=0,
                                key="compare_sector")
 
 # ---- Resolve the filtered company list ----
@@ -161,7 +161,7 @@ def _filtered() -> list:
 
 _pool = _filtered()
 if not _pool:
-    st.warning("Sin empresas para esa combinación de filtros.")
+    st.warning("No companies match this country / industry filter.")
     st.stop()
 
 
@@ -203,7 +203,7 @@ with c2:
     sel2 = st.selectbox("Ticker 2", _labels, index=_default2,
                          key=f"compare_t2_{country_sel}_{sector_sel}")
 with c3:
-    sel3 = st.selectbox("Ticker 3 (opcional)", [_NONE] + _labels, index=0,
+    sel3 = st.selectbox("Ticker 3 (optional)", [_NONE] + _labels, index=0,
                          key=f"compare_t3_{country_sel}_{sector_sel}")
 
 t1 = _by_label.get(sel1, "")
@@ -215,7 +215,7 @@ tickers = [t for t in (t1, t2, t3) if t]
 # would otherwise load the bundle twice for the same ticker.
 tickers = list(dict.fromkeys(tickers))
 if len(tickers) < 2:
-    st.info("Elegí al menos 2 tickers distintos para comparar.")
+    st.info("Pick at least 2 distinct tickers to compare.")
     st.stop()
 
 
@@ -534,14 +534,14 @@ st.plotly_chart(fig, width="stretch",
 
 if skipped_fcf:
     st.caption(
-        f"⚠️ FCF no proyectable para: {', '.join(skipped_fcf)} "
-        f"(FCF base ≤ 0 o sin estados disponibles)."
+        f"⚠️ FCF not projectable for: {', '.join(skipped_fcf)} "
+        f"(base-year FCF ≤ 0 or no statements available)."
     )
 st.caption(
-    "Eje Y = índice rebased al año base (= 100), no $B — permite "
-    "comparar trayectorias de crecimiento cuando los tickers tienen "
-    "magnitudes muy distintas. Hover muestra el FCF absoluto en $B. "
-    "Forecast usa el CAGR histórico + márgenes 3y-avg de cada ticker."
+    "Y-axis = index rebased to the base year (= 100), not $B — lets "
+    "growth trajectories be compared across tickers with very "
+    "different magnitudes. Hover shows absolute FCF in $B. Forecast "
+    "uses each ticker's own historical CAGR + 3y-avg margins."
 )
 
 

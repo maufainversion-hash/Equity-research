@@ -92,7 +92,9 @@ def analyze_dividend_safety(
     *, income: pd.DataFrame, balance: pd.DataFrame, cash: pd.DataFrame,
 ) -> DividendSafetyResult:
     div_series = _dividends_paid(cash)
-    if div_series is None or div_series.iloc[-1] <= 0:
+    # _dividends_paid already applies .abs() — so the only way the
+    # last value is ≤0 is that it's exactly 0 (no dividend paid).
+    if div_series is None or div_series.iloc[-1] == 0:
         return DividendSafetyResult(
             applicable=False, score=0, overall="N/A", flag="unknown",
             note="Company does not pay material dividends.",

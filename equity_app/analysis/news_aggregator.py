@@ -325,11 +325,14 @@ def fetch_news_for_ticker(
     *,
     lookback_days: int = 7,
     max_items: int = 50,
-) -> list[NewsItem]:
+) -> tuple[NewsItem, ...]:
     """Aggregated, deduped, scored news for one ticker. All 3 sources
-    fetched in parallel; any source failure is silent (returns [])."""
+    fetched in parallel; any source failure is silent (returns ()).
+
+    Returns a tuple (immutable) so cached entries can't be corrupted
+    by a downstream consumer that mutates the result."""
     if not ticker:
-        return []
+        return ()
     fetchers = [
         (_fetch_yfinance_news,  (ticker, lookback_days, 30)),
         (_fetch_finnhub_news,   (ticker, lookback_days)),
@@ -349,7 +352,7 @@ def fetch_news_for_ticker(
     for it in all_items:
         it.relevance_score = _score_relevance(it, query_ticker=ticker)
     all_items.sort(key=lambda x: x.relevance_score, reverse=True)
-    return all_items[:max_items]
+    return tuple(all_items[:max_items])
 
 
 @st.cache_data(ttl=1800, show_spinner=False)

@@ -87,10 +87,17 @@ def rate(
         reasoning = (applicability_note or
                      "Modelos clásicos no aplicables al perfil de la empresa. "
                      "Usar el implied growth del reverse-DCF.")
+        # Preserve the real upside (may be wildly negative for growth
+        # stocks where classical models cluster well below price).
+        # Downstream consumers should branch on verdict == "N/A" before
+        # using upside, not the other way round. NaN when truly unknown
+        # so a stray formatter shows "—" instead of a fake 0.0.
+        import math as _math
         return Rating(
             verdict="N/A",
             composite=float(composite),
-            upside=float(upside if upside is not None else 0.0),
+            upside=(float(upside) if upside is not None
+                    else _math.nan),
             confidence=confidence,
             reasoning=reasoning,
         )

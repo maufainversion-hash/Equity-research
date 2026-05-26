@@ -249,9 +249,17 @@ def _resolve_shares_outstanding(
 
 
 def _build_target_fundamentals(
-    income: pd.DataFrame, balance: pd.DataFrame
+    income: pd.DataFrame, balance: pd.DataFrame,
+    *,
+    shares_override: Optional[float] = None,
 ) -> Optional[TargetFundamentals]:
-    """Construct TargetFundamentals from the latest year of statements."""
+    """Construct TargetFundamentals from the latest year of statements.
+
+    When ``shares_override`` is provided (typically the result of the
+    4-tier cascade in :func:`_resolve_shares_outstanding`), it wins
+    over the income-statement-only resolution — important for
+    thin-XBRL filers (V, MA, ...) where ``weightedAverageShsOut``
+    isn't shipped but the cascade can still resolve via info/quote."""
     if income.empty or balance.empty:
         return None
     last_inc = income.iloc[-1]
@@ -263,7 +271,8 @@ def _build_target_fundamentals(
                 return float(row[k])
         return None
 
-    shares = _pick(last_inc, "weightedAverageShsOut", "weightedAverageShsOutDil")
+    shares = shares_override or _pick(
+        last_inc, "weightedAverageShsOut", "weightedAverageShsOutDil")
     if not shares or shares <= 0:
         return None
     return TargetFundamentals(
@@ -385,7 +394,8 @@ def run_valuation(
 
     # ---- Comparables ----
     if peers:
-        target = _build_target_fundamentals(income, balance)
+        target = _build_target_fundamentals(income, balance,
+                                             shares_override=shares)
         if target is None:
             out.comparables_error = "Could not build target fundamentals."
         else:

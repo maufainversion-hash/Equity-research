@@ -86,15 +86,23 @@ def render_watchlist_card(*, on_select) -> None:
             if chg is not None else
             '<span style="color:var(--text-muted); font-size:12px;">—</span>'
         )
+        # Three explicit columns: ticker (left), last price (centre,
+        # tabular nums), change% (right, colour-coded). The prior
+        # layout crammed all three into a flex row without labels and
+        # placed change AFTER last with no separator — confusing read
+        # of which number was the price vs the change.
         rows.append(
-            '<div style="display:flex; justify-content:space-between; '
-            'align-items:baseline; padding:6px 0; '
+            '<div style="display:grid; '
+            'grid-template-columns:1fr 1fr auto; '
+            'align-items:baseline; gap:12px; padding:6px 0; '
             'border-bottom:1px solid var(--border);">'
             f'<span style="color:var(--text-primary); font-weight:500; '
             f'font-size:13px;">{t}</span>'
-            f'<span style="color:var(--text-muted); font-size:12px; '
-            f'font-variant-numeric:tabular-nums;">{last_text}</span>'
-            f'{chg_text}'
+            f'<span style="color:var(--text-secondary); font-size:13px; '
+            f'font-variant-numeric:tabular-nums; text-align:right;">'
+            f'{last_text}</span>'
+            f'<span style="text-align:right; min-width:64px; '
+            f'font-variant-numeric:tabular-nums;">{chg_text}</span>'
             '</div>'
         )
     st.markdown(

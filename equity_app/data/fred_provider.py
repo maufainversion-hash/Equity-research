@@ -22,7 +22,7 @@ Series we care about by default:
 """
 from __future__ import annotations
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
 
 import logging
@@ -109,7 +109,7 @@ def fetch_series(series_id: str, *, start: Optional[str] = None) -> pd.Series:
 
     if start is None:
         # 10y of history is enough for every dashboard use
-        start = (datetime.utcnow() - timedelta(days=365 * 10)).strftime("%Y-%m-%d")
+        start = (datetime.now(timezone.utc) - timedelta(days=365 * 10)).strftime("%Y-%m-%d")
 
     payload = _fred_get("series/observations", {
         "series_id":         series_id,
@@ -137,7 +137,7 @@ def fetch_series(series_id: str, *, start: Optional[str] = None) -> pd.Series:
 
 
 def latest_value(series_id: str) -> tuple[Optional[float], Optional[pd.Timestamp]]:
-    s = fetch_series(series_id, start=(datetime.utcnow() - timedelta(days=365)).strftime("%Y-%m-%d"))
+    s = fetch_series(series_id, start=(datetime.now(timezone.utc) - timedelta(days=365)).strftime("%Y-%m-%d"))
     if s.empty:
         return None, None
     return float(s.iloc[-1]), s.index[-1]
@@ -145,7 +145,7 @@ def latest_value(series_id: str) -> tuple[Optional[float], Optional[pd.Timestamp
 
 def inflation_yoy_pct(series_id: str = "CPIAUCSL") -> tuple[Optional[float], Optional[pd.Timestamp]]:
     """YoY % change of an index series (CPIAUCSL = headline CPI)."""
-    s = fetch_series(series_id, start=(datetime.utcnow() - timedelta(days=400)).strftime("%Y-%m-%d"))
+    s = fetch_series(series_id, start=(datetime.now(timezone.utc) - timedelta(days=400)).strftime("%Y-%m-%d"))
     if s.empty or len(s) < 13:
         return None, None
     yoy = (s.iloc[-1] / s.iloc[-13] - 1) * 100

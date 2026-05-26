@@ -80,7 +80,10 @@ def _dividends_per_share(
     if div is None or div.dropna().empty:
         return None
     div = div.abs()                       # cash flow comes in negative
-    if (div.dropna() <= 0).all():
+    # After .abs(), the only way every value is ≤0 is that every value
+    # is exactly 0 — i.e. no dividends at all. Bail out before the
+    # share resolution dance.
+    if (div.dropna() == 0).all():
         return None
 
     # Tier 1: per-period series from income statement

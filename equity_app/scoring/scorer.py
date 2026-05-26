@@ -84,21 +84,34 @@ def _clip(score: Optional[float]) -> Optional[float]:
 def score_growth(
     income: pd.DataFrame, cash: pd.DataFrame
 ) -> tuple[Optional[float], str]:
-    """Average score across revenue / EPS / FCF 5y CAGR."""
+    """Average score across revenue / EPS / FCF CAGR.
+
+    All three CAGRs are pinned to the SAME window (the largest one
+    that every series can support) so the average doesn't mix a 5y
+    rev CAGR with a 1y FCF CAGR. Falls back to 3y if any series is
+    too thin for 5y; bails out if even 3y is unattainable."""
     rev = _get(income, "revenue")
     eps = _get(income, "eps")
     fcf = free_cash_flow(cash)
+    series = [(name, s) for name, s in
+              (("revenue", rev), ("EPS", eps), ("FCF", fcf))
+              if s is not None and not s.dropna().empty]
+    if not series:
+        return None, "Insufficient growth data"
 
-    cagrs = []
-    for s in (rev, eps, fcf):
-        if s is None:
-            continue
-        clean = s.dropna()
-        if len(clean) < 2:
-            continue
-        c = cagr(clean, periods=min(5, len(clean) - 1))
+    # Pick the largest window all available series can support.
+    min_len = min(len(s.dropna()) for _, s in series)
+    if min_len < 2:
+        return None, "Insufficient growth data"
+    window = min(5, min_len - 1)
+
+    cagrs: list[float] = []
+    used: list[str] = []
+    for name, s in series:
+        c = cagr(s.dropna(), periods=window)
         if np.isfinite(c):
             cagrs.append(c)
+            used.append(name)
     if not cagrs:
         return None, "Insufficient growth data"
 
@@ -107,7 +120,9 @@ def score_growth(
         (-0.20, 0), (-0.05, 25), (0.0, 40), (0.05, 60),
         (0.10, 75), (0.20, 90), (0.30, 100),
     ])
-    return _clip(score), f"Avg CAGR {g_avg:.1%} across rev/EPS/FCF"
+    return _clip(score), (
+        f"Avg {window}y CAGR {g_avg:.1%} across {'/'.join(used)}"
+    )
 
 
 def score_profitability(income: pd.DataFrame, balance: pd.DataFrame) -> tuple[Optional[float], str]:

@@ -126,8 +126,8 @@ def fetch_insider_transactions(ticker: str) -> pd.DataFrame:
 
 def fetch_company_news(ticker: str, *, days_back: int = 30) -> pd.DataFrame:
     """Headlines for the last N days."""
-    from datetime import datetime, timedelta
-    today = datetime.utcnow().date()
+    from datetime import datetime, timedelta, timezone
+    today = datetime.now(timezone.utc).date()
     start = today - timedelta(days=days_back)
     payload = _get("company-news", {
         "symbol": ticker,
@@ -163,11 +163,12 @@ def fetch_earnings_calendar(ticker: str, *,
                             from_date: Optional[str] = None,
                             to_date: Optional[str] = None) -> pd.DataFrame:
     """Upcoming earnings dates + EPS estimates."""
-    from datetime import datetime, timedelta
+    from datetime import datetime, timedelta, timezone
+    today = datetime.now(timezone.utc).date()
     if from_date is None:
-        from_date = datetime.utcnow().date().isoformat()
+        from_date = today.isoformat()
     if to_date is None:
-        to_date = (datetime.utcnow().date() + timedelta(days=90)).isoformat()
+        to_date = (today + timedelta(days=90)).isoformat()
     payload = _get("calendar/earnings", {
         "symbol": ticker, "from": from_date, "to": to_date,
     })

@@ -112,7 +112,7 @@ def render_efficiency(
     inventory = _get(balance, "inventory")
     payables = _get(balance, "current_liabilities")  # proxy: AP often missing
     assets = _get(balance, "total_assets")
-    rd = _get(income, "depreciation_inc")            # closest proxy (R&D often absent)
+    da = _get(income, "depreciation_inc")            # D&A from income (R&D often absent)
     sga = _get(income, "sga")
 
     # Asset turnover series
@@ -131,8 +131,8 @@ def render_efficiency(
 
     sga_pct = _safe_div(_last(sga), _last(rev))
     sga_pct = sga_pct * 100 if sga_pct is not None else None
-    rd_pct = _safe_div(_last(rd), _last(rev))
-    rd_pct = rd_pct * 100 if rd_pct is not None else None
+    da_pct = _safe_div(_last(da), _last(rev))
+    da_pct = da_pct * 100 if da_pct is not None else None
 
     cards = [
         {"label": "Asset turnover", "value": asset_turn_v,
@@ -148,7 +148,7 @@ def render_efficiency(
          "kind": "days", "industry_avg": None, "higher_better": False},
         {"label": "SG&A / Revenue", "value": sga_pct, "history": [],
          "kind": "pct", "industry_avg": None, "higher_better": False},
-        {"label": "D&A / Revenue", "value": rd_pct, "history": [],
+        {"label": "D&A / Revenue", "value": da_pct, "history": [],
          "kind": "pct", "industry_avg": None, "higher_better": False},
     ]
     for i in range(0, len(cards), 3):

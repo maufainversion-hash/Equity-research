@@ -98,11 +98,19 @@ def estimate_fundamental_growth(
             g_fcfe_raw = float(g_fcfe_series.mean())
     g_fcfe = _clamp_growth(g_fcfe_raw)
 
-    # ---- g_revenue_historical = 5y revenue CAGR ----
+    # ---- g_revenue_historical = revenue CAGR over the largest window
+    # the series supports (target 5y → 4 periods of growth between 5
+    # data points; fall back to the full series otherwise). The window
+    # actually used isn't always 5y, so the variable name is "historical"
+    # rather than "5y" to avoid the lie.
     revenue = _get(income, "revenue")
-    g_rev = cagr(revenue, periods=4) if revenue is not None else float("nan")
-    if not np.isfinite(g_rev) and revenue is not None:
-        g_rev = cagr(revenue)
+    g_rev = float("nan")
+    if revenue is not None:
+        clean = revenue.dropna()
+        if len(clean) >= 5:
+            g_rev = cagr(clean, periods=4)             # full 5-point window
+        elif len(clean) >= 2:
+            g_rev = cagr(clean, periods=len(clean) - 1)  # what we have
     g_revenue_historical = _clamp_growth(g_rev)
 
     # ---- Stage-aware blend ----
