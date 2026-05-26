@@ -1663,51 +1663,1161 @@ def _stub(slug: str, books: list[Book], videos: list[Video],
     ))
 
 
-# Empresas (stubs)
-_stub("revenue_growth",
-      [_BOOK_DAMODARAN_VALUATION, _BOOK_LYNCH, _BOOK_FISHER],
-      [_VIDEO_DAMODARAN_VALUATION],
-      [_Q_LYNCH_INVERT, _Q_DAMODARAN_STORY])
-_stub("margins",
-      [_BOOK_MCKINSEY_VALUATION, _BOOK_BUFFETT_LETTERS],
-      [_VIDEO_BUFFETT_1996],
-      [_Q_BUFFETT_MOAT])
-_stub("operating_leverage",
-      [_BOOK_MCKINSEY_VALUATION, _BOOK_DAMODARAN_VALUATION],
-      [_VIDEO_DAMODARAN_CORPFIN],
-      [_Q_DAMODARAN_STORY])
-_stub("roe",
-      [_BOOK_MCKINSEY_VALUATION, _BOOK_CFA],
-      [_VIDEO_DAMODARAN_CORPFIN],
-      [_Q_BUFFETT_MOAT])
-_stub("debt_analysis",
-      [_BOOK_SECURITY_ANALYSIS, _BOOK_DALIO_PRINCIPLES, _BOOK_KLARMAN_MOS],
-      [_VIDEO_DAMODARAN_CORPFIN],
-      [_Q_GRAHAM_MOS])
-_stub("dilution",
-      [_BOOK_BUFFETT_LETTERS, _BOOK_DAMODARAN_VALUATION],
-      [_VIDEO_BUFFETT_1996], [_Q_BUFFETT_PRICE_VALUE])
+# ============================================================
+# Batch 1 — Empresas core lessons
+# ============================================================
+
+# ---------- Revenue growth ----------
+_add(Lesson(
+    slug="revenue_growth",
+    label=_label_for("revenue_growth"),
+    category=_cat_for("revenue_growth"),
+    hook=_hook_for("revenue_growth"),
+    definition=(
+        "Revenue growth es el crecimiento de la facturación de una "
+        "empresa a través del tiempo. Parece simple pero la pregunta "
+        "real no es cuánto creció — es **cómo**. Los analistas separan "
+        "el crecimiento en componentes:\n\n"
+        "  · **Orgánico**: el negocio core vendió más (más volumen, "
+        "más precios, o ambos).\n"
+        "  · **M&A**: vino de acquisitions — comprar revenue, no "
+        "generarlo.\n"
+        "  · **FX**: monedas locales se apreciaron vs USD reporting.\n"
+        "  · **Mix / pricing**: cambiaron qué venden o a qué precio "
+        "(distinto de volumen).\n\n"
+        "Una empresa que crece 20% por adquisiciones y 0% orgánico es "
+        "muy distinta de una que crece 20% orgánico — aunque el "
+        "número reportado sea idéntico."
+    ),
+    why_matters=(
+        "El valor de un negocio depende del crecimiento orgánico "
+        "sostenible — no del crecimiento total. M&A en exceso suele "
+        "destruir valor (estudios académicos coinciden: 60%+ de los "
+        "deals fallan). FX gains no son repetibles. Pricing power "
+        "es escalable; volumen tiene techo físico. Saber qué tipo de "
+        "growth tenés en el reporte cambia completamente la valuación."
+    ),
+    how_pros_analyze=(
+        "1. **Decomposition obligatoria**: reportes 10-K y earnings "
+        "calls suelen dar 'organic growth ex-FX ex-M&A'. Buscar ese "
+        "número, no el headline.\n"
+        "2. **Pricing vs volume**: empresas grandes suelen reportar "
+        "ambos. Coca-Cola por ejemplo da volume growth + price/mix "
+        "growth por geografía. Pricing power consistente = moat.\n"
+        "3. **Quality of growth**: ¿el growth viene con márgenes "
+        "estables o se compra con descuentos? Revenue creciendo pero "
+        "márgenes erosionándose = mala calidad.\n"
+        "4. **Comparables sectoriales**: 10% growth en software es "
+        "modesto; en utilities es excepcional. Hay que normalizar.\n"
+        "5. **Trend, no point**: una empresa con CAGR estable 8% por "
+        "10 años es más valiosa que una con un año de 30% y otros "
+        "estancados — aunque el promedio sea igual."
+    ),
+    key_metrics=[
+        ("Revenue YoY (%)",
+         "Crecimiento reportado vs año anterior. Headline obvious."),
+        ("Organic revenue growth (%)",
+         "El que descuenta M&A y FX. Lo que mide el negocio real."),
+        ("Volume vs price/mix split",
+         "En empresas grandes ambos son reportados. Pricing power = "
+         "price/mix consistentemente positivo."),
+        ("Revenue CAGR 5y",
+         "Trend de mediano plazo. Suaviza años outlier."),
+        ("Same-store / same-customer growth",
+         "Para retail (SSS) y SaaS (NRR). Mide cómo crece la base "
+         "existente, no el efecto net-new."),
+    ],
+    bullish_vs_bearish=[
+        ("Crecimiento orgánico ≥ headline (poco M&A)",
+         "Headline alto pero orgánico cerca de 0 (todo es M&A)"),
+        ("Pricing + volume ambos positivos",
+         "Crece solo por descuentos / pricing negativo"),
+        ("Same-store sales positivo consistente",
+         "Crece solo por aperturas / SSS negativo"),
+        ("Mix shifting hacia productos premium",
+         "Mix shifting hacia low-margin commodity"),
+        ("Aceleración orgánica en mercados maduros",
+         "Desaceleración orgánica oculta por adquisiciones"),
+    ],
+    valuation_impact=(
+        "Revenue growth alimenta directo el DCF como input top-line. "
+        "Pero los multiples dependen MÁS del growth QUALITY que de su "
+        "magnitud. Una empresa con 8% orgánico estable amerita P/S "
+        "más alto que una con 15% mixto (50% M&A). Damodaran: 'el "
+        "growth que crea valor es solo el que viene con ROIC > WACC'. "
+        "Si una empresa crece comprando otras a múltiples altos, "
+        "está destruyendo valor aunque revenue suba."
+    ),
+    case_study=(
+        "**Constellation Software (CSU.TO)**: la masterclass de "
+        "growth-by-M&A bien hecha. Revenue creció ~20% CAGR durante "
+        "20 años casi enteramente por acquisitions — PERO cada deal "
+        "se hace con disciplina IRR strict (>20%). El stock multiplicó "
+        "100x desde 2006. Lección: M&A NO es inherentemente malo, lo "
+        "malo es la M&A indisciplinada.\n\n"
+        "**Contraejemplo — Kraft-Heinz 2015-2019**: el merger prometió "
+        "synergies + revenue growth. Resultado: revenue stagnated 4 "
+        "años, márgenes cayeron, en 2019 tomaron impairment de $15B "
+        "(reconociendo que las marcas valían menos). Buffett admitió "
+        "públicamente que sobrepagó."
+    ),
+    common_mistakes=[
+        "Celebrar revenue growth headline sin verificar cuánto es orgánico.",
+        "Asumir que más growth = más valor. Growth con ROIC < WACC destruye valor.",
+        "Confundir un trimestre con una tendencia. Un beat aislado no establece growth sostenible.",
+        "Ignorar el efecto FX cuando la empresa reporta en USD pero opera multinacional.",
+        "Pasar por alto que el crecimiento de same-store es el verdadero indicador para retail / SaaS.",
+    ],
+    mental_model=(
+        "Buffett: 'crecimiento solo tiene valor cuando ocurre con retornos "
+        "sobre capital atractivos'. Tu pregunta no debe ser '¿está "
+        "creciendo?' sino '¿con qué calidad crece y cuánto tiempo "
+        "puede sostenerlo?'. Una empresa que crece 8% al 25% ROIC vale "
+        "más que una que crece 15% al 8% ROIC. Cada vez que veas un "
+        "headline de revenue growth, pensá: orgánico, sostenible, y "
+        "con qué retorno marginal sobre el capital invertido."
+    ),
+    books=[_BOOK_DAMODARAN_VALUATION, _BOOK_LYNCH, _BOOK_FISHER,
+           _BOOK_MCKINSEY_VALUATION],
+    videos=[_VIDEO_DAMODARAN_VALUATION],
+    quotes=[_Q_LYNCH_INVERT, _Q_DAMODARAN_STORY,
+            Quote(text="Growth is a component in the value of a business "
+                       "— but a growth that destroys value is anti-growth.",
+                  author="Aswath Damodaran",
+                  source="Damodaran NYU lectures")],
+))
+
+# ---------- Margins ----------
+_add(Lesson(
+    slug="margins",
+    label=_label_for("margins"),
+    category=_cat_for("margins"),
+    hook=_hook_for("margins"),
+    definition=(
+        "Los márgenes miden cuánto se queda la empresa de cada dólar "
+        "vendido, en cada etapa del estado de resultados:\n\n"
+        "  · **Gross margin** = (Revenue − COGS) / Revenue. Lo que "
+        "queda después del costo directo de producción.\n"
+        "  · **Operating margin** = EBIT / Revenue. Después de OPEX "
+        "(R&D, marketing, G&A). El margen del negocio core.\n"
+        "  · **EBITDA margin** = (EBIT + D&A) / Revenue. Operating "
+        "ajustado por capital intensity.\n"
+        "  · **Net margin** = Net Income / Revenue. El bottom-line "
+        "después de intereses, impuestos y todo lo demás.\n\n"
+        "Cada margen cuenta una parte distinta de la historia. Mirar "
+        "uno solo es como diagnosticar a un paciente con un solo "
+        "análisis."
+    ),
+    why_matters=(
+        "Los márgenes son la huella digital de la calidad del negocio. "
+        "Una empresa con gross margin 70% (software, marcas, "
+        "farma) tiene fundamentos distintos a una con 30% (retail, "
+        "manufactura). Los márgenes expansivos en el tiempo señalan "
+        "pricing power, escalabilidad o ventaja competitiva creciente. "
+        "Márgenes que se comprimen son la primera señal de deterioro "
+        "competitivo — antes de que aparezca en revenue."
+    ),
+    how_pros_analyze=(
+        "1. **Gross margin first**: es el más cercano al producto. "
+        "Erosión sostenida = competencia o commoditización.\n"
+        "2. **Operating margin vs gross**: la diferencia es OPEX. "
+        "Empresas en growth deliberadamente sacrifican op margin para "
+        "ganar share (Amazon clásico). Empresas maduras lo expanden.\n"
+        "3. **Comparison vs peers**: margins solo importan vs "
+        "competidores del mismo modelo. Apple op margin 30% vs Dell "
+        "8% — la diferencia no es operacional, es estructural.\n"
+        "4. **Trend 10y, not 1y**: márgenes oscilan con cycle. La "
+        "tendencia subyacente importa más que el punto.\n"
+        "5. **Decomposición del cambio**: si net margin sube 100bp, "
+        "¿es por gross margin, OPEX leverage, mix de productos, o "
+        "tax rate? Cada explicación implica calidad distinta."
+    ),
+    key_metrics=[
+        ("Gross margin (%)",
+         "Producto / mix. >70% software & brand · 30-50% industriales · "
+         "<20% commoditizado."),
+        ("Operating margin (%)",
+         "Salud del negocio core. Mature blue chip: 15-30%."),
+        ("EBITDA margin (%)",
+         "Capital intensity-adjusted. Permite comparar telecoms vs "
+         "software."),
+        ("Net margin (%)",
+         "Después de todo. Sensible a leverage y tax."),
+        ("Incremental margin",
+         "ΔOp Income / ΔRevenue. Mide operating leverage. >30% indica "
+         "leverage fuerte."),
+    ],
+    bullish_vs_bearish=[
+        ("Gross margin expandiendo 5+ años",
+         "Gross margin erosionándose (commoditización / competencia)"),
+        ("Op margin > gross margin proxy del sector",
+         "Op margin sub-peer (ineficiencia OPEX)"),
+        ("Incremental margin alto (operating leverage)",
+         "Crece revenue pero op income estancado (deleverage)"),
+        ("Margin recovery post-shock (resilient)",
+         "Margins nunca recuperan (cambio estructural)"),
+        ("Pricing power demostrado (price contribution positivo)",
+         "Margens estables solo por cost-cutting (sin pricing)"),
+    ],
+    valuation_impact=(
+        "En el DCF, el margen operativo determina el NOPAT y por tanto "
+        "el FCF. Una expansión de 200bp en op margin puede agregar "
+        "15-25% al intrinsic value. Pero más importante: márgenes "
+        "consistentemente altos justifican multiples más altos. "
+        "Software cotiza a P/S 8-15x porque sus márgenes operativos "
+        "son 25-40%; retail cotiza a P/S 0.5-2x porque sus márgenes "
+        "son 5-10%."
+    ),
+    case_study=(
+        "**Apple FY2024**: gross margin 46%, op margin 31%. Empezó "
+        "como empresa de hardware (gross margin típico hw <30%). El "
+        "shift hacia servicios (gross margin >70%) elevó el blended "
+        "gross margin de 38% (2018) a 46% (2024). El mercado pagó "
+        "ese mix shift con expansión de multiple — pasó de P/E 14 a "
+        "P/E 28+ en el mismo período.\n\n"
+        "**Contraejemplo — General Electric 2015-2020**: op margin "
+        "bajó de 14% a 6% mientras revenue se estancó. La empresa "
+        "que era 'GE Brand' pasó a ser commoditized industrial. "
+        "Stock perdió 60%."
+    ),
+    common_mistakes=[
+        "Comparar márgenes entre industrias. Software vs manufactura son juegos distintos.",
+        "Ignorar que márgenes en cyclical companies oscilan — no comprar en el peak ni vender en el trough.",
+        "Confundir margin expansion vía cost-cutting con margin expansion vía pricing. La segunda es sostenible, la primera no.",
+        "Pasar por alto el efecto del tax rate en net margin (cambios en jurisdicciones, deferred taxes).",
+        "Asumir que margen alto = barrera de entrada. A veces solo indica que no hay competencia AÚN.",
+    ],
+    mental_model=(
+        "Pensá los márgenes como las huellas que deja el modelo de "
+        "negocio. Software te muestra 75% gross margin porque copiar "
+        "código cuesta cero. Retail te muestra 25% porque cada item "
+        "tiene costo. Cuando un margen se mueve fuera de su rango "
+        "histórico, **eso es información** — algo cambió: el mix, la "
+        "competencia, los costos. El analista pregunta '¿qué cambió?' "
+        "antes de '¿es bueno o malo?'."
+    ),
+    books=[_BOOK_MCKINSEY_VALUATION, _BOOK_BUFFETT_LETTERS,
+           _BOOK_DAMODARAN_VALUATION],
+    videos=[_VIDEO_BUFFETT_1996, _VIDEO_DAMODARAN_CORPFIN],
+    quotes=[_Q_BUFFETT_MOAT,
+            Quote(text="The single most important decision in evaluating "
+                       "a business is pricing power.",
+                  author="Warren Buffett",
+                  source="2010 FCIC interview"),
+            _Q_DAMODARAN_STORY],
+))
+
+# ---------- Operating leverage ----------
+_add(Lesson(
+    slug="operating_leverage",
+    label=_label_for("operating_leverage"),
+    category=_cat_for("operating_leverage"),
+    hook=_hook_for("operating_leverage"),
+    definition=(
+        "Operating leverage es la sensibilidad del operating income a "
+        "cambios en revenue. Una empresa con costos fijos altos y "
+        "variables bajos tiene **alto operating leverage**: pequeños "
+        "cambios en revenue producen movimientos amplificados en OI.\n\n"
+        "Cuantitativamente: **Operating leverage = % Δ EBIT / % Δ Revenue**.\n\n"
+        "Una empresa con 2x operating leverage: revenue +10% → EBIT +20%.\n"
+        "Una empresa con 0.5x: revenue +10% → EBIT +5%.\n\n"
+        "El leverage opera en ambas direcciones — amplifica también "
+        "las caídas."
+    ),
+    why_matters=(
+        "Es la razón por la que el mismo crecimiento de revenue mueve "
+        "muy distinto los EPS de distintos modelos. Software, "
+        "exchanges (CME, ICE), media — alto fixed cost, casi todo "
+        "incremental revenue va al bottom line. Retail, restaurants, "
+        "shipping — alto variable cost, growth modesto en EPS. "
+        "Entender el operating leverage te dice qué esperar de los "
+        "earnings cuando revenue acelera (o se desacelera)."
+    ),
+    how_pros_analyze=(
+        "1. **Incremental margin**: ΔEBIT / ΔRevenue año a año. Si una "
+        "empresa muestra 40-60% incremental margin sostenido, alto "
+        "operating leverage.\n"
+        "2. **Fixed vs variable cost mix**: difícil de extraer del "
+        "10-K pero suele estar en earnings calls. Software: ~80% fixed. "
+        "Retail: ~30% fixed (rent + corporate G&A).\n"
+        "3. **Break-even analysis**: punto donde EBIT = 0. Empresas "
+        "con high operating leverage tienen break-even alto pero "
+        "todo lo que está arriba se traduce en EBIT.\n"
+        "4. **Operating leverage en bajadas**: durante recesión, "
+        "alto OP también amplifica las pérdidas. Hay que respetar "
+        "que el leverage es simétrico.\n"
+        "5. **Mature companies**: una vez maduras, el operating "
+        "leverage se agota. Mantener growth requiere más OPEX."
+    ),
+    key_metrics=[
+        ("Degree of operating leverage (DOL)",
+         "Contribution margin / Operating income. >2x = high. <1.2x = low."),
+        ("Incremental operating margin (%)",
+         "ΔEBIT / ΔRevenue YoY. Sostained 40%+ = leverage muy alto."),
+        ("Fixed cost ratio",
+         "Fixed / Total OPEX. Difícil de obtener pero clave."),
+        ("Break-even revenue",
+         "Revenue level needed to cover all costs. Para evaluar "
+         "downside risk."),
+        ("Revenue per employee",
+         "Proxy de capital intensity. >$500K = high leverage; <$200K = low."),
+    ],
+    bullish_vs_bearish=[
+        ("Incremental margin >40% sostenido",
+         "Incremental margin <20% / revenue crece pero EBIT no"),
+        ("Revenue crece + OPEX casi flat (high leverage)",
+         "Revenue crece + OPEX crece igual o más (no leverage)"),
+        ("Modelo escalable (software, exchanges)",
+         "Modelo human-intensive (consultoría, retail)"),
+        ("Recovery post-recesión rápida (leverage al alza)",
+         "Recovery post-recesión lenta (sin re-leverage)"),
+    ],
+    valuation_impact=(
+        "Las empresas con alto operating leverage merecen multiples "
+        "MÁS altos cuando crecen y multiples MÁS bajos cuando "
+        "decrecen — el mercado paga por la convexity. Microsoft (high "
+        "OP) cotiza P/E 30+ con 12% growth; Walmart (low OP) cotiza "
+        "P/E 25 con 5% growth. La diferencia es operating leverage. "
+        "En DCF, modelar márgenes que se expanden con escala es la "
+        "forma técnica de capturar OP."
+    ),
+    case_study=(
+        "**Meta Platforms 2022-2024**: en 2022 revenue cayó 1% pero "
+        "operating margin colapsó de 40% a 25% — el operating "
+        "leverage operó al revés. En 2023-2024 Zuck hizo cost-cutting "
+        "agresivo ('year of efficiency'), revenue se recuperó +16% y "
+        "op margin volvió a 41%. El stock 4x desde el bottom — un "
+        "case study clásico de cómo el operating leverage simétrico "
+        "drivea retornos.\n\n"
+        "**Contraejemplo — Boeing 2019-2024**: high operating leverage "
+        "(plantas, R&D, certificación). Cuando el 737 MAX se "
+        "groundeó, revenue cayó y los costos fijos siguieron. EBIT "
+        "fue negativo 5 años seguidos. Recovery lenta porque cada "
+        "avión adicional importa muchísimo."
+    ),
+    common_mistakes=[
+        "Confundir operating leverage con financial leverage. El primero es operativo (costos fijos vs variables), el segundo es financiero (deuda).",
+        "Asumir que alto operating leverage es siempre bueno. Es bueno con revenue creciendo, es brutal con revenue cayendo.",
+        "Olvidar que el operating leverage se 'agota' a escala. Microsoft no tiene el mismo OP marginal que hace 20 años.",
+        "Pasar por alto que el OPEX no es 100% fijo — incluye componentes variables (bonuses, marketing performance-based).",
+        "Modelar revenue growth lineal sin ajustar márgenes — pierde toda la convexity del modelo.",
+    ],
+    mental_model=(
+        "Imaginá una empresa como una palanca física. El operating "
+        "leverage es el ratio de la palanca. Algunas empresas son "
+        "palancas largas (alto leverage) — pequeños movimientos abajo "
+        "producen grandes movimientos arriba. Otras son palancas "
+        "cortas (bajo leverage). Cuando estimás el EBIT futuro, no "
+        "asumas que crece proporcionalmente con revenue — depende del "
+        "largo de la palanca."
+    ),
+    books=[_BOOK_MCKINSEY_VALUATION, _BOOK_DAMODARAN_VALUATION,
+           _BOOK_CFA],
+    videos=[_VIDEO_DAMODARAN_CORPFIN],
+    quotes=[_Q_DAMODARAN_STORY,
+            Quote(text="In businesses with high operating leverage, modest "
+                       "changes in revenue can produce dramatic changes in "
+                       "profits — for better or for worse.",
+                  author="Tim Koller (McKinsey)",
+                  source="Valuation, 7th ed.")],
+))
+
+# ---------- ROE / DuPont ----------
+_add(Lesson(
+    slug="roe",
+    label=_label_for("roe"),
+    category=_cat_for("roe"),
+    hook=_hook_for("roe"),
+    definition=(
+        "Return on Equity (ROE) = Net Income / Total Equity. Mide "
+        "cuánta ganancia genera la empresa por cada dólar de patrimonio "
+        "neto. Es la métrica favorita del shareholder porque mide "
+        "el retorno sobre **su** capital — no sobre el capital total.\n\n"
+        "Pero ROE solo te dice POCO. La descomposición DuPont lo abre "
+        "en sus tres drivers:\n\n"
+        "**ROE = Net margin × Asset turnover × Equity multiplier**\n\n"
+        "  · Net margin = NI / Revenue (rentabilidad)\n"
+        "  · Asset turnover = Revenue / Total Assets (eficiencia)\n"
+        "  · Equity multiplier = Total Assets / Equity (leverage)\n\n"
+        "Dos empresas con ROE 20% pueden tener fundamentos opuestos."
+    ),
+    why_matters=(
+        "ROE es el indicador más usado por inversores y el más fácil "
+        "de manipular sin malicia. Una empresa puede inflar ROE "
+        "tomando deuda (equity multiplier sube) — pero esa misma "
+        "deuda la vuelve más frágil. DuPont te permite distinguir un "
+        "ROE de alta calidad (alto net margin, baja deuda) de uno de "
+        "baja calidad (basado en leverage). Es la diferencia entre "
+        "Visa y un banco regional pre-2008."
+    ),
+    how_pros_analyze=(
+        "1. **DuPont decomposition obligatoria**. ROE 25% con margin 25% "
+        "/ turnover 1.0 / leverage 1.0 es muy distinto a ROE 25% con "
+        "margin 5% / turnover 1.0 / leverage 5.0.\n"
+        "2. **Compare ROE vs Cost of Equity (Ke)**: ROE > Ke = "
+        "creación de valor para shareholders. ROE < Ke = destrucción.\n"
+        "3. **Sustainability**: si ROE depende del leverage, es "
+        "frágil — un mal año puede wipear el equity.\n"
+        "4. **Banks**: tienen leverage estructural ~10x. ROE 15% en "
+        "banco vs 15% en tech no son iguales. Para bancos comparar "
+        "**ROTE** (return on tangible equity).\n"
+        "5. **Industry comparison**: utilities tienen ROE 10% pero "
+        "regulado y estable; tech 25% pero volátil. Hay que normalizar."
+    ),
+    key_metrics=[
+        ("ROE (%)",
+         "Net Income / Average Equity. >15% bueno · >25% excelente "
+         "· <10% subpar."),
+        ("ROE − Cost of Equity",
+         "Spread de creación de valor. >5pp = sólido moat."),
+        ("Net margin (%)",
+         "Driver de rentabilidad en DuPont."),
+        ("Asset turnover",
+         "Driver de eficiencia en DuPont. Retailers >2x, "
+         "industriales <1x."),
+        ("Equity multiplier",
+         "Driver de leverage. >3x considerar leverage-driven; >5x = "
+         "fragilidad."),
+        ("ROTE — Return on Tangible Equity",
+         "Excluye goodwill. Esencial para bancos / empresas "
+         "M&A-heavy."),
+    ],
+    bullish_vs_bearish=[
+        ("ROE >20% sostenido 10y con leverage modesto",
+         "ROE alto pero impulsado solo por leverage (>4x multiplier)"),
+        ("DuPont: alto net margin + alta eficiencia",
+         "DuPont: bajo margin + alta deuda — fragilidad"),
+        ("ROE > Cost of Equity (spread positivo)",
+         "ROE < Cost of Equity — destrucción de valor"),
+        ("ROTE alto (calidad real)",
+         "ROE alto pero ROTE bajo (goodwill enmascara economía pobre)"),
+    ],
+    valuation_impact=(
+        "Empresas con ROE > Ke crean valor — el book value debería "
+        "cotizar a P/B > 1. Visa cotiza P/B 12x porque su ROE es ~50% "
+        "vs Ke ~9%. Bancos cotizan P/B 1.0-1.5x porque ROE ~12% vs "
+        "Ke ~10%. La fórmula simplificada: **P/B = (ROE − g) / (Ke − g)**. "
+        "Un ROE estable y alto justifica multiples premium; un ROE "
+        "volátil y dependiente de leverage merece descuento."
+    ),
+    case_study=(
+        "**Lehman Brothers 2006**: reportaba ROE 25%+ — looked "
+        "amazing. DuPont decomposition revelaba: net margin 7%, asset "
+        "turnover bajo, equity multiplier ~30x. Tres veces el "
+        "leverage típico de un banco. Cuando los assets cayeron 3%, "
+        "el equity entero se evaporó (3% × 30 = 100%). ROE = fragilidad.\n\n"
+        "**Contraejemplo — Visa**: ROE ~50% con net margin 50%+, "
+        "equity multiplier <2x. La calidad del ROE es real — no "
+        "depende de leverage. Stock 20x desde IPO 2008."
+    ),
+    common_mistakes=[
+        "Comparar ROE entre industrias sin ajustar por leverage estructural.",
+        "Celebrar ROE alto sin descomponer en DuPont — puede ser puro leverage.",
+        "Usar ROE en bancos. Para bancos usar ROTE (excluye goodwill).",
+        "Olvidar que un cash buyback aumenta ROE artificialmente (reduce equity).",
+        "Ignorar que ROE puede ser >100% (e.g. Lowe's después de buybacks agresivos) — el equity es residual.",
+    ],
+    mental_model=(
+        "ROE responde una pregunta: '¿cuánto retorno gana la empresa "
+        "sobre el capital que YO aporto?' Pero la pregunta importante "
+        "es 'cómo lo gana'. Una empresa que rinde 25% sin deuda es "
+        "una máquina de compounding. Una que rinde 25% con leverage "
+        "10x es una bomba de tiempo. DuPont separa la señal del ruido."
+    ),
+    books=[_BOOK_MCKINSEY_VALUATION, _BOOK_CFA, _BOOK_DAMODARAN_VALUATION,
+           _BOOK_BUFFETT_LETTERS],
+    videos=[_VIDEO_DAMODARAN_CORPFIN],
+    quotes=[_Q_BUFFETT_MOAT,
+            Quote(text="The primary test of managerial economic "
+                       "performance is the achievement of a high earnings "
+                       "rate on equity capital employed.",
+                  author="Warren Buffett",
+                  source="Berkshire 1979 letter"),
+            _Q_MUNGER_INCENTIVES],
+))
+
+# ---------- Debt analysis ----------
+_add(Lesson(
+    slug="debt_analysis",
+    label=_label_for("debt_analysis"),
+    category=_cat_for("debt_analysis"),
+    hook=_hook_for("debt_analysis"),
+    definition=(
+        "Análisis de deuda es evaluar la solvencia y la "
+        "sustentabilidad de la estructura de capital de una empresa. "
+        "No es solo 'cuánta deuda tiene', sino:\n\n"
+        "  · **Coverage**: ¿la genera suficiente caja para pagar "
+        "intereses y principal?\n"
+        "  · **Maturity profile**: ¿cuándo vence cada tranche?\n"
+        "  · **Refinancing risk**: ¿en qué condiciones tendrá que "
+        "rollover su deuda?\n"
+        "  · **Covenants**: ¿qué le impide hacer la deuda?\n"
+        "  · **Currency mix**: ¿deuda en moneda local o foreign?\n\n"
+        "La deuda no es buena ni mala. Es una herramienta que "
+        "amplifica retornos cuando va bien y amplifica problemas "
+        "cuando va mal."
+    ),
+    why_matters=(
+        "La deuda mata empresas. Hasta empresas de calidad. Lehman, "
+        "AIG, GE Capital, WeWork, Evergrande, Credit Suisse — "
+        "todas tenían un problema de balance que se hizo crisis de "
+        "solvencia. Buffett: 'cuando combinás ignorancia con apalanca-"
+        "miento obtenés resultados muy interesantes'. Saber leer un "
+        "balance debt no es opcional para un equity analyst — la "
+        "deuda decide quién sobrevive un downturn."
+    ),
+    how_pros_analyze=(
+        "1. **Net debt / EBITDA**: el ratio más común. <2x = "
+        "conservador, 2-4x = típico, >5x = riesgo material.\n"
+        "2. **Interest coverage (EBITDA / Interest)**: >5x cómodo, "
+        "<2x = stress. Mide capacidad de servir deuda.\n"
+        "3. **Maturity wall**: ¿hay tranches grandes vendiendo en los "
+        "próximos 12-24 meses? Visualizar el maturity schedule del 10-K.\n"
+        "4. **Fixed vs floating rate mix**: en alza de tasas, la "
+        "deuda floating se vuelve más cara YoY. % fixed = protección.\n"
+        "5. **Off-balance-sheet**: operating leases (post-IFRS 16 ya "
+        "están en balance), pension underfunded, supply chain "
+        "financing escondida.\n"
+        "6. **Credit ratings (Moody's, S&P)**: investment grade vs "
+        "high yield. Cross-over downgrades disparan ventas forzadas.\n"
+        "7. **Spread sobre treasuries**: el mercado de bonos te dice "
+        "cómo ve el riesgo. Spread ampliándose = warning."
+    ),
+    key_metrics=[
+        ("Net debt / EBITDA",
+         "<2x conservador · 2-4x normal · >5x stress · >7x distress"),
+        ("Interest coverage (EBITDA / Interest)",
+         ">8x cómodo · 4-8x normal · 2-4x atención · <2x stress"),
+        ("Debt / Equity",
+         "Conservador <0.5 · normal 0.5-1.5 · agresivo >2"),
+        ("Current ratio (Current Assets / Current Liab)",
+         ">1.5 cómodo · 1-1.5 ok · <1 stress (no puede cubrir corto plazo)"),
+        ("Maturity wall % (próximos 24m)",
+         "<20% de la deuda en próximos 2 años = ok. >40% = "
+         "refinancing risk material."),
+        ("% Fixed-rate debt",
+         "Más alto = menos sensitivity a rates. <50% en alza de tasas "
+         "= EPS pressure."),
+    ],
+    bullish_vs_bearish=[
+        ("Net debt / EBITDA <2x",
+         "Net debt / EBITDA >5x"),
+        ("Interest coverage >8x",
+         "Interest coverage <2x"),
+        ("Maturity wall <20% próximos 2y",
+         "Maturity wall >40% próximos 2y"),
+        ("Investment grade (BBB- o mejor)",
+         "High yield (BB+ o peor)"),
+        ("Mayor parte deuda fixed-rate",
+         "Mayor parte floating en alza de tasas"),
+        ("Credit spread tightening",
+         "Credit spread widening (mercado pricea más riesgo)"),
+    ],
+    valuation_impact=(
+        "La deuda alta inflados ROE / EPS / share buyback capacity en "
+        "el corto plazo — pero comprime el multiple porque el mercado "
+        "exige más retorno por el riesgo. En DCF, la deuda reduce el "
+        "WACC inicialmente (debt es más barato que equity), pero "
+        "después de cierto punto el costo de equity explota (Modigliani-"
+        "Miller con bankruptcy costs). El sweet spot es leverage moderado. "
+        "Empresas con balance fortress (Apple, Microsoft) merecen "
+        "multiples premium por la optionality."
+    ),
+    case_study=(
+        "**Boeing 2019-2024**: 737 MAX grounding + COVID = revenue "
+        "colapsó. Deuda pasó de $14B (2018) a $58B (2020 peak). "
+        "Interest coverage cayó de 25x a 2x. Stock perdió 65%. "
+        "Lección: una empresa con high operating leverage + high "
+        "financial leverage está doble-expuesta.\n\n"
+        "**Caso limpio — Microsoft 2024**: $74B cash vs $51B debt = "
+        "$23B net cash. Interest coverage >50x. Esto le permite hacer "
+        "la mayor adquisición tech (Activision $69B) sin estrés. "
+        "Balance fortress = optionality."
+    ),
+    common_mistakes=[
+        "Mirar solo el ratio Debt/Equity sin chequear interest coverage.",
+        "Ignorar el maturity wall — una empresa puede ser solvente y aún así colapsar si no puede refinanciar en mal momento.",
+        "Olvidar la deuda off-balance-sheet (pensions, leases, supply chain financing).",
+        "Asumir que la deuda en moneda fuerte de una empresa EM es segura. Devaluation puede multiplicar la deuda en moneda local.",
+        "Pasar por alto los covenants — un breach puede acelerar toda la deuda.",
+    ],
+    mental_model=(
+        "Munger: 'el primer principio del éxito a largo plazo es no "
+        "quebrar'. La deuda es la herramienta más eficaz para "
+        "quebrar. Cuando analizás una empresa, hacé el ejercicio de "
+        "stress-test mental: ¿qué pasa si revenue cae 30% por 2 años? "
+        "¿el balance lo soporta? Las empresas que sobreviven todo "
+        "ciclo son las que tienen balance fortress. Las que vuelan "
+        "alto en bull markets pero quiebran en recesiones — son las "
+        "leveraged."
+    ),
+    books=[_BOOK_SECURITY_ANALYSIS, _BOOK_DALIO_PRINCIPLES,
+           _BOOK_KLARMAN_MOS, _BOOK_BUFFETT_LETTERS],
+    videos=[_VIDEO_DAMODARAN_CORPFIN,
+            Video(title="Ray Dalio · How Debt Cycles Work",
+                  channel="Bridgewater / Principles", minutes=15,
+                  url="",
+                  why="Dalio sobre el ciclo de deuda — relevante para "
+                       "entender cuándo el leverage se vuelve sistémico.")],
+    quotes=[_Q_GRAHAM_MOS,
+            Quote(text="Volatility is far from synonymous with risk. "
+                       "Real risk arises from the combination of "
+                       "leverage and uncertainty.",
+                  author="Warren Buffett",
+                  source="Berkshire 2014 letter"),
+            Quote(text="It's only when the tide goes out that you "
+                       "learn who's been swimming naked.",
+                  author="Warren Buffett",
+                  source="Berkshire 2001 letter")],
+))
+
+# ---------- Dilution ----------
+_add(Lesson(
+    slug="dilution",
+    label=_label_for("dilution"),
+    category=_cat_for("dilution"),
+    hook=_hook_for("dilution"),
+    definition=(
+        "Dilución es la reducción del porcentaje de ownership de un "
+        "accionista cuando la empresa emite nuevas acciones. Las dos "
+        "fuentes más comunes:\n\n"
+        "  · **Stock-based compensation (SBC)**: equity entregado a "
+        "empleados como parte de su pago. Más usado en tech.\n"
+        "  · **Capital raises / secondary offerings**: la empresa "
+        "emite acciones para financiar M&A, capex o pagar deuda.\n\n"
+        "El efecto: vos tenías 1% de la empresa, ahora tenés 0.95% — "
+        "tus future cash flows por acción se diluyeron. El EPS "
+        "denominador crece, comprimiendo la métrica."
+    ),
+    why_matters=(
+        "La dilución es el costo escondido del growth. Tech companies "
+        "muestran 'adjusted EPS' que excluye SBC — pero SBC es un costo "
+        "real, simplemente no en cash. Mary Buffett dijo: 'el SBC es la "
+        "única forma de que el management le robe directamente a los "
+        "accionistas y lo llame compensation'. Una empresa que crece "
+        "20% en revenue pero diluye 6% por año en acciones, crece solo "
+        "14% por share — y eso es lo que vos ganás."
+    ),
+    how_pros_analyze=(
+        "1. **Tracking de shares outstanding**: 5-10 años. ¿Sube por "
+        "SBC + raises o baja por buybacks? El neto importa.\n"
+        "2. **SBC / Revenue (%)**: en tech, 5-15% es típico. >20% es "
+        "alarmante. Snowflake 30% en 2022 — destruía valor real.\n"
+        "3. **SBC / FCF**: si SBC es 50% de FCF, la mitad del 'cash "
+        "earned' es realmente dilución encubierta.\n"
+        "4. **Buybacks netos**: empresa madura. Buybacks > SBC = "
+        "shareholder-friendly. Buybacks < SBC = solo cosmético "
+        "(compra acciones pero emite más).\n"
+        "5. **Dilution per year (CAGR)**: % crecimiento anual de "
+        "shares outstanding. >2% sostenido es problemático."
+    ),
+    key_metrics=[
+        ("Shares outstanding · trend 10y",
+         "Subiendo = dilución. Bajando = empresa retorna capital."),
+        ("SBC / Revenue (%)",
+         "Tech: <5% bueno · 5-15% típico · >15% alarmante."),
+        ("SBC / FCF (%)",
+         "<25% manageable. >50% = la mitad del FCF es dilución."),
+        ("Net buyback (shares retired − shares issued)",
+         "Positivo = neto reductor. Negativo = neto dilutivo."),
+        ("Dilution per year (%)",
+         "ΔShares Out YoY. >2% sostenido es preocupante."),
+        ("Diluted vs basic EPS",
+         "Gap mide la dilución latent (options + RSUs). Un gap >5% "
+         "es alto."),
+    ],
+    bullish_vs_bearish=[
+        ("Shares outstanding bajando 1-3% anual (buybacks netos)",
+         "Shares outstanding subiendo >2% anual (dilución estructural)"),
+        ("SBC / Revenue <10% en tech",
+         "SBC / Revenue >20% (Snowflake-style)"),
+        ("Buybacks > SBC (real retorno)",
+         "Buybacks solo igualan SBC (cosmético)"),
+        ("Capital raises raros y a precios premium",
+         "Capital raises frecuentes a descuento"),
+        ("Diluted EPS converge con basic",
+         "Gap diluted-basic creciendo año a año"),
+    ],
+    valuation_impact=(
+        "El intrinsic value SIEMPRE se calcula sobre shares diluidos "
+        "(option + RSU + convertibles fully diluted), no sobre shares "
+        "actuales. Un DCF que ignora SBC sobreestima el valor por "
+        "5-20% en tech. La regla simple: EPS sostenible debería "
+        "incluir SBC como expense (Damodaran insiste en esto). Una "
+        "empresa que reporta 'adjusted EPS' inflado por exclusion de "
+        "SBC está engañando."
+    ),
+    case_study=(
+        "**Snowflake 2021-2024**: revenue creció ~50% CAGR pero "
+        "shares outstanding también creció ~10% YoY por SBC. "
+        "GAAP EPS siempre negativo, 'adjusted' positivo — la "
+        "diferencia era casi enteramente SBC. Stock cayó 60% en 2022 "
+        "cuando el mercado empezó a valorar SBC como costo real.\n\n"
+        "**Contraejemplo — Apple**: shares outstanding cayó de "
+        "26B (2012) a 15B (2024) — recompró 42% de la empresa. "
+        "Vos comprabas 1 share en 2012, hoy representa 1.7x del "
+        "ownership de entonces. Esa es la opuesta de dilución: "
+        "compounding del per-share value."
+    ),
+    common_mistakes=[
+        "Confiar en 'adjusted EPS' que excluye SBC. SBC es un costo real.",
+        "Celebrar buybacks sin chequear que netean el SBC. Muchos solo lo igualan.",
+        "Ignorar la dilución por options/warrants in-the-money que aún no se ejercieron.",
+        "Asumir que capital raises son siempre malos. En empresas growth raise a multiples premium pueden ser accretive.",
+        "Pasar por alto convertible debt — eventualmente se convierte a equity.",
+    ],
+    mental_model=(
+        "Buffett mira shares outstanding cada año. Si vos tenés 1% de "
+        "una empresa hoy y dentro de 5 años tenés 1.2% (porque la "
+        "empresa recompró acciones), entonces creciste tu ownership "
+        "aunque no compraste más. Eso es compounding silencioso. Lo "
+        "opuesto: si tu 1% se vuelve 0.8% en 5 años por dilución, "
+        "perdiste 20% de tu pie del pastel sin venderlo. La dilución "
+        "es el robo más sutil al accionista."
+    ),
+    books=[_BOOK_BUFFETT_LETTERS, _BOOK_DAMODARAN_VALUATION,
+           Book(title="The Outsiders", author="William Thorndike",
+                year=2012, chapter_hint="Cómo allocators great evitan dilución",
+                why="Los CEOs analizados todos compartían un patrón: "
+                     "recompras a precios bajos, raises a precios altos."),
+           _BOOK_INTELLIGENT_INVESTOR],
+    videos=[_VIDEO_BUFFETT_1996, _VIDEO_DAMODARAN_CORPFIN],
+    quotes=[
+        Quote(text="If options aren't a form of compensation, what are "
+                   "they? If compensation isn't an expense, what is it? "
+                   "And, if expenses shouldn't go into the calculation "
+                   "of earnings, where in the world should they go?",
+              author="Warren Buffett",
+              source="Berkshire 1998 letter"),
+        _Q_BUFFETT_PRICE_VALUE,
+        Quote(text="Diluting existing shareholders to compensate "
+                   "employees is fine — as long as everyone is honest "
+                   "about the cost.",
+              author="Mary Buffett",
+              source="Buffettology"),
+    ],
+))
 _stub("unit_economics",
       [_BOOK_FISHER,
        Book(title="The Lean Startup", author="Eric Ries", year=2011,
             chapter_hint="Caps. 6-9 (build-measure-learn)",
             why="Aunque es de startups, define unit economics modernos.")],
       [], [_Q_LYNCH_INVERT])
-_stub("pricing_power",
-      [_BOOK_BUFFETT_LETTERS, _BOOK_FISHER, _BOOK_MCKINSEY_VALUATION],
-      [_VIDEO_BUFFETT_1996], [_Q_BUFFETT_MOAT])
+# ---------- Pricing power ----------
+_add(Lesson(
+    slug="pricing_power",
+    label=_label_for("pricing_power"),
+    category=_cat_for("pricing_power"),
+    hook=_hook_for("pricing_power"),
+    definition=(
+        "Pricing power es la capacidad de una empresa de subir precios "
+        "sin perder volumen materialmente. No es 'tener precios altos' "
+        "— es **poder subirlos cuando hace falta** sin que los "
+        "clientes se vayan.\n\n"
+        "Test simple (Buffett): 'si podés aumentar el precio 10% sin "
+        "perder ningún cliente, tenés un excelente negocio. Si para "
+        "eso tenés que rezar antes de hacerlo, es un negocio "
+        "terrible.'\n\n"
+        "Pricing power es **la manifestación financiera del moat**. "
+        "Donde hay pricing power, hay competitive advantage; donde "
+        "no, hay commoditización."
+    ),
+    why_matters=(
+        "En entorno inflacionario, pricing power es la única defensa. "
+        "Empresas sin pricing power ven los costos subir + los "
+        "márgenes caer (margen comprimido). Empresas con pricing "
+        "power pasan los costos al consumidor + márgenes estables. "
+        "Por eso en los 1970s las pocas empresas que prosperaron — "
+        "Coca-Cola, Disney, See's Candy — eran las que podían subir "
+        "precios sin justificarse. Buffett las llamó 'inflation hedges'."
+    ),
+    how_pros_analyze=(
+        "1. **Track record de price increases**: ¿la empresa aumentó "
+        "precios above-inflation en los últimos 10 años? See's Candy "
+        "lo hizo cada año durante décadas.\n"
+        "2. **Volume durante price increases**: si subieron precios "
+        "y volume se mantuvo o creció, pricing power real. Si volume "
+        "cayó proporcionalmente, no hay PP.\n"
+        "3. **Gross margin trend en recesiones**: empresas sin "
+        "pricing power suelen perder margin en downturn. Las con PP "
+        "lo mantienen o expanden.\n"
+        "4. **Mix shift hacia premium**: ¿la empresa puede vender "
+        "más high-end? Lululemon, Apple — sí. Walmart — limitado.\n"
+        "5. **Customer concentration**: si tu top 3 clientes son "
+        "50% del revenue, ellos tienen pricing power sobre vos.\n"
+        "6. **Switching costs**: alto switching = pricing power "
+        "estructural (ERP software, banking core systems)."
+    ),
+    key_metrics=[
+        ("Price contribution to revenue growth (%)",
+         "Empresas grandes lo reportan. Pricing positivo 5+ años = PP "
+         "demostrado."),
+        ("Gross margin trend",
+         "Estable o expansivo con costos subiendo = PP. Cae con "
+         "inflación = no hay PP."),
+        ("Price elasticity",
+         "Difícil de calcular exacto pero proxies: volume reaction a "
+         "price increases."),
+        ("Customer concentration (top 10 %)",
+         "<30% = pricing power propio · >50% = clientes tienen poder."),
+        ("Brand premium vs commodity",
+         "Apple iPhone $1200 vs Android genérico $200 mismo hardware = "
+         "PP de marca."),
+    ],
+    bullish_vs_bearish=[
+        ("Aumenta precios above-inflation sin perder volume",
+         "Tiene que descontar para mantener volume"),
+        ("Gross margin estable o expansiva durante inflación",
+         "Gross margin se comprime con cost inflation"),
+        ("Mix shift hacia productos premium",
+         "Mix shift hacia low-end / value tier"),
+        ("Pocos competidores con producto diferenciado",
+         "Many competitors, producto comoditizado"),
+        ("Switching costs altos (data, integración, certificación)",
+         "Producto fácilmente sustituible"),
+    ],
+    valuation_impact=(
+        "Pricing power justifica multiples MÁS altos por dos razones: "
+        "(1) márgenes más altos en bottom line, (2) earnings más "
+        "predecibles (la empresa puede defender el cash flow en "
+        "downturns). En DCF, asumir pricing power te permite modelar "
+        "EBITDA margins crecientes — pero solo es legítimo si hay "
+        "evidencia histórica. Una empresa con PP demostrado merece "
+        "premium de 20-40% en P/E vs un peer commodity-like."
+    ),
+    case_study=(
+        "**Disney parks 1955-2020**: ticket price de Disneyland en "
+        "1955: $1. En 2020: ~$150. Un aumento de 4.6% CAGR "
+        "consistente — por encima de inflation US (3.2% CAGR mismo "
+        "período). Visitors per year crecieron de 3.6M a 18M. Pricing + "
+        "volume both up. Pricing power textbook.\n\n"
+        "**Contraejemplo — airlines pre-bankruptcy**: la industria "
+        "tenía cero pricing power por décadas. Cualquier intento de "
+        "subir precios resultaba en que un competidor mantenía y "
+        "robaba market share. Después de las múltiples bankruptcies "
+        "y consolidación 2005-2015, industria pasó de 8+ jugadores "
+        "a 4 → pricing power emergió. Los multiples siguieron."
+    ),
+    common_mistakes=[
+        "Confundir precios altos con pricing power. Una empresa puede tener precios premium pero no poder subirlos.",
+        "Asumir PP basado en marca sin verificar el track record cuantitativo.",
+        "Ignorar el efecto de competencia futura. PP histórico no garantiza PP futuro (Kodak, Sears).",
+        "Pasar por alto PP en B2B services. Software ERP, cloud hyperscalers tienen PP por switching costs.",
+        "No considerar que en deflación / recesión, PP de luxury bienes se erosiona (Tiffany pre-LVMH).",
+    ],
+    mental_model=(
+        "Buffett: 'si podés subir precios sin reuniones interminables "
+        "y sin preocuparte por perder clientes, tenés un gran negocio. "
+        "Si para subir 1 centavo tenés que rezar al cielo, tenés un "
+        "negocio terrible'. Pricing power es la prueba más limpia de "
+        "moat — no requiere modelos complejos, solo mirar el "
+        "historial de precios y de volume."
+    ),
+    books=[_BOOK_BUFFETT_LETTERS, _BOOK_FISHER, _BOOK_MCKINSEY_VALUATION,
+           Book(title="The Pricing Strategy Handbook",
+                author="Thomas Nagle", year=2016,
+                chapter_hint="Caps. 1-4",
+                why="Manual técnico de pricing strategy.")],
+    videos=[_VIDEO_BUFFETT_1996,
+            Video(title="Buffett on Pricing Power",
+                  channel="Berkshire annual meeting clips", minutes=8,
+                  url="",
+                  why="Clip clásico donde Buffett explica See's "
+                       "Candy como case study.")],
+    quotes=[
+        Quote(text="The single most important decision in evaluating "
+                   "a business is pricing power. If you've got the "
+                   "power to raise prices without losing business to a "
+                   "competitor, you've got a very good business.",
+              author="Warren Buffett",
+              source="FCIC interview 2010"),
+        _Q_BUFFETT_MOAT,
+        Quote(text="See's Candies was the first 'great' business we "
+                   "ever bought. We paid $25 million for it in 1972 — "
+                   "and over the years we've taken out something close "
+                   "to $2 billion in pre-tax earnings.",
+              author="Warren Buffett",
+              source="Berkshire 2007 letter"),
+    ],
+))
 _stub("guidance",
       [_BOOK_BUFFETT_LETTERS, _BOOK_LYNCH],
       [_VIDEO_BUFFETT_1996], [_Q_LYNCH_INVERT, _Q_MUNGER_INCENTIVES])
-_stub("cyclicality",
-      [_BOOK_MARKS_MARKET_CYCLE, _BOOK_DAMODARAN_VALUATION],
-      [], [_Q_MARKS_RISK])
-_stub("competitive_advantages",
-      [_BOOK_BUFFETT_LETTERS, _BOOK_FISHER,
-       Book(title="Competition Demystified", author="Bruce Greenwald",
-            year=2005, chapter_hint="Toda la parte II",
-            why="Marco analítico riguroso de moats, desde Columbia.")],
-      [_VIDEO_BUFFETT_1996], [_Q_BUFFETT_MOAT])
+# ---------- Cyclicality ----------
+_add(Lesson(
+    slug="cyclicality",
+    label=_label_for("cyclicality"),
+    category=_cat_for("cyclicality"),
+    hook=_hook_for("cyclicality"),
+    definition=(
+        "Una empresa es cíclica cuando sus earnings, márgenes y ROIC "
+        "fluctúan significativamente con el ciclo económico — no por "
+        "decisiones internas sino por demanda externa que sube y baja. "
+        "Industrias cíclicas clásicas:\n\n"
+        "  · **Materiales**: aceros, químicos, miners\n"
+        "  · **Industriales**: capex equipment, machinery, autos\n"
+        "  · **Energía**: oil & gas (precio del subyacente)\n"
+        "  · **Semis**: super-cíclica por inventory cycle\n"
+        "  · **Consumer discretionary**: hoteles, cruceros, luxury\n"
+        "  · **Bancos**: por credit cycle\n\n"
+        "El problema crítico: en peak earnings se ven baratas (P/E "
+        "bajo) y en trough caras (P/E alto o negativo). El value trap "
+        "más clásico es comprar cíclicas en el peak."
+    ),
+    why_matters=(
+        "Cíclicas representan ~25% del S&P. Si no las podés valuar, "
+        "perdés un cuarto del mercado. Pero el error más común del "
+        "retail es aplicar P/E o ROIC point-in-time sin normalizar "
+        "por ciclo. Una acerera con P/E 6 en peak earnings cae 60% "
+        "cuando los earnings se normalizan. Buffett evita la mayoría "
+        "de cíclicas porque dice que 'predecir el ciclo es difícil "
+        "y comprar empresas predecibles es mejor'."
+    ),
+    how_pros_analyze=(
+        "1. **Through-the-cycle earnings**: promediar EPS de los "
+        "últimos 7-10 años (cubrir un ciclo completo). Damodaran usa "
+        "esto para EPV en cíclicas.\n"
+        "2. **Normalized ROIC**: ROIC promedio del ciclo, no spot. "
+        "Mineras pueden tener ROIC 30% en peak y -10% en trough — "
+        "el normalizado es ~12%.\n"
+        "3. **Shiller P/E (CAPE)**: P/E sobre earnings ajustados por "
+        "inflation y promediados 10 años. Útil para mercados completos "
+        "y cíclicas individuales.\n"
+        "4. **Commodity correlation**: en miners / energy, el "
+        "precio del subyacente (oro, petróleo, cobre) drivea TODO. "
+        "Forecast del precio = forecast del earnings.\n"
+        "5. **Capacity discipline**: ¿la industria está sumando "
+        "capacidad agresivamente (peak) o cortando capex (trough)? "
+        "Capex cycle leads earnings cycle.\n"
+        "6. **Position en el ciclo**: late cycle indicators "
+        "(margins record, capex en peak, inventory build) anticipan "
+        "el turn."
+    ),
+    key_metrics=[
+        ("Through-cycle EPS",
+         "Promedio EPS 7-10 años. Más estable que EPS LTM."),
+        ("Normalized ROIC (10y avg)",
+         "ROIC promedio del ciclo. Compare vs WACC."),
+        ("Shiller P/E (CAPE)",
+         "Precio / EPS ajustado inflation 10y. <15 cheap · 15-25 fair · "
+         ">30 expensive."),
+        ("Commodity / Volume sensitivity",
+         "% Δ EBIT per % Δ commodity / volume. Mide el operating "
+         "leverage cíclico."),
+        ("Position in cycle (qualitative)",
+         "Early-mid-late-trough. Late + recovering = best buy point."),
+    ],
+    bullish_vs_bearish=[
+        ("P/E alto en trough (earnings deprimidos, recovery próxima)",
+         "P/E bajo en peak (value trap clásico)"),
+        ("CAPE / through-cycle P/E razonable",
+         "Spot P/E bajo pero CAPE elevado"),
+        ("Capacity discipline (cuts capex en trough)",
+         "Capacity adds en peak (preparándose para crash)"),
+        ("Sector trough con sentiment bearish (capitulation)",
+         "Sector peak con sentiment euphoric"),
+        ("Balance fortress que sobrevive trough",
+         "Leverage alto en peak (no podrá soportar trough)"),
+    ],
+    valuation_impact=(
+        "Aplicar DCF a cíclicas usando peak earnings sobreestima por "
+        "30-50%; usando trough earnings subestima. La técnica correcta "
+        "es **normalize**: EBIT margin promedio del ciclo, asumir "
+        "ROIC normalizado, modelar reversion. Multiples sobre cíclicas "
+        "deben usar through-cycle earnings — Shiller's CAPE es la "
+        "versión index-wide del concepto. En cíclicas extremas (oil "
+        "& gas, miners), valuación basada en NAV de reservas + cost "
+        "curve es más útil que earnings multiples."
+    ),
+    case_study=(
+        "**ArcelorMittal 2008**: la acerera más grande del mundo. En "
+        "2007 (peak del cycle) reportaba EPS $7 y cotizaba P/E 9 — "
+        "se veía como bargain absoluto. 2008-2009 EPS colapsó a -$1, "
+        "el stock cayó 80%. Lección: P/E 9 sobre peak earnings es "
+        "más caro que P/E 25 sobre normalized earnings.\n\n"
+        "**Caso clásico — Oil majors 2020**: en abril 2020, oil cayó "
+        "a $-37 (negative). XOM, CVX cotizaban como nunca habían "
+        "estado en décadas, dividend yield 10%+. Los que compraron "
+        "ese trough hicieron 5x en 2 años. Los que vendieron en el "
+        "peak de 2007 ($147 oil) hicieron lo mismo al revés."
+    ),
+    common_mistakes=[
+        "Aplicar P/E point-in-time. Siempre usar through-cycle earnings en cíclicas.",
+        "Comprar cíclicas en peak earnings (cuando se ven baratas). El P/E bajo es señal de RIESGO, no de oportunidad.",
+        "Vender cíclicas en trough (cuando se ven caras). El P/E alto refleja earnings deprimidos temporalmente.",
+        "Asumir que el management va a ser disciplinado en capacity. Casi nunca lo es — los CEOs construyen en peak.",
+        "Ignorar el balance. Una cíclica con high leverage en peak es prácticamente garantizada de stress en trough.",
+    ],
+    mental_model=(
+        "Marks: 'el inversor exitoso no es el que pega al peak o al "
+        "trough — es el que evita comprar en el peak'. Para cíclicas, "
+        "la mentalidad es contraria: cuando el sentimiento es eufórico "
+        "y los multiples bajos, vendé; cuando el sentimiento es "
+        "depresivo y los multiples altos (por earnings deprimidos), "
+        "comprá. Es psicológicamente difícil pero matemáticamente "
+        "correcto."
+    ),
+    books=[_BOOK_MARKS_MARKET_CYCLE, _BOOK_DAMODARAN_VALUATION,
+           _BOOK_MARKS_MOST_IMPORTANT, _BOOK_DALIO_PRINCIPLES],
+    videos=[Video(title="Howard Marks · You Can't Predict, You Can Prepare",
+                  channel="Oaktree", minutes=45, url="",
+                  why="Filosofía de invertir en cíclicas sin "
+                       "predecir el timing exacto.")],
+    quotes=[
+        _Q_MARKS_RISK,
+        Quote(text="The greatest mistake you can make in cyclical "
+                   "industries is to extrapolate the current "
+                   "conditions indefinitely.",
+              author="Howard Marks",
+              source="Mastering the Market Cycle"),
+        _Q_BUFFETT_PRICE_VALUE,
+    ],
+))
+# ---------- Competitive advantages ----------
+_add(Lesson(
+    slug="competitive_advantages",
+    label=_label_for("competitive_advantages"),
+    category=_cat_for("competitive_advantages"),
+    hook=_hook_for("competitive_advantages"),
+    definition=(
+        "Una ventaja competitiva (CA) es cualquier factor que le "
+        "permite a una empresa generar **rentabilidad superior al "
+        "costo de capital de forma sostenida**, mientras enfrenta "
+        "competencia. Moats (lección aparte) son las ventajas "
+        "**estructurales y duraderas**; competitive advantages "
+        "incluye también las temporales (first-mover, execution, "
+        "speed).\n\n"
+        "Bruce Greenwald (Columbia) sintetizó las únicas tres "
+        "fuentes reales de CA sostenibles:\n\n"
+        "  1. **Supply-side advantages** (costos): producción más "
+        "barata por escala, tech propietaria, acceso a recursos.\n"
+        "  2. **Demand-side advantages** (clientes): switching costs, "
+        "habit, network effects, search costs.\n"
+        "  3. **Economies of scale**: cuando los fixed costs son "
+        "grandes y un competidor más grande pueda lograr menor "
+        "costo unitario."
+    ),
+    why_matters=(
+        "Sin CA, los retornos altos atraen competencia hasta que "
+        "convergen al WACC. CON CA, los retornos persisten — y eso "
+        "es lo que distingue una empresa que compounding 30 años "
+        "de una que se vuelve mediocre en 10. Identificar la "
+        "**fuente exacta** de la CA es crucial: 'Apple tiene moat' "
+        "es vago — ¿es brand, switching cost (iCloud + App Store), "
+        "ecosystem effect, o supply chain dominance? Cada una "
+        "implica una amenaza distinta y una durabilidad distinta."
+    ),
+    how_pros_analyze=(
+        "1. **Greenwald test**: ¿esta CA es verdaderamente "
+        "estructural o solo execution? Execution es replicable; "
+        "estructural no.\n"
+        "2. **Source identification**: scale economies, network "
+        "effects, switching costs, brand, regulatory licenses. "
+        "Múltiples al mismo tiempo = moat más ancho.\n"
+        "3. **Durability test**: ¿qué tendría que pasar para que "
+        "esta CA se erosione? Si la respuesta es 'tech disruption' "
+        "→ tech moats son CORTOS. Si es 'cambio cultural de "
+        "consumidor' → décadas.\n"
+        "4. **Measurement vía ROIC durability**: ROIC > WACC durante "
+        "10+ años es prueba empírica de CA real.\n"
+        "5. **Watch erosion signals**: market share loss, "
+        "pricing power compresión, capex requirement creciendo "
+        "para sostener share."
+    ),
+    key_metrics=[
+        ("ROIC > WACC duration",
+         "Cuántos años consecutivos. >10 años = CA estructural."),
+        ("Market share trend",
+         "Estable / creciendo = CA funcional. Decreciendo = CA "
+         "erosionándose."),
+        ("Gross margin durability",
+         "Margen alto y estable through cycles = pricing power = CA."),
+        ("Customer retention (NRR en SaaS, churn en consumer)",
+         "Alta retention = switching costs / brand habits."),
+        ("Capex per unit of growth",
+         "Bajo = scale economies. Subiendo = CA debilitándose "
+         "(necesita más inversión para mismos retornos)."),
+    ],
+    bullish_vs_bearish=[
+        ("Multiple CA sources simultáneas (network + scale + brand)",
+         "Una sola CA o difusa"),
+        ("ROIC > WACC 10+ años consecutivos",
+         "ROIC > WACC erratic / declining"),
+        ("Market share estable o creciendo",
+         "Market share erosionándose con tiempo"),
+        ("CA replicable solo con capital infinito",
+         "CA imitable con execution decente"),
+        ("Switching costs estructurales (data, regulación)",
+         "Switching costs convenience-based (fáciles de superar)"),
+    ],
+    valuation_impact=(
+        "Las empresas con CA real merecen DCF con competitive "
+        "advantage period (CAP) más largo y ROIC steady-state más "
+        "alto. Damodaran asume típicamente 5-10 años de CAP; "
+        "empresas con CA structural pueden tener 15-25. Esta sola "
+        "assumption puede agregar 30-60% al intrinsic value. En "
+        "multiples: P/E premium de 30-100% vs sector average para "
+        "empresas con moat demostrado."
+    ),
+    case_study=(
+        "**ASML — el monopolio EUV**: única empresa del mundo que "
+        "produce EUV lithography (la maquinaria para hacer chips "
+        "<7nm). Switching cost técnico imposible — los fabs (TSMC, "
+        "Samsung, Intel) DEBEN comprarles. ROIC 30%+ consistente. "
+        "Stock 30x en una década. CA structural definitiva: monopolio "
+        "tecnológico + regulatory moat (US/Netherlands restringe "
+        "exports a China).\n\n"
+        "**Contraejemplo — Kodak**: tenía CA aparentemente "
+        "indestructible (brand, distribución, patents en film). Pero "
+        "la CA era específica de UNA tecnología (chemical film). "
+        "Cuando llegó digital, la CA evaporó en una década. Bankrupt "
+        "2012. Lección: las CA basadas en tecnología específica son "
+        "frágiles ante paradigm shifts."
+    ),
+    common_mistakes=[
+        "Confundir 'empresa grande' con 'empresa con moat'. Sears, Kodak, Nokia fueron gigantes sin CA estructural.",
+        "Asumir que la CA es permanente. Hay que validar que sigue intacta cada año.",
+        "Identificar CA solo por la narrativa. Hay que verificarlo empíricamente con ROIC > WACC duradero.",
+        "Subestimar las CA invisible (regulación, certificaciones, distribution networks).",
+        "Pasar por alto que en tech, las CA se erosionan más rápido que en consumer / financials.",
+    ],
+    mental_model=(
+        "Buffett: 'la mejor metáfora para una gran empresa es un castillo "
+        "con un foso ancho. El foso es la competitive advantage. Lo que "
+        "buscás es un foso que sea Profundo, Ancho, Y que la dirección "
+        "esté ensanchándolo continuamente'. Pensá en cada empresa que "
+        "analizás: ¿cuál es exactamente el foso? Si no podés "
+        "identificarlo en una oración, capaz no existe."
+    ),
+    books=[_BOOK_BUFFETT_LETTERS, _BOOK_FISHER,
+           Book(title="Competition Demystified",
+                author="Bruce Greenwald", year=2005,
+                chapter_hint="Toda la parte II — los 3 tipos de CA",
+                why="El framework más riguroso para identificar CA "
+                     "reales vs falsas."),
+           Book(title="7 Powers", author="Hamilton Helmer", year=2016,
+                chapter_hint="Cap. 1-7 — los 7 tipos de power",
+                why="Framework moderno: scale economies, network "
+                     "economies, counter-positioning, switching costs, "
+                     "branding, cornered resource, process power.")],
+    videos=[_VIDEO_BUFFETT_1996,
+            Video(title="Hamilton Helmer · 7 Powers",
+                  channel="Talks at Google", minutes=60,
+                  url="",
+                  why="El autor explica los 7 tipos de power business.")],
+    quotes=[
+        _Q_BUFFETT_MOAT,
+        Quote(text="There are only three genuine sources of competitive "
+                   "advantage: supply, demand, and economies of scale. "
+                   "Everything else is execution.",
+              author="Bruce Greenwald",
+              source="Competition Demystified"),
+        Quote(text="In the absence of a strategy, hard work is just "
+                   "running on a treadmill.",
+              author="Hamilton Helmer",
+              source="7 Powers"),
+    ],
+))
 _stub("saas_metrics",
       [Book(title="The SaaS Playbook", author="Rob Walling", year=2022,
             chapter_hint="Caps. 1-4", why="Métricas SaaS modernas claras.")],
@@ -1742,21 +2852,404 @@ _stub("network_effects",
 _stub("multiples_overview",
       [_BOOK_DAMODARAN_VALUATION, _BOOK_MCKINSEY_VALUATION],
       [_VIDEO_DAMODARAN_VALUATION], [_Q_DAMODARAN_STORY])
-_stub("ev_ebitda",
-      [_BOOK_DAMODARAN_VALUATION, _BOOK_MCKINSEY_VALUATION],
-      [_VIDEO_DAMODARAN_VALUATION], [_Q_DAMODARAN_STORY])
-_stub("pe_ratio",
-      [_BOOK_INTELLIGENT_INVESTOR, _BOOK_DAMODARAN_VALUATION],
-      [_VIDEO_DAMODARAN_VALUATION], [_Q_BUFFETT_PRICE_VALUE])
+# ---------- EV/EBITDA ----------
+_add(Lesson(
+    slug="ev_ebitda",
+    label=_label_for("ev_ebitda"),
+    category=_cat_for("ev_ebitda"),
+    hook=_hook_for("ev_ebitda"),
+    definition=(
+        "EV/EBITDA = Enterprise Value / EBITDA. Mide cuántas veces el "
+        "EBITDA anual paga el COMPRADOR ENTERO de la empresa (asumiendo "
+        "que también asume la deuda).\n\n"
+        "  · **Enterprise Value** = Market Cap + Total Debt − Cash + "
+        "Minority Interest. Es el costo de comprar el negocio COMPLETO, "
+        "no solo el equity.\n"
+        "  · **EBITDA** = Earnings Before Interest, Taxes, Depreciation, "
+        "Amortization. El cash operating earnings antes de capital "
+        "structure y D&A.\n\n"
+        "Es preferido en M&A y para empresas con leverage variable: "
+        "neutraliza el efecto del capital structure (EV incluye deuda, "
+        "EBITDA es pre-interest), permitiendo comparar manzanas con "
+        "manzanas entre empresas con distinta capital structure."
+    ),
+    why_matters=(
+        "P/E se afecta por capital structure (interest expense + tax). "
+        "Dos empresas idénticas operacionalmente pero con distinta deuda "
+        "tendrán P/E distintos — pero el mismo EV/EBITDA. Por eso "
+        "EV/EBITDA es el múltiplo de elección en industrias con "
+        "diversidad de leverage (industriales, telecom, M&A "
+        "comparables). Críticos como Buffett y Munger lo desprecian "
+        "('EBITDA omite el D&A que es real cost') pero los private "
+        "equity lo usan como religion."
+    ),
+    how_pros_analyze=(
+        "1. **EV calculation correcta**: market cap (todas las clases "
+        "de shares) + total debt (no solo long-term) + minority "
+        "interest + preferred − cash & marketable securities − "
+        "investments. Si te olvidás minority interest o preferred, "
+        "subestimás EV.\n"
+        "2. **Compare vs peers, no aislado**. EV/EBITDA 8x es "
+        "expensive en utilities (típico 6x) y cheap en software "
+        "(típico 18x).\n"
+        "3. **Forward EBITDA**: para growth companies, usar NTM "
+        "EBITDA refleja mejor.\n"
+        "4. **Adjusted EBITDA**: empresas reportan 'adjusted EBITDA' "
+        "excluyendo SBC, restructurings, etc. Validar que las "
+        "adjustments son razonables. SBC NUNCA debería excluirse.\n"
+        "5. **Watch EBITDA margin trend**: si EBITDA margin se "
+        "comprime, el multiple debería bajar simultáneamente."
+    ),
+    key_metrics=[
+        ("EV / EBITDA LTM",
+         "Industriales ~10x · software ~18x · utilities ~9x · "
+         "energy ~5-8x · consumer staples ~14x."),
+        ("EV / EBITDA forward (NTM)",
+         "Preferido para growth. Usar consensus estimates."),
+        ("EBITDA margin (%)",
+         "Determina la calidad del EBITDA. >30% capital-light, "
+         "<15% capital-intensive."),
+        ("EV / FCFF",
+         "Una alternativa que SÍ deduce D&A & CapEx — más honesta para "
+         "empresas capital-intensive."),
+        ("Net debt / EBITDA",
+         "El leverage. <2x conservador · >5x stress."),
+    ],
+    bullish_vs_bearish=[
+        ("EV/EBITDA < peer median con EBITDA growth",
+         "EV/EBITDA premium pero EBITDA estancado"),
+        ("Adjusted EBITDA cercano a reported (ajustes mínimos)",
+         "Adjusted EBITDA >>> GAAP EBITDA (ajustes agresivos)"),
+        ("EBITDA margin estable o expansive",
+         "EBITDA margin contracting (debilidad operacional)"),
+        ("EV calculation incluye todo (minority, preferred)",
+         "Análisis usa solo equity / ignora minority — subestima EV"),
+        ("EV/FCFF y EV/EBITDA convergen",
+         "Gap grande EV/FCFF >> EV/EBITDA (capex eating EBITDA)"),
+    ],
+    valuation_impact=(
+        "El intrinsic EV/EBITDA se deriva de: ROIC, growth, "
+        "reinvestment rate. **Implied EV/EBITDA ≈ (1 − tax) × "
+        "(1 − reinvestment) / (WACC − g)**. Una empresa con ROIC alto "
+        "+ growth alto + WACC bajo justifica EV/EBITDA 20x+. Por eso "
+        "Visa cotiza ~25x EV/EBITDA — los fundamentals lo soportan. "
+        "Cuando el multiple actual > implied, hay sobre-valuación; "
+        "cuando < implied, oportunidad."
+    ),
+    case_study=(
+        "**M&A de TXU Energy 2007 → bankruptcy 2014**: KKR + TPG "
+        "compraron Texas energy company por $45B (incluye assumed "
+        "debt) — el LBO más grande de la historia. EV/EBITDA del "
+        "deal: ~12x. Tesis: natural gas iba a subir. Natural gas "
+        "cayó. Con 7x leverage no había margen para error. "
+        "Bankrupted en 2014. Lección: EV/EBITDA alto + leverage alto "
+        "= cero margin of safety.\n\n"
+        "**Caso clásico — Tobacco companies pre-Master Settlement 1998**: "
+        "cotizaban EV/EBITDA ~5x cuando el resto del consumer staples "
+        "estaba ~12x. Mercado descontaba litigation risk. Los que "
+        "compraron en el bottom ganaron 10-20x en la siguiente "
+        "década. Multiple expansion (de 5x a 12x) fue la mitad del "
+        "retorno."
+    ),
+    common_mistakes=[
+        "Olvidar minority interest y preferred en el cálculo de EV.",
+        "Comparar EV/EBITDA entre industrias (utilities vs software no son comparables).",
+        "Usar 'adjusted EBITDA' sin validar las ajustments. SBC es un costo real.",
+        "Aplicar EV/EBITDA a financials (bancos, aseguradoras). No tiene sentido — debt es input no debt.",
+        "Ignorar que high-capex industries (telecom, miners) tienen EBITDA inflado vs FCF. EV/FCFF es más honesto.",
+    ],
+    mental_model=(
+        "Munger: 'cada vez que escucho EBITDA pienso bullshit "
+        "earnings'. Su punto: D&A es un costo real (la maquinaria se "
+        "deprecia, hay que reemplazarla). EBITDA es útil para "
+        "comparar capital structures distintos, pero NUNCA debería "
+        "ser el único múltiplo. Siempre cross-check con EV/FCFF y "
+        "ROIC. Si EV/EBITDA dice 'cheap' pero EV/FCFF dice 'caro', "
+        "creé al EV/FCFF."
+    ),
+    books=[_BOOK_DAMODARAN_VALUATION, _BOOK_MCKINSEY_VALUATION,
+           _BOOK_CFA],
+    videos=[_VIDEO_DAMODARAN_VALUATION],
+    quotes=[
+        _Q_DAMODARAN_STORY,
+        Quote(text="Every time I hear EBITDA I substitute it with "
+                   "'bullshit earnings'. Depreciation is a real cost.",
+              author="Charlie Munger",
+              source="Berkshire annual meeting (multiple)"),
+        Quote(text="EBITDA is what management would like you to focus "
+                   "on. Operating cash flow is what they don't.",
+              author="Aswath Damodaran",
+              source="Damodaran NYU lectures"),
+    ],
+))
+# ---------- P/E ratio ----------
+_add(Lesson(
+    slug="pe_ratio",
+    label=_label_for("pe_ratio"),
+    category=_cat_for("pe_ratio"),
+    hook=_hook_for("pe_ratio"),
+    definition=(
+        "Price-to-Earnings (P/E) = Price per Share / EPS. Dice "
+        "cuántos años de earnings actuales pagarías por una acción "
+        "si los earnings se mantuvieran constantes. Es el múltiplo "
+        "más conocido y más mal usado.\n\n"
+        "Variantes críticas:\n"
+        "  · **Trailing P/E (LTM)**: sobre earnings últimos 12 meses. "
+        "Histórico, no proyecta nada.\n"
+        "  · **Forward P/E**: sobre estimates del próximo año. "
+        "Refleja expectativas.\n"
+        "  · **Shiller / CAPE**: sobre earnings promediados 10 años "
+        "ajustados por inflation. Smooth cyclicality.\n"
+        "  · **Ex-cash P/E**: P/E ajustado por cash neto en balance.\n\n"
+        "Históricamente el S&P promedió P/E ~16. Pero el promedio "
+        "esconde rangos: 7 en 1980, 33 en 2000, 26 en 2024."
+    ),
+    why_matters=(
+        "P/E es el atajo mental que el 90% del mercado usa para "
+        "decidir 'barato vs caro'. Lo problemático: P/E aisle no "
+        "dice casi nada sin contexto. Una P/E 30 puede ser barato "
+        "(growth alto + ROIC alto) o caro (peak earnings + sin "
+        "growth). Y P/E 5 puede ser ganga (mispricing) o trampa "
+        "(value trap en peak cíclico). Saber CUÁNDO P/E aplica y "
+        "cuándo no es lo que separa a un analista de un screener."
+    ),
+    how_pros_analyze=(
+        "1. **No usar P/E aislado**. Siempre combinar con: growth "
+        "(PEG), ROIC, quality of earnings.\n"
+        "2. **Compare vs historical own**: ¿la empresa cotiza a "
+        "P/E 28 que es 1 std arriba de su 10y mean? Eso es "
+        "información.\n"
+        "3. **Forward vs trailing**: forward P/E es preferible para "
+        "growth companies; trailing para mature stable.\n"
+        "4. **Adjust for non-recurring**: si EPS LTM incluye un "
+        "one-time gain, P/E parece bajo pero es engañoso.\n"
+        "5. **Cyclicality check**: en cyclical companies, usar CAPE "
+        "/ through-cycle earnings, NUNCA trailing.\n"
+        "6. **No usar en empresas con earnings negativos o "
+        "volátiles**. P/E meaningful requiere earnings positivos y "
+        "predecibles."
+    ),
+    key_metrics=[
+        ("Trailing P/E (LTM)",
+         "S&P promedio histórico ~16. >25 expensive · <12 cheap "
+         "(con contexto)."),
+        ("Forward P/E (NTM)",
+         "Sobre estimates próximos 12m. Más útil para growth."),
+        ("Shiller P/E (CAPE)",
+         "Earnings 10y ajustados inflation. <15 cheap · >30 "
+         "expensive."),
+        ("P/E relative to history",
+         "Z-score del P/E actual vs 10y propio. >1 std = expensive."),
+        ("P/E relative to peers",
+         "Premium / discount vs sector median."),
+    ],
+    bullish_vs_bearish=[
+        ("P/E forward < historical avg con ROIC sólido",
+         "P/E LTM bajo en cyclical peak (value trap)"),
+        ("P/E ajustado por cash/leverage razonable",
+         "P/E sobre EPS inflado por one-time / SBC excluido"),
+        ("P/E vs growth: PEG <1.5 con calidad",
+         "P/E premium pero growth desacelerando"),
+        ("Shiller CAPE razonable",
+         "Spot P/E bajo pero CAPE elevado (peak)"),
+        ("Quality of earnings alto (FCF conversion >80%)",
+         "EPS inflado por accruals (low quality earnings)"),
+    ],
+    valuation_impact=(
+        "P/E es un proxy, no un valor intrínseco. El P/E justificado "
+        "se deriva del Gordon growth model: **P/E = payout × (1+g) / "
+        "(Ke − g)**. Una empresa con payout 50%, growth 8%, Ke 9% "
+        "tiene P/E justificado = 50% × 1.08 / (0.09 − 0.08) = 54x. "
+        "Esto explica por qué growth + low Ke + sustainable payout "
+        "= multiples altos. Cuando el mercado paga P/E muy alto, "
+        "tenés que verificar que los tres componentes lo soporten."
+    ),
+    case_study=(
+        "**Nvidia 2023**: cotizaba a forward P/E ~25 después del "
+        "rally. Si miras solo P/E, parecía expensive. Pero earnings "
+        "estaban creciendo >100% YoY por AI demand. Un PEG <1 = "
+        "still cheap given growth. Los que vendieron por 'P/E "
+        "alto' perdieron otros 3x.\n\n"
+        "**Contraejemplo — Ford 2022**: trailing P/E 4. Looked like "
+        "absurd bargain. Pero earnings estaban en peak (post-COVID "
+        "auto shortage + pricing power temporal). Cuando se "
+        "normalizó, EPS cayó 60% y el P/E 'subió' a 12 sin que el "
+        "stock se moviera. Classic value trap por usar P/E LTM en "
+        "cyclical en peak."
+    ),
+    common_mistakes=[
+        "Comparar P/E entre industrias sin ajustar. Software P/E 30 ≠ utilities P/E 30.",
+        "Usar P/E LTM en cyclicals. Siempre normalizar.",
+        "Ignorar la diferencia entre P/E (sobre EPS LTM) y forward P/E. Pueden diverger 30%+.",
+        "Confiar en 'adjusted EPS' inflado por exclusion de SBC. Usar GAAP EPS o ajustar manualmente.",
+        "Asumir que P/E bajo siempre es barato. A veces es CAUSA — la empresa se está deteriorando.",
+    ],
+    mental_model=(
+        "Damodaran: 'P/E es la métrica más fácil de calcular y la más "
+        "fácil de malinterpretar'. Antes de usar P/E, preguntate: "
+        "¿los E son sostenibles? ¿son representativos del ciclo? "
+        "¿de qué calidad? ¿están inflados por one-time / contabilidad? "
+        "El P/E es útil DESPUÉS de responder esas preguntas — antes, "
+        "es solo un ratio."
+    ),
+    books=[_BOOK_INTELLIGENT_INVESTOR, _BOOK_DAMODARAN_VALUATION,
+           _BOOK_MCKINSEY_VALUATION],
+    videos=[_VIDEO_DAMODARAN_VALUATION,
+            Video(title="The Trouble with P/E Ratios",
+                  channel="Aswath Damodaran", minutes=30, url="",
+                  why="Damodaran explica las trampas más comunes.")],
+    quotes=[
+        _Q_BUFFETT_PRICE_VALUE,
+        _Q_DAMODARAN_STORY,
+        Quote(text="The P/E ratio is the price of a dream. If the "
+                   "dream is real, the multiple is justified. If not, "
+                   "it's a bubble.",
+              author="Aswath Damodaran",
+              source="Investment Valuation"),
+    ],
+))
 _stub("peg",
       [_BOOK_LYNCH, _BOOK_DAMODARAN_VALUATION],
       [], [_Q_LYNCH_INVERT])
 _stub("sotp",
       [_BOOK_DAMODARAN_VALUATION, _BOOK_MCKINSEY_VALUATION],
       [], [])
-_stub("terminal_value",
-      [_BOOK_DAMODARAN_VALUATION, _BOOK_MCKINSEY_VALUATION],
-      [_VIDEO_DAMODARAN_VALUATION], [_Q_DAMODARAN_STORY])
+# ---------- Terminal value ----------
+_add(Lesson(
+    slug="terminal_value",
+    label=_label_for("terminal_value"),
+    category=_cat_for("terminal_value"),
+    hook=_hook_for("terminal_value"),
+    definition=(
+        "Terminal value (TV) es el valor presente de todos los cash "
+        "flows MÁS ALLÁ del período explícito del DCF. Si modelás "
+        "FCF años 1-10, el TV captura años 11 hasta infinito.\n\n"
+        "Las dos metodologías:\n\n"
+        "**1. Gordon Growth (perpetuity)**: TV = FCF_n+1 / (WACC − g)\n"
+        "  · Asume crecimiento perpetuo a tasa g (típicamente 2-3%).\n"
+        "  · Sencillo pero ULTRA-sensible a g.\n\n"
+        "**2. Exit multiple**: TV = EBITDA_n × Multiple\n"
+        "  · Asume que en año n vendés la empresa a un multiple "
+        "razonable.\n"
+        "  · Más práctico pero introduce circularidad (el multiple "
+        "futuro depende del mismo growth/WACC del DCF).\n\n"
+        "En un DCF típico, el TV representa 60-80% del valor total. "
+        "Pequeñas variaciones en assumptions de TV mueven mucho el "
+        "intrinsic."
+    ),
+    why_matters=(
+        "El TV es donde casi todo el valor de un DCF reside. Una "
+        "diferencia de 50bp en g terminal o 100bp en WACC cambia el "
+        "TV 15-25%, y por tanto el intrinsic value en proporción. "
+        "Por eso Damodaran insiste: 'el TV no es un afterthought, es "
+        "la mitad del modelo'. Y por eso un DCF con TV mal pensado "
+        "no vale el papel donde está impreso."
+    ),
+    how_pros_analyze=(
+        "1. **g terminal cap**: NO puede ser > growth nominal del PIB "
+        "del país (~3-4% en developed markets, ~5-7% EM). Una empresa "
+        "no puede crecer indefinidamente más rápido que la economía — "
+        "eventualmente absorbería todo.\n"
+        "2. **TV % of total PV**: si TV > 75% del valor total, el "
+        "DCF es básicamente una apuesta sobre la perpetuidad. "
+        "Reducir el período explícito o cuestionar assumptions.\n"
+        "3. **Implied multiple check**: calcular el multiple "
+        "implícito del TV. Si TV / EBITDA_n implica P/E 50x, ¿es "
+        "razonable para una empresa madura?\n"
+        "4. **Steady-state ROIC**: en el TV, asumir ROIC = WACC + "
+        "small premium (Koller). ROIC steady-state >25% es asumir "
+        "moat extraordinario perpetuo.\n"
+        "5. **Reinvestment rate consistency**: si g = 3%, ROIC = "
+        "12%, entonces reinvestment rate = 3/12 = 25%. FCF = NOPAT × "
+        "(1 − 25%). Los tres componentes (g, ROIC, RR) deben ser "
+        "consistentes."
+    ),
+    key_metrics=[
+        ("g terminal (%)",
+         "Cap: nominal GDP growth (~2-4% developed). Más es agresivo."),
+        ("TV / Total PV (%)",
+         ">75% = casi todo en perpetuidad (frágil). <60% = OK."),
+        ("Implied steady-state ROIC",
+         ">25% requiere moat extraordinario justificado. 10-15% es "
+         "típico."),
+        ("Reinvestment rate (g / ROIC)",
+         "Debería estar 25-50% de NOPAT. >75% sustainability cuestionable."),
+        ("Exit multiple implied",
+         "Si exit multiple > current multiple del sector, expansión "
+         "asumida (frágil)."),
+    ],
+    bullish_vs_bearish=[
+        ("TV / PV ≤ 65% (forecast explícito carga el peso)",
+         "TV / PV > 80% (toda la valuación es la perpetuidad)"),
+        ("g terminal ≤ nominal GDP",
+         "g terminal > nominal GDP (matemáticamente imposible "
+         "long-term)"),
+        ("Implied steady ROIC 10-15% (plausible)",
+         "Implied steady ROIC >25% sin moat estructural"),
+        ("Exit multiple razonable vs sector",
+         "Exit multiple > sector premium implícito"),
+    ],
+    valuation_impact=(
+        "TV mueve TODO el intrinsic value. Sensitivity: en un DCF "
+        "típico, +50bp en g terminal → +12-18% intrinsic. +100bp en "
+        "WACC → -15-25% intrinsic. Por eso una matriz de sensitivity "
+        "WACC × g terminal es obligatoria — no para presentar 'cuánto "
+        "vale' sino para mostrar 'cuán fragil es el modelo a las "
+        "assumptions'."
+    ),
+    case_study=(
+        "**Tesla 2020-2024**: muchos DCFs publicados en 2020-2021 "
+        "asumían g terminal 4-5% (above-GDP) + steady ROIC 20%+. "
+        "Justificaban valuaciones $1T+. Damodaran público mostró "
+        "que con assumptions más sobrias (g = 2.5%, ROIC = 12%), el "
+        "intrinsic era ~$200-300/share. El stock corrigió de $400 a "
+        "$120 en 2022. La mayoría del rerating fue ajustar el "
+        "TV assumptions, no las del forecast explícito.\n\n"
+        "**Caso clásico — Disney late 1990s**: DCFs con TV "
+        "asumiendo 6% growth perpetuo + ROIC 18%. Cuando los "
+        "earnings se estabilizaron y growth normalizó al 3-4%, el "
+        "stock se estancó por una década. Lección: TV optimista = "
+        "tiempo lateral mientras los fundamentals validan o no la "
+        "tesis."
+    ),
+    common_mistakes=[
+        "Asumir g terminal > nominal GDP growth. Matemáticamente roto a largo plazo.",
+        "Permitir que TV > 80% del PV total — el modelo es una apuesta sobre la perpetuidad, no análisis.",
+        "Usar exit multiple sin verificar que sea consistente con WACC, g y ROIC asumidos (circularidad).",
+        "Asumir ROIC steady-state alto (>20%) sin moat estructural justificado. La competencia eventualmente convergerá ROIC al WACC.",
+        "No hacer sensitivity sobre TV. Es la assumption más importante; presentar un point estimate es ingenuo.",
+    ],
+    mental_model=(
+        "Damodaran: 'in valuation, the terminal value is where "
+        "dreams come true and models come undone'. Pensá el TV no "
+        "como 'la respuesta' sino como 'la apuesta'. Cada DCF está "
+        "implícitamente apostando a una combinación de growth + ROIC "
+        "+ WACC para los próximos infinitos años. Si esa apuesta es "
+        "razonable, el DCF tiene valor. Si requiere assumptions "
+        "agresivas, tu intrinsic value es solo papel."
+    ),
+    books=[_BOOK_DAMODARAN_VALUATION, _BOOK_MCKINSEY_VALUATION,
+           _BOOK_KLARMAN_MOS],
+    videos=[_VIDEO_DAMODARAN_VALUATION,
+            Video(title="Terminal Value: The Most Important Number "
+                       "in DCF",
+                  channel="Aswath Damodaran", minutes=45, url="",
+                  why="Damodaran enseña cómo NO arruinar tu DCF "
+                       "con un TV malo.")],
+    quotes=[
+        _Q_DAMODARAN_STORY,
+        Quote(text="The terminal value is the most important number "
+                   "in your DCF and the one most likely to be wrong.",
+              author="Aswath Damodaran",
+              source="Investment Valuation"),
+        Quote(text="If your terminal growth rate exceeds the growth "
+                   "rate of the economy, you're implicitly assuming "
+                   "your company will eventually become the entire "
+                   "economy.",
+              author="Tim Koller (McKinsey)",
+              source="Valuation, 7th ed."),
+    ],
+))
 _stub("sensitivity_analysis",
       [_BOOK_MCKINSEY_VALUATION], [_VIDEO_DAMODARAN_VALUATION], [])
 _stub("scenario_analysis",
