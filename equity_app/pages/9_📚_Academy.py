@@ -376,18 +376,65 @@ def _breadcrumb() -> None:
 # ============================================================
 # Lesson render
 # ============================================================
+_CODE_BLOCK_RE = None  # lazy-compiled below
+
+
 def _md_to_html(text: str) -> str:
-    """Minimal markdown → HTML (bold + line breaks + lists)."""
+    """Minimal markdown → HTML.
+
+    Supports: ``**bold**``, line breaks, bullet/numbered lists,
+    triple-backtick code blocks (rendered as monospace <pre>), and
+    inline ``--- `` horizontal rules. The code-block support is the
+    point of having this helper at all — formulas + ASCII art need
+    monospace + preserved whitespace, which prose <p> mangles."""
     import re
     if not text:
         return ""
-    out = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", text)
+
+    # 1) Extract code blocks first so their contents survive the
+    #    paragraph/bold passes below. Replace each with a marker.
+    code_blocks: list[str] = []
+
+    def _stash(match: re.Match) -> str:
+        idx = len(code_blocks)
+        code_blocks.append(match.group(1))
+        return f"\x00CB{idx}\x00"
+
+    code_pattern = re.compile(r"```\n?(.*?)```", re.DOTALL)
+    out = code_pattern.sub(_stash, text)
+
+    # 2) Bold pass on the rest.
+    out = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", out)
+
+    # 3) Split into paragraphs.
     paragraphs = out.split("\n\n")
     rendered: list[str] = []
     for p in paragraphs:
         p = p.strip()
         if not p:
             continue
+        # 3a) Bare `---` on its own paragraph → horizontal rule.
+        if p == "---":
+            rendered.append(
+                "<hr style='border:none;border-top:1px solid "
+                "#1F2937;margin:14px 0;'/>"
+            )
+            continue
+        # 3b) Code-block marker: render as <pre> monospace.
+        marker_match = re.fullmatch(r"\x00CB(\d+)\x00", p)
+        if marker_match:
+            idx = int(marker_match.group(1))
+            code = code_blocks[idx].rstrip("\n")
+            rendered.append(
+                "<pre style='background:#0b1220;border:1px solid "
+                "#1F2937;border-radius:6px;padding:12px 14px;"
+                "color:#cbd5e1;font-family:JetBrains Mono,Menlo,"
+                "Consolas,monospace;font-size:12.5px;line-height:1.5;"
+                "overflow-x:auto;margin:8px 0;white-space:pre;'>"
+                f"{code}</pre>"
+            )
+            continue
+        # 3c) Lists.
         lines = p.split("\n")
         is_list = all(
             line.lstrip().startswith(("·", "-", "*")) or
