@@ -2397,12 +2397,143 @@ _add(Lesson(
               source="Buffettology"),
     ],
 ))
-_stub("unit_economics",
-      [_BOOK_FISHER,
-       Book(title="The Lean Startup", author="Eric Ries", year=2011,
-            chapter_hint="Caps. 6-9 (build-measure-learn)",
-            why="Aunque es de startups, define unit economics modernos.")],
-      [], [_Q_LYNCH_INVERT])
+# ---------- Unit economics ----------
+_add(Lesson(
+    slug="unit_economics",
+    label=_label_for("unit_economics"),
+    category=_cat_for("unit_economics"),
+    hook=_hook_for("unit_economics"),
+    definition=(
+        "Unit economics es el análisis de la rentabilidad de UNA "
+        "transacción o UN cliente — antes de mirar los costos fijos "
+        "corporativos. Pregunta: ¿cada cliente / producto / orden "
+        "individualmente genera contribution margin positivo?\n\n"
+        "Las métricas centrales en SaaS / consumer subscription:\n"
+        "  · **CAC** (Customer Acquisition Cost): cuánto cuesta "
+        "adquirir UN cliente nuevo.\n"
+        "  · **LTV** (Lifetime Value): cuánto cash genera ese cliente "
+        "durante su vida útil.\n"
+        "  · **Payback period**: meses para que CAC se recupere con "
+        "gross profit del cliente.\n"
+        "  · **LTV/CAC ratio**: ≥3x considerado sano.\n\n"
+        "Para empresas de hardware / retail: contribution margin "
+        "por unidad y break-even volume."
+    ),
+    why_matters=(
+        "Una empresa puede crecer revenue rápidamente y aún perder "
+        "más plata cuanto más vende — si las unit economics son "
+        "negativas. Es exactamente lo que pasó con MoviePass, "
+        "Casper, Blue Apron, varias DTCs y miles de SaaS pre-IPO. "
+        "Unit economics positivas son el filtro #1 antes de evaluar "
+        "growth — sin ellas, el crecimiento es destrucción de capital."
+    ),
+    how_pros_analyze=(
+        "1. **Fully-loaded CAC**: incluir TODO el costo de marketing "
+        "+ sales + onboarding. Muchas empresas reportan 'paid CAC' "
+        "(solo ads) — subestimar el total real.\n"
+        "2. **LTV calculation realistic**: usar churn observable, no "
+        "wishful thinking. Y descontar future cash flows (LTV NPV).\n"
+        "3. **Cohort analysis**: trackear cohorts (mes/año de "
+        "adquisición) separadamente. Permite ver si cohorts nuevos "
+        "son mejores o peores que los antiguos.\n"
+        "4. **Payback period**: <12 meses es excellent. >24 meses = "
+        "stress (necesitás mucho capital working hasta recuperar el "
+        "CAC).\n"
+        "5. **Contribution margin per unit (no SaaS)**: para retail, "
+        "DTCs, fintechs, mirar cuántas unidades necesitás para "
+        "cubrir fixed costs.\n"
+        "6. **Scale economies en CAC**: ¿el CAC crece con scale "
+        "(saturación de mercado) o baja (network effects)?"
+    ),
+    key_metrics=[
+        ("CAC (USD)",
+         "Costo fully-loaded de adquirir 1 cliente. Comparar vs LTV."),
+        ("LTV (USD)",
+         "Lifetime value. = Avg revenue × gross margin × avg "
+         "customer lifespan."),
+        ("LTV / CAC ratio",
+         ">3x healthy · 1-3x marginal · <1x destrucción de valor."),
+        ("Payback period (months)",
+         "<12m excellent · 12-24m OK · >24m capital-hungry."),
+        ("Contribution margin per unit",
+         "Para hardware/retail. Negativo = perdés en cada unidad."),
+        ("Cohort retention curve",
+         "% de cohort retenido después de N meses. Curva estable = "
+         "sticky product."),
+    ],
+    bullish_vs_bearish=[
+        ("LTV/CAC >3x sostenido en múltiples cohorts",
+         "LTV/CAC <2x o cayendo cohort over cohort"),
+        ("Payback period <12 meses",
+         "Payback >24 meses (capital intensity disfrazada)"),
+        ("CAC bajando con scale (network effects)",
+         "CAC subiendo con scale (saturación del canal)"),
+        ("Cohorts nuevos mejoran (NRR >100%)",
+         "Cohorts nuevos peores (signs de mercado saturándose)"),
+        ("Mix de canales orgánicos (low CAC)",
+         "Crecimiento 100% paid (alto CAC, frágil ante ad costs)"),
+    ],
+    valuation_impact=(
+        "Para SaaS / DTC pre-IPO, unit economics es la BASE de la "
+        "valuación. Una empresa con LTV/CAC 5x puede sostenibly "
+        "spendar en marketing — su growth es escalable. Una con LTV/CAC "
+        "1.5x está quemando capital — su 'growth' termina cuando se "
+        "acaba el cash. Damodaran insiste: **growth sin unit "
+        "economics positivas no agrega valor, lo destruye**. En DCF, "
+        "modelar contribution margin por cohort y la trayectoria del "
+        "CAC con scale."
+    ),
+    case_study=(
+        "**Netflix early-2010s**: LTV/CAC ~5x. Cada usuario nuevo "
+        "costaba ~$50 en adquisición, generaba ~$250 en LTV "
+        "(ARPU × tenure × margin). Eso justificaba gastar agresivo "
+        "en marketing + contenido. Stock 50x desde 2012.\n\n"
+        "**Contraejemplo — MoviePass 2017-2019**: cobraba $10/mes, "
+        "le pagaba al cine $10-15 por película, usuario "
+        "promedio veía 3+ films/mes. Contribution margin **negativa** "
+        "($-30 por usuario/mes). Más usuarios = más pérdidas. La "
+        "empresa explotó cuando el cash se acabó. Caso de unit "
+        "economics suicidas escondidas detrás de 'growth'."
+    ),
+    common_mistakes=[
+        "Usar 'paid CAC' (solo ads) en vez de fully-loaded CAC.",
+        "Calcular LTV con churn assumptions optimistas no validadas en cohorts reales.",
+        "Confundir gross margin alto con unit economics positivas. Gross margin no incluye CAC.",
+        "Ignorar que LTV es un FUTURE value — necesita ser descontado al presente.",
+        "Asumir que CAC se mantendrá constante con scale. Casi siempre sube (saturación).",
+    ],
+    mental_model=(
+        "Pregunta filosófica del unit economics analyst: 'si la "
+        "empresa parase de crecer mañana, ¿el cliente que ya tiene "
+        "le da plata?'. Si la respuesta es sí, podés evaluar growth. "
+        "Si la respuesta es no, **el growth ES el problema**, no la "
+        "solución. Lynch: 'know what you own' — saber unit economics "
+        "es la base de saber qué tenés."
+    ),
+    books=[_BOOK_FISHER,
+           Book(title="The Lean Startup", author="Eric Ries", year=2011,
+                chapter_hint="Caps. 6-9 (build-measure-learn)",
+                why="Define unit economics modernos para startups."),
+           Book(title="The SaaS Metrics Handbook", author="David Skok",
+                year=2019, chapter_hint="LTV, CAC, magic number",
+                why="Texto referencia de SaaS metrics — Skok es el VC "
+                     "que popularizó LTV/CAC."),
+           _BOOK_DAMODARAN_VALUATION],
+    videos=[
+        Video(title="David Skok · SaaS Metrics That Matter",
+              channel="Matrix Partners", minutes=30, url="",
+              why="El framework de SaaS metrics explicado por su autor."),
+    ],
+    quotes=[
+        _Q_LYNCH_INVERT,
+        Quote(text="A company that loses money on every sale cannot "
+                   "make it up on volume.",
+              author="Anónimo / Silicon Valley adage",
+              source="Folklore inversión (versión cínica del "
+                     "growth-at-all-costs)"),
+        _Q_DAMODARAN_STORY,
+    ],
+))
 # ---------- Pricing power ----------
 _add(Lesson(
     slug="pricing_power",
@@ -2540,9 +2671,138 @@ _add(Lesson(
               source="Berkshire 2007 letter"),
     ],
 ))
-_stub("guidance",
-      [_BOOK_BUFFETT_LETTERS, _BOOK_LYNCH],
-      [_VIDEO_BUFFETT_1996], [_Q_LYNCH_INVERT, _Q_MUNGER_INCENTIVES])
+# ---------- Guidance ----------
+_add(Lesson(
+    slug="guidance",
+    label=_label_for("guidance"),
+    category=_cat_for("guidance"),
+    hook=_hook_for("guidance"),
+    definition=(
+        "Guidance es la proyección que el management hace público "
+        "sobre revenue, márgenes y EPS futuros — típicamente "
+        "trimestre o año adelante. Aparece en earnings releases, "
+        "conference calls e investor days.\n\n"
+        "Tipos:\n"
+        "  · **Quantitative guidance**: rango específico de número "
+        "(revenue $5.0-5.2B, EPS $1.20-1.25).\n"
+        "  · **Directional guidance**: 'esperamos mid-single-digit "
+        "growth' sin compromiso numérico.\n"
+        "  · **Withdrawal**: pulled guidance — señal de "
+        "incertidumbre o stress (COVID 2020, todos retiraron "
+        "guidance).\n\n"
+        "Buffett y muchos value investors desconfían del guidance — "
+        "pero el mercado reacciona violentamente a desvíos."
+    ),
+    why_matters=(
+        "Las acciones se mueven más por desvíos de guidance que por "
+        "los earnings absolutos. Empresa beats EPS pero lowers "
+        "guidance → stock cae 10%. Empresa misses EPS pero raises "
+        "guidance → stock sube. Saber leer el guidance — qué dice, "
+        "qué omite, cómo se compara al consensus — es la mitad del "
+        "análisis de earnings season."
+    ),
+    how_pros_analyze=(
+        "1. **Compare vs consensus**: el sell-side reúne estimates. "
+        "Una empresa que guide 'in line' suena positivo pero si el "
+        "consensus estaba ya un poco arriba, en realidad es "
+        "downward revision implícita.\n"
+        "2. **Components matter**: revenue guidance high, margin "
+        "guidance low. Mix matters. Saber cuál driver está stressed.\n"
+        "3. **Range width**: rango angosto = confianza, rango ancho "
+        "= incertidumbre.\n"
+        "4. **Hedging language**: 'subject to FX', 'assuming "
+        "macroeconomic stability'. Los caveats son la verdad.\n"
+        "5. **History of guide → result**: ¿la empresa históricamente "
+        "guides conservative (beat-and-raise) o aggressive (miss)? "
+        "Patrones se repiten.\n"
+        "6. **Multi-year outlook**: empresas que dan 3y framework "
+        "(NVDA, ASML) revelan strategy. Las que no dan = "
+        "incertidumbre interna."
+    ),
+    key_metrics=[
+        ("Guidance vs consensus (delta)",
+         "Beat: guide > consensus (bullish). Miss: < consensus."),
+        ("Guidance range width (%)",
+         "(High − Low) / Midpoint. <5% = high confidence; >15% = "
+         "low confidence."),
+        ("Guide revision frequency",
+         "¿Se actualiza mid-quarter? Frecuentes revisions = "
+         "volatility in the business."),
+        ("Beat-and-raise pattern",
+         "% de trimestres con beat + guide-up vs miss + guide-down. "
+         "Alto sostenido = management conservador y disciplinado."),
+        ("Guidance hit rate (3y history)",
+         "% de tiempo que la empresa cumple su own guidance."),
+    ],
+    bullish_vs_bearish=[
+        ("Guidance above consensus, range angosto",
+         "Guidance below consensus, range ancho"),
+        ("Pattern de beat-and-raise consistente",
+         "Pattern de miss-and-lower (management overpromising)"),
+        ("Caveats mínimos, language confident",
+         "Heavy hedging, 'subject to' múltiples"),
+        ("Multi-year framework con milestones",
+         "No quantitative guidance (señal de no-visibilidad)"),
+        ("Guide se mantiene mid-quarter sin updates",
+         "Pre-announce / negative guide mid-quarter"),
+    ],
+    valuation_impact=(
+        "Forward earnings estimates (consensus) drivean directamente "
+        "forward multiples. Cuando guidance baja, los forecasts "
+        "bajan, el forward P/E sube — y multiple compression sigue. "
+        "Empresas con guidance creíble (beat-and-raise pattern) "
+        "merecen multiples premium porque tienen menos earnings "
+        "risk. Empresas con miss frecuente tienen multiples "
+        "comprimidos como descuento por unreliability."
+    ),
+    case_study=(
+        "**Nvidia 2023 Q2**: revenue guidance $11B vs consensus $7B. "
+        "Una de las mayores guides-ups en historia tech ($4B "
+        "delta). Stock saltó 28% en una sesión. Demostró que la "
+        "data center AI demand era genuina, no narrativa.\n\n"
+        "**Contraejemplo — Nike 2024**: lowered FY24 guidance dos "
+        "trimestres seguidos. Stock cayó 30% acumulado. La señal "
+        "subyacente: el moat de Nike erosionándose ante New Balance, "
+        "On Running, Hoka — guidance es donde aparece primero el "
+        "cambio competitivo, antes de que se vea en revenue absoluto."
+    ),
+    common_mistakes=[
+        "Mirar solo el headline beat/miss sin chequear guidance forward.",
+        "Asumir que guide-up siempre = bullish. A veces es 'low bar' después de cut anterior.",
+        "Ignorar los hedging caveats en el guidance ('assuming FX neutral', 'subject to').",
+        "Confiar en management que históricamente guides aggressive y misses (Tesla en muchos años, biotechs en general).",
+        "Olvidar que el mercado pricea el FORWARD, no el LTM. Guide-down con beat-LTM = caída del stock.",
+    ],
+    mental_model=(
+        "Lynch: 'know what you own and know why you own it'. Saber "
+        "qué hace una empresa NO alcanza — necesitás saber qué dice "
+        "su management sobre el futuro y si históricamente cumple. "
+        "Munger: 'show me the incentive'. Management que guides "
+        "aggressive tiene incentivos cortoplacistas (option packages). "
+        "Management que guides conservative (Buffett-style) tiene "
+        "incentivos longplacistas."
+    ),
+    books=[_BOOK_BUFFETT_LETTERS, _BOOK_LYNCH,
+           Book(title="Earnings Magic and the Unbalance Sheet",
+                author="Gary Giroux", year=2006,
+                chapter_hint="Sobre el efecto de guidance en "
+                              "earnings management",
+                why="Cómo el guidance crea presión para "
+                     "earnings management.")],
+    videos=[_VIDEO_BUFFETT_1996,
+            Video(title="Reading Between the Lines of Earnings Calls",
+                  channel="CFA Institute", minutes=30, url="",
+                  why="Cómo decodificar el lenguaje de management.")],
+    quotes=[
+        _Q_LYNCH_INVERT,
+        _Q_MUNGER_INCENTIVES,
+        Quote(text="Charlie and I have never given guidance on earnings "
+                   "and never will. We think it's a misleading practice "
+                   "that encourages playing games with quarterly numbers.",
+              author="Warren Buffett",
+              source="Berkshire 2002 letter"),
+    ],
+))
 # ---------- Cyclicality ----------
 _add(Lesson(
     slug="cyclicality",
@@ -2818,40 +3078,1025 @@ _add(Lesson(
               source="7 Powers"),
     ],
 ))
-_stub("saas_metrics",
-      [Book(title="The SaaS Playbook", author="Rob Walling", year=2022,
-            chapter_hint="Caps. 1-4", why="Métricas SaaS modernas claras.")],
-      [Video(title="Rule of 40 and Why It Matters",
-             channel="Bessemer Venture Partners", minutes=12,
-             url="", why="VC explica las métricas que miran en SaaS.")],
-      [])
-_stub("banking_metrics",
-      [_BOOK_CFA, _BOOK_DAMODARAN_VALUATION],
-      [], [])
-_stub("insurance_metrics",
-      [_BOOK_BUFFETT_LETTERS,
-       Book(title="The Davis Dynasty", author="John Rothchild", year=2001,
-            chapter_hint="Sobre Shelby Davis y el negocio de insurance",
-            why="Cómo pensar insurance como business.")],
-      [_VIDEO_BUFFETT_1996], [])
-_stub("semis_metrics",
-      [Book(title="Chip War", author="Chris Miller", year=2022,
-            chapter_hint="Caps. sobre TSMC + ASML",
-            why="Historia + estructura de la industria semis.")],
-      [], [])
-_stub("consumer_brands",
-      [_BOOK_BUFFETT_LETTERS, _BOOK_FISHER],
-      [_VIDEO_BUFFETT_1996], [_Q_BUFFETT_MOAT])
-_stub("network_effects",
-      [Book(title="The Cold Start Problem", author="Andrew Chen", year=2021,
-            chapter_hint="Toda la parte I",
-            why="Cómo se construyen y se rompen los network effects.")],
-      [], [])
+# ---------- SaaS metrics ----------
+_add(Lesson(
+    slug="saas_metrics",
+    label=_label_for("saas_metrics"),
+    category=_cat_for("saas_metrics"),
+    hook=_hook_for("saas_metrics"),
+    definition=(
+        "SaaS (Software-as-a-Service) requiere métricas distintas a "
+        "las clásicas por su modelo de revenue recurrente:\n\n"
+        "  · **ARR** (Annual Recurring Revenue): revenue subscription "
+        "anualizado.\n"
+        "  · **NRR** (Net Revenue Retention): cómo expande la base "
+        "existente — incluye upsell, downsell, churn. >120% = "
+        "best-in-class.\n"
+        "  · **GRR** (Gross Revenue Retention): retention puro, sin "
+        "upsell. >90% saludable.\n"
+        "  · **Magic Number**: net new ARR / S&M spend. >1.0 = "
+        "marketing eficiente.\n"
+        "  · **Rule of 40**: growth % + FCF margin %. ≥40 = healthy "
+        "balance entre growth e profitability.\n\n"
+        "Estas métricas reemplazan o complementan revenue growth + "
+        "margin clásicos."
+    ),
+    why_matters=(
+        "SaaS public companies con NRR alta (>120%) cotizan a múltiples "
+        "premium (15-25x EV/Revenue) vs las con NRR mediocres "
+        "(<105%) que cotizan 5-10x. Para entender si Snowflake "
+        "merece P/S 30 o si es burbuja, hay que mirar NRR (~158%) y "
+        "Magic Number (~1.5). Saber estas métricas separa el "
+        "research SaaS de las generalidades."
+    ),
+    how_pros_analyze=(
+        "1. **NRR > 120% = expansion moat real**: el cliente paga "
+        "más año tras año. Significa switching costs altos + value "
+        "expansion (más usuarios, más módulos).\n"
+        "2. **GRR > 90% sticky**: si solo NRR alta pero GRR baja, "
+        "están perdiendo customers pero expandiendo los que quedan — "
+        "frágil.\n"
+        "3. **Magic Number ≥1**: cada dólar en S&M trae ≥$1 en ARR "
+        "nuevo. <0.5 = marketing ineficiente, growth requiere mucho "
+        "capital.\n"
+        "4. **CAC payback en meses**: <12 meses = best-in-class · "
+        "12-24 = OK · >24 = capital-hungry.\n"
+        "5. **Rule of 40**: growth% + FCF margin% ≥ 40 indica que "
+        "están balanceando growth + profitability. Empresas elite "
+        "(Salesforce, ServiceNow) sostienen >50.\n"
+        "6. **Cohort analysis**: tracking cohorts permite ver si NRR "
+        "está mejorando o empeorando con cada nueva camada."
+    ),
+    key_metrics=[
+        ("ARR (USD)",
+         "Annual Recurring Revenue. La cifra absoluta."),
+        ("Net Revenue Retention (NRR) %",
+         "<100% empresas en problemas · 100-115% normal · "
+         ">120% best-in-class · >140% Snowflake-tier."),
+        ("Gross Revenue Retention (GRR) %",
+         ">90% sticky · 85-90% OK · <85% leakage problemática."),
+        ("Magic Number",
+         "Net new ARR / S&M spend en quarter. >1 efficient · "
+         "0.5-1 OK · <0.5 burning cash."),
+        ("Rule of 40",
+         "Growth% + FCF margin%. ≥40 healthy · ≥50 elite."),
+        ("CAC payback period (months)",
+         "<12 excellent · 12-24 OK · >24 capital intensive."),
+    ],
+    bullish_vs_bearish=[
+        ("NRR >120% sostenido (expansión genuina)",
+         "NRR <105% o declining (saturación / churn)"),
+        ("GRR >90% (sticky product)",
+         "GRR <85% (leakage estructural)"),
+        ("Magic Number >1",
+         "Magic Number <0.5 (marketing ineficiente)"),
+        ("Rule of 40 sostenido >40",
+         "Rule of 40 <30 (ni growth ni profit)"),
+        ("Logo retention alto (no solo $ retention)",
+         "Empresa pierde logos pero retiene $ por upsell — frágil"),
+    ],
+    valuation_impact=(
+        "Los SaaS multiples están dirigidos por NRR + growth: "
+        "**EV/Revenue ≈ growth × NRR factor**. Snowflake con 30%+ "
+        "growth y NRR 158% justifica P/S 20x; Zoom con 5% growth y "
+        "NRR 105% cotiza P/S 5x. Cuando NRR cae 10pp, el multiple "
+        "se comprime materialmente. El forecast de FCF requiere "
+        "modelar cohort dynamics — no se puede simplificar a 'X% "
+        "growth, Y% margin'."
+    ),
+    case_study=(
+        "**Snowflake 2020-2024**: IPO con NRR 158% — la más alta "
+        "ever en SaaS public. Justificó P/S inicial 80x+. NRR cayó "
+        "gradualmente a 127% (2024) y el P/S se comprimió a 15x. El "
+        "multiple compression fue ~80% del retorno negativo del "
+        "stock. Lección: NRR es el driver clave del SaaS multiple.\n\n"
+        "**Caso clásico — Salesforce**: NRR estable ~108-115% por "
+        "20 años con scale masivo. Rule of 40 consistente >40. "
+        "Multiple stable ~7-10x P/S. Compounded 80x desde IPO 2004."
+    ),
+    common_mistakes=[
+        "Mirar solo revenue growth sin NRR. Empresa puede crecer 30% mientras pierde clientes (solo se sostienen con new logos).",
+        "Confundir NRR con GRR. NRR alta con GRR baja = expansion masking churn.",
+        "Ignorar la diferencia entre Billings (lo facturado) y Revenue (lo reconocido). Billings forward = pipeline.",
+        "Usar 'adjusted FCF' que excluye SBC. SBC en SaaS es ENORME y real.",
+        "Aplicar SaaS metrics a empresas que no son verdaderamente SaaS (algo de Zoom no es SaaS, es transactional).",
+    ],
+    mental_model=(
+        "El SaaS analyst piensa cohorts, no agregados. Una empresa "
+        "con NRR 130% es una máquina que cada año extrae más "
+        "valor de la misma base — sin necesitar nuevos clientes. "
+        "Eso es compounding contractual. Una empresa con NRR <100% "
+        "está obligada a correr en treadmill — vender nuevos para "
+        "compensar los que pierde. La diferencia es estructural, no "
+        "ejecutiva."
+    ),
+    books=[
+        Book(title="The SaaS Playbook", author="Rob Walling", year=2022,
+             chapter_hint="Caps. 1-4", why="Métricas SaaS modernas claras."),
+        Book(title="From Impossible to Inevitable",
+             author="Aaron Ross & Jason Lemkin", year=2016,
+             chapter_hint="Caps. sobre Hypergrowth",
+             why="El libro que estandarizó las métricas SaaS modernas."),
+        _BOOK_DAMODARAN_VALUATION,
+    ],
+    videos=[
+        Video(title="Rule of 40 and Why It Matters",
+              channel="Bessemer Venture Partners", minutes=12, url="",
+              why="VC explica las métricas que miran en SaaS."),
+        Video(title="David Skok · SaaS Metrics 2.0",
+              channel="Matrix Partners", minutes=45, url="",
+              why="El framework de SaaS metrics actualizado por su autor."),
+    ],
+    quotes=[
+        Quote(text="In SaaS, the customer cohort is the unit of "
+                   "analysis. If your cohorts are improving, you're "
+                   "compounding. If they're decaying, you're "
+                   "treadmilling.",
+              author="David Skok",
+              source="Matrix Partners SaaS Metrics blog"),
+        _Q_LYNCH_INVERT,
+        _Q_DAMODARAN_STORY,
+    ],
+))
+# ---------- Banking metrics ----------
+_add(Lesson(
+    slug="banking_metrics",
+    label=_label_for("banking_metrics"),
+    category=_cat_for("banking_metrics"),
+    hook=_hook_for("banking_metrics"),
+    definition=(
+        "Los bancos requieren un toolkit completamente distinto de "
+        "métricas porque su balance ES su negocio (capital regulado, "
+        "leverage estructural ~10x, asset-liability matching). Las "
+        "métricas centrales:\n\n"
+        "  · **NIM** (Net Interest Margin): (Interest income − "
+        "interest expense) / Average Earning Assets. El margen del "
+        "core lending business.\n"
+        "  · **Efficiency ratio**: OpEx / Revenue. <60% bueno · "
+        ">70% ineficiente.\n"
+        "  · **NPL** (Non-Performing Loans): % del loan book en "
+        "default.\n"
+        "  · **CET1** (Common Equity Tier 1): capital de mejor "
+        "calidad sobre RWA. Regulatorio mínimo ~10%, banks elite "
+        ">13%.\n"
+        "  · **ROTE / ROE**: return on tangible / total equity.\n"
+        "  · **CASA ratio**: deposits low-cost (current + savings) "
+        "sobre total deposits. Más CASA = menor cost of funds."
+    ),
+    why_matters=(
+        "Aplicar DCF o P/E como en cualquier otra empresa a un banco "
+        "es ingenuidad — funcionalmente roto. Bancos viven en "
+        "P/TBV, ROTE, NIM, credit losses. Pre-2008 los analistas que "
+        "no entendían el sistema bancario perdieron fortunas — "
+        "Lehman cotizaba a P/E 'razonable' justo antes de quebrar. "
+        "El que sabía leer CET1, NPL, asset-liability mismatch vio "
+        "venir la crisis."
+    ),
+    how_pros_analyze=(
+        "1. **NIM trend with rate cycle**: NIM expande con tasas "
+        "subiendo, comprime con tasas bajando (asumiendo "
+        "asset-sensitive). Verificar el rate sensitivity.\n"
+        "2. **Asset quality**: NPLs creciendo = early warning. "
+        "Provisions for credit losses (PCL) prosean cuántos pierden "
+        "expected.\n"
+        "3. **Capital adequacy**: CET1 > regulatory minimum + buffer "
+        "para dividends / buybacks. Bancos US deben mantener "
+        "stressed CET1 >5% post-stress.\n"
+        "4. **Loan growth vs economy**: bancos creciendo loans 15% "
+        "anual en economía 3% growth → potencial credit cycle "
+        "deterioration ahead.\n"
+        "5. **Deposit franchise**: CASA ratio + customer "
+        "concentration. Sticky retail deposits = competitive "
+        "advantage; flighty corporate deposits = fragile.\n"
+        "6. **Off-balance-sheet exposures**: derivatives, "
+        "securitizations, SPEs. Pre-2008 era la zona oculta."
+    ),
+    key_metrics=[
+        ("NIM (%)",
+         "US large-cap banks ~3% · EM banks 4-6% · investment "
+         "banks <2%."),
+        ("Efficiency ratio (%)",
+         "<55% best · 55-65% normal · >70% inefficient."),
+        ("NPL ratio (%)",
+         "<1% clean · 1-3% normal · >3% stress · >5% distress."),
+        ("CET1 ratio (%)",
+         "Regulatorio: ~7-10%. Banks elite >13%. <8% restricted "
+         "dividends."),
+        ("ROTE (%)",
+         ">15% excellent · 10-15% good · <10% subpar."),
+        ("Loan-to-Deposit ratio",
+         "<80% conservador · 80-100% normal · >100% funding-dependent."),
+        ("CASA ratio (%)",
+         "% deposits low-cost. >40% strong franchise · <25% expensive funding."),
+    ],
+    bullish_vs_bearish=[
+        ("NIM expandiendo con tasas subiendo",
+         "NIM comprimiendo (mismatch en asset/liability)"),
+        ("NPL ratio estable o bajando",
+         "NPL ratio subiendo + provisions aumentando"),
+        ("CET1 buffer cómodo sobre regulatory",
+         "CET1 cerca de mínimo regulatorio (no margen)"),
+        ("ROTE >15% sostenido",
+         "ROTE <10% (no cubre cost of equity)"),
+        ("CASA ratio alto (deposits sticky)",
+         "Dependencia de wholesale funding (costoso, flighty)"),
+        ("Loan growth ~ GDP growth",
+         "Loan growth >> GDP (riesgo de credit cycle)"),
+    ],
+    valuation_impact=(
+        "Bancos cotizan en P/TBV (Price-to-Tangible Book Value), no "
+        "P/E como otras empresas. Fórmula: **P/TBV justificado = "
+        "(ROTE − g) / (Ke − g)**. Un banco con ROTE 15%, growth 3%, "
+        "Ke 10% justifica P/TBV = (0.15−0.03)/(0.10−0.03) = 1.7x. "
+        "JPM cotiza P/TBV ~2x porque ROTE 18%+; Citigroup ~0.8x "
+        "porque ROTE 7%. La regla simple: **ROTE > Ke → P/TBV > 1**, "
+        "**ROTE < Ke → P/TBV < 1**."
+    ),
+    case_study=(
+        "**JPMorgan 2008-2024**: ROTE consistente 15%+ a pesar de la "
+        "crisis. CET1 13%+. NIM resiliente con rate cycles. P/TBV "
+        "stayed >1.5x. Compounded 5x desde 2009 lows. Caso de "
+        "balance sheet + management discipline + scale economies "
+        "en banking.\n\n"
+        "**Contraejemplo — Silicon Valley Bank (SVB) 2023**: NIM "
+        "looked OK pero deposit franchise era 90%+ uninsured "
+        "corporate (frágil). Asset-liability mismatch enorme "
+        "(bonos largos vs depósitos demandables). Cuando los rates "
+        "subieron, las losses unrealized en HTM securities ($16B+) "
+        "wiped el equity. Bank run en 48h. Lección: NIM headline "
+        "puede esconder fragilidad estructural."
+    ),
+    common_mistakes=[
+        "Aplicar DCF / P/E a bancos. Modelo equivocado, usar P/TBV + RI + DDM.",
+        "Mirar solo ROE sin ROTE. ROE incluye goodwill que distorsiona.",
+        "Ignorar el asset-liability mismatch. Es la causa más común de bank failures.",
+        "Confiar en NPL ratios sin contexto del ciclo. NPLs lag credit deterioration por 6-12 meses.",
+        "Pasar por alto que CET1 cerca de minimum = no buybacks / dividend cuts coming.",
+    ],
+    mental_model=(
+        "Buffett (sobre bancos): 'banking is a wonderful business — "
+        "if you don't do anything stupid'. Los bancos hacen plata "
+        "tomando deposits baratos y prestando a tasas mayores. Lo "
+        "estúpido: leverage excesivo, asset-liability mismatch, "
+        "exposure a credit cycles que no entendés. Un banco bien "
+        "gestionado compounde a 12-15% ROTE durante décadas. Uno "
+        "mal gestionado puede wipear todo el equity en un trimestre."
+    ),
+    books=[_BOOK_CFA, _BOOK_DAMODARAN_VALUATION, _BOOK_BUFFETT_LETTERS,
+           Book(title="Bank Investing: A Practitioner's Field Guide",
+                author="Jeffrey Davis", year=2021,
+                chapter_hint="Toda la parte sobre frameworks",
+                why="Manual moderno escrito por un bank analyst.")],
+    videos=[
+        Video(title="How to Analyze a Bank Stock",
+              channel="The Plain Bagel", minutes=15, url="",
+              why="Intro accesible a P/TBV + ROTE."),
+    ],
+    quotes=[
+        Quote(text="Banking has been a very good business for a very "
+                   "long time. It's not necessary to do brilliant "
+                   "things — just don't do dumb things.",
+              author="Warren Buffett",
+              source="Berkshire annual meeting 1990s"),
+        Quote(text="The four most dangerous words in investing are: "
+                   "'this time it's different' — and that applies to "
+                   "banks in spades.",
+              author="John Templeton",
+              source="(atribuido)"),
+        _Q_BUFFETT_PRICE_VALUE,
+    ],
+))
+# ---------- Insurance metrics ----------
+_add(Lesson(
+    slug="insurance_metrics",
+    label=_label_for("insurance_metrics"),
+    category=_cat_for("insurance_metrics"),
+    hook=_hook_for("insurance_metrics"),
+    definition=(
+        "Las aseguradoras hacen plata de DOS fuentes:\n\n"
+        "  · **Underwriting profit**: primas cobradas − claims + "
+        "expenses. Margen del seguro propiamente dicho.\n"
+        "  · **Investment income**: yield del 'float' (primas "
+        "cobradas pero no aún pagadas en claims). Buffett construyó "
+        "Berkshire sobre este concepto.\n\n"
+        "Métricas centrales:\n"
+        "  · **Combined ratio**: (Claims + Expenses) / Premiums. "
+        "<100% = underwriting profitable · >100% = underwriting loss.\n"
+        "  · **Loss ratio**: Claims / Premiums.\n"
+        "  · **Expense ratio**: OpEx / Premiums.\n"
+        "  · **Float**: liabilities (claims reserves + unearned "
+        "premiums) − cash held against them. Capital ajeno que la "
+        "aseguradora invierte.\n"
+        "  · **Reserves adequacy**: cuán bien estimó claims futuras."
+    ),
+    why_matters=(
+        "Buffett: 'el negocio de seguros, bien manejado, genera "
+        "float al costo de menos que zero — significa que te pagan "
+        "para mantener capital ajeno'. Esa es la fundación de "
+        "Berkshire. Una aseguradora con combined ratio <95% genera "
+        "underwriting profit + float gratis. Una con combined ratio "
+        ">105% paga por el privilegio de tener float — modelo "
+        "destructor de valor."
+    ),
+    how_pros_analyze=(
+        "1. **Combined ratio < 100% = underwriting disciplinado**. "
+        "Sostenido <95% es excelente.\n"
+        "2. **Loss ratio vs expense ratio**: alto loss ratio = "
+        "claims underestimated o underwriting agresivo. Alto expense "
+        "= ineficiencia operacional.\n"
+        "3. **Reserve development**: ¿reservas estimadas hace 3 años "
+        "fueron suficientes? Adverse development (reservas "
+        "insuficientes) es red flag.\n"
+        "4. **Float growth**: float creciendo + costo bajo (combined "
+        "ratio <100%) = compounding machine.\n"
+        "5. **Cat exposure**: catastrophes (huracán, terremoto) "
+        "pueden wipear años de underwriting profit en un trimestre. "
+        "Reinsurance + diversification matter.\n"
+        "6. **Book value growth**: para insurers, BV per share "
+        "growth es el North Star — Buffett mide BVS de Berkshire "
+        "como métrica principal."
+    ),
+    key_metrics=[
+        ("Combined ratio (%)",
+         "<95% excellent · 95-100% good · 100-105% break-even · "
+         ">105% underwriting loss."),
+        ("Loss ratio (%)",
+         "Claims paid / Premiums. Industry average 60-70%."),
+        ("Expense ratio (%)",
+         "OpEx / Premiums. <30% efficient · >35% bloated."),
+        ("Float ($B)",
+         "Premium reserves − cash held. Crecimiento sostained = good."),
+        ("Float per share growth (%)",
+         "Métrica Buffett. Quiere ver crecer 10%+ anual."),
+        ("Book value per share growth (%)",
+         "Para insurers, BVS es el North Star. Berkshire ~10-15% "
+         "CAGR históricamente."),
+    ],
+    bullish_vs_bearish=[
+        ("Combined ratio <95% sostained",
+         "Combined ratio >100% (underwriting destructive)"),
+        ("Float growing + cost negativo (paid to hold)",
+         "Float growing pero costo positivo (paying to hold)"),
+        ("Favorable reserve development (reservas eran "
+         "conservadoras)",
+         "Adverse reserve development (reservas insuficientes "
+         "consistentes)"),
+        ("Cat exposure managed via reinsurance",
+         "Heavy cat exposure no hedged"),
+        ("Investment income > underwriting profit (Buffett-style)",
+         "Dependent on underwriting profit (sin float economic)"),
+    ],
+    valuation_impact=(
+        "Insurers cotizan en P/BV principalmente. Una aseguradora "
+        "con combined ratio <95% sostenido + float compounding "
+        "merece P/BV > 1.5x (Berkshire ~1.5x, Markel ~1.4x). "
+        "Aseguradoras commodity-like cotizan P/BV ~1x. La fórmula "
+        "del intrinsic incluye: book value + valor presente del "
+        "spread (underwriting margin + investment yield − cost of "
+        "equity). Para Berkshire específicamente, Buffett insiste "
+        "que BVS subestima el valor por la goodwill no contabilizada "
+        "en business operating subsidiarias."
+    ),
+    case_study=(
+        "**Berkshire Hathaway 1967-presente**: Buffett compró "
+        "National Indemnity 1967. Insurance float fue el motor del "
+        "compounding de Berkshire — empezó con $39M, llegó a $164B "
+        "en 2023. Combined ratio sostenido <100%, lo que significa "
+        "que el float era GRATIS (cost-negative). Invirtió ese float "
+        "en Coca-Cola, Apple, etc. — 4900x return desde 1967.\n\n"
+        "**Contraejemplo — AIG pre-2008**: combined ratio decente "
+        "pero la división AIG Financial Products escribió CDS "
+        "garantizando MBS sin reservas adecuadas. Underwriting "
+        "discipline cero. Cuando las MBS fallaron, AIG necesitó "
+        "$182B en bailout. Lección: insurance es una caja negra si "
+        "no entendés qué riesgos están underwriting."
+    ),
+    common_mistakes=[
+        "Mirar earnings volátiles (insurance es cíclica por cats). Look at 5y avg.",
+        "Ignorar reserve development. Adverse desarrollo es señal #1 de problema.",
+        "Confundir combined ratio LTM con through-cycle. Un buen año no significa underwriting disciplinado.",
+        "Aplicar P/E. Mejor P/BV + ROE on equity ex-investments.",
+        "Pasar por alto que el investment portfolio matters tanto como underwriting. Para Berkshire, casi todo el value viene de ahí.",
+    ],
+    mental_model=(
+        "Insurance bien manejado es 'capital ajeno gratis'. Pensá "
+        "como Buffett: el float es como tener un préstamo de "
+        "$164B a interés negativo. Si vos podés invertir eso a 6%+, "
+        "esa diferencia es valor puro. Pero si tu underwriting es "
+        "indisciplinado, el float te cuesta — y entonces todo el "
+        "edge desaparece. La disciplina underwriting precede al "
+        "investment skill."
+    ),
+    books=[_BOOK_BUFFETT_LETTERS,
+           Book(title="The Davis Dynasty",
+                author="John Rothchild", year=2001,
+                chapter_hint="Sobre Shelby Davis y insurance",
+                why="Cómo pensar insurance como business."),
+           Book(title="In Praise of Doubt: How Insurance Made Buffett",
+                author="Adam Mead", year=2021,
+                chapter_hint="Toda la parte sobre el modelo de Berkshire",
+                why="Análisis profundo del modelo insurance + float de "
+                     "Berkshire.")],
+    videos=[_VIDEO_BUFFETT_1996,
+            Video(title="Warren Buffett Explains Insurance Float",
+                  channel="Berkshire annual meeting clips",
+                  minutes=10, url="",
+                  why="Buffett explicando float en sus propias palabras.")],
+    quotes=[
+        Quote(text="Float, you say, what's that? Float is money that "
+                   "doesn't belong to us, but that we get to invest. "
+                   "Insurance companies receive premiums upfront and "
+                   "pay claims later — and over time, the float can "
+                   "be enormous.",
+              author="Warren Buffett",
+              source="Berkshire 1995 letter"),
+        Quote(text="The most important thing in insurance is to never "
+                   "let underwriting discipline lapse for the sake of "
+                   "volume.",
+              author="Warren Buffett",
+              source="Berkshire annual letter"),
+        _Q_BUFFETT_MOAT,
+    ],
+))
+# ---------- Semis metrics ----------
+_add(Lesson(
+    slug="semis_metrics",
+    label=_label_for("semis_metrics"),
+    category=_cat_for("semis_metrics"),
+    hook=_hook_for("semis_metrics"),
+    definition=(
+        "Semiconductores son la industria más cíclica del tech "
+        "stack. Métricas específicas:\n\n"
+        "  · **Inventory days**: días de inventario en hand. Subiendo = "
+        "demand softening; bajando = supply tight.\n"
+        "  · **Book-to-bill ratio**: orders received / orders shipped "
+        "in quarter. >1 = backlog growing (bullish); <1 = "
+        "destocking.\n"
+        "  · **Capex intensity**: CapEx / Revenue. >25% para "
+        "foundries (TSMC, Intel manufacturing); <10% fabless (Nvidia, "
+        "AMD).\n"
+        "  · **Design wins**: contracts a future revenue. Pipeline "
+        "indicator.\n"
+        "  · **Lead times**: weeks de delivery. Long lead times = "
+        "tight supply (peak); short = oversupply (trough).\n"
+        "  · **Wafer pricing**: precio por wafer en foundries.\n\n"
+        "El ciclo típico: 18-24 meses tight → 12-18 meses correction."
+    ),
+    why_matters=(
+        "Semis impulsan 50%+ de la innovación tech (AI, autos, IoT, "
+        "consumer electronics). Pero la industria oscila violentamente "
+        "— Nvidia subió 800% en 2023, AMD perdió 60% en 2022. "
+        "Entender el inventory cycle, capex intensity y geopolitical "
+        "risk (China-Taiwan-US) es la diferencia entre comprar en el "
+        "trough vs en el peak. Y el peak típicamente sucede 6-12 "
+        "meses antes de que aparezca en revenue."
+    ),
+    how_pros_analyze=(
+        "1. **Inventory channel check**: si distribuidores reportan "
+        "inventory days subiendo, demand cooling — empieza el "
+        "correction.\n"
+        "2. **Book-to-bill <1 para 2+ quarters = entering down-cycle**. "
+        "TSMC, ASML reportan esto trimestralmente.\n"
+        "3. **Lead times**: ASML EUV machines tenían lead times de "
+        "18+ meses en 2022 (peak). Cuando bajan a <12 meses = supply "
+        "loosening.\n"
+        "4. **Geopolitical exposure**: % revenue China, % "
+        "manufacturing Taiwan. Concentración alta = tail risk "
+        "(export controls, conflict).\n"
+        "5. **Design wins for future cycles**: chip design tarda "
+        "2-3 años de revenue. Pipeline de design wins predicts 2027 "
+        "revenue.\n"
+        "6. **R&D intensity**: tech leaders gastan 15-25% revenue en "
+        "R&D. <10% = perdiendo competitive ground."
+    ),
+    key_metrics=[
+        ("Inventory days",
+         "<60 tight · 60-100 normal · >100 destocking / overstock."),
+        ("Book-to-bill ratio",
+         ">1.05 expanding · 0.95-1.05 stable · <0.95 contracting."),
+        ("CapEx / Revenue (%)",
+         "Foundries: 25-40% · IDMs: 15-25% · fabless: <10%."),
+        ("R&D / Revenue (%)",
+         "Leaders 15-25% · followers 5-10%."),
+        ("Gross margin (%)",
+         "Foundries 50-55% · fabless leaders 65-75% (Nvidia AI 75%+)."),
+        ("Lead time (weeks)",
+         ">20 tight supply · 10-20 normal · <10 oversupply."),
+    ],
+    bullish_vs_bearish=[
+        ("Book-to-bill >1.1 sostained",
+         "Book-to-bill <0.9 (downcycle entering)"),
+        ("Inventory days bajando + lead times extending",
+         "Inventory days subiendo (destocking ahead)"),
+        ("R&D intensity creciendo + design wins flowing",
+         "R&D / Revenue cayendo (perdiendo competitive ground)"),
+        ("Geopolitical diversification (multi-fab strategy)",
+         "Single-source Taiwan / single-customer concentration"),
+        ("Capex disciplinado en down-cycle",
+         "Capex expansion at peak (creando next oversupply)"),
+    ],
+    valuation_impact=(
+        "Semis cotizan muy distinto según donde estás en el ciclo. "
+        "Peak earnings + peak multiples = double-whammy en downcycle. "
+        "Usar through-cycle P/E + normalizar margins es esencial. "
+        "Empresas con moats estructurales (ASML, TSMC, Nvidia AI) "
+        "merecen premium multiples; commoditized (memory, "
+        "value-tier logic) cotizan deeper-cycle."
+    ),
+    case_study=(
+        "**Nvidia 2022-2024**: stock cayó 65% en 2022 cuando gaming "
+        "+ crypto demand colapsó. Inventory days saltaron de 80 a "
+        "200. Pero a finales de 2022 empezó AI demand para H100 "
+        "data center chips. 2023 revenue +126%, gross margin 75%+. "
+        "Stock 9x desde Oct 2022 lows. Lección: en semis, el "
+        "downcycle puede ser DENTRO de un super-cycle más grande "
+        "(AI compute).\n\n"
+        "**Caso clásico — Intel 2014-2024**: lideró durante 30 años. "
+        "Pero foundry execution failed (no podían manufacturar 7nm "
+        "competitivamente vs TSMC). ROIC pasó de 22% a 4%. Capex "
+        "subió a $25B/año tratando de catchup. Multiple comprimió "
+        "de P/E 14 a P/E 25 sobre EPS que cayó 60%. Cuando un semi "
+        "leader pierde manufacturing edge, el multiple se comprime "
+        "y los earnings caen — el doble whammy del 'commoditization'."
+    ),
+    common_mistakes=[
+        "Asumir que peak earnings = good entry. Semis pagan P/E LOW en peak y HIGH en trough — el opuesto del retail value investing.",
+        "Ignorar el inventory cycle. Es el leading indicator más fuerte.",
+        "Aplicar DCF con growth lineal en una industria con cycles 18-24 meses.",
+        "Subestimar el geopolitical risk. TSMC Taiwan concentration es existential.",
+        "Confundir AI-driven semis (Nvidia, TSMC EUV) con general semis. Son industrias distintas dentro de la misma label.",
+    ],
+    mental_model=(
+        "Semis es la industria donde el sentiment lidera el "
+        "fundamental por 6-12 meses. Cuando todos hablan de "
+        "'shortage forever', el supply ya está en camino. Cuando "
+        "'glut forever', la demand ya empieza a recovery. Pensá "
+        "como Marks: cycles inevitables, no predecibles en timing. "
+        "Pero los inventory data + book-to-bill te dan ventanas "
+        "anchas."
+    ),
+    books=[
+        Book(title="Chip War", author="Chris Miller", year=2022,
+             chapter_hint="Caps. sobre TSMC + ASML",
+             why="Historia + estructura de la industria semis."),
+        Book(title="The Innovator's Dilemma",
+             author="Clayton Christensen", year=1997,
+             chapter_hint="Aplicado a semis: cómo Intel perdió mobile",
+             why="Framework de disruption — muy aplicable a semis."),
+        _BOOK_DAMODARAN_VALUATION,
+    ],
+    videos=[
+        Video(title="The Semiconductor Cycle Explained",
+              channel="Asianometry", minutes=20, url="",
+              why="Channel especializado en semis con visuals "
+                   "increíbles."),
+        Video(title="Chris Miller · Chip War",
+              channel="Talks at Google", minutes=60, url="",
+              why="El autor explica la geopolítica de chips."),
+    ],
+    quotes=[
+        Quote(text="In the semiconductor industry, the only constant "
+                   "is cyclicality. The companies that survive are "
+                   "the ones that prepare for the downcycle when "
+                   "everyone is partying at the peak.",
+              author="Morris Chang",
+              source="Founder of TSMC, multiple interviews"),
+        _Q_MARKS_RISK,
+        Quote(text="If you wait until you see the recovery, you've "
+                   "already missed half of it in semis.",
+              author="Anonymous semi PM",
+              source="Industry folklore"),
+    ],
+))
+# ---------- Consumer brands ----------
+_add(Lesson(
+    slug="consumer_brands",
+    label=_label_for("consumer_brands"),
+    category=_cat_for("consumer_brands"),
+    hook=_hook_for("consumer_brands"),
+    definition=(
+        "Una marca consumer es un activo intangible que permite a la "
+        "empresa cobrar un PREMIUM sobre el producto comoditizado "
+        "equivalente, mantener clientes fieles (lower churn), y "
+        "expandir a categorías adyacentes con bajo CAC.\n\n"
+        "Componentes del 'brand equity':\n"
+        "  · **Awareness**: % población que conoce la marca.\n"
+        "  · **Preference**: cuando hay opciones similares, ¿cuántos "
+        "eligen esta?\n"
+        "  · **Premium pricing power**: puede cobrar más?\n"
+        "  · **Distribution moat**: presencia ubicua (Coca-Cola en "
+        "200 países).\n\n"
+        "Marcas grandes (Coca-Cola, Apple, Nike, LVMH) valen tanto "
+        "o más que los activos físicos de la empresa."
+    ),
+    why_matters=(
+        "Las marcas son los moats más duraderos en consumer. "
+        "Coca-Cola lleva 130+ años cotizando ROIC alto. See's Candy, "
+        "Disney, McDonald's, similares. Buffett dijo que 'una marca "
+        "fuerte es como un castillo con foso ancho — la competencia "
+        "tiene que cruzar nado'. En valuación, una marca consolidada "
+        "justifica multiples premium sostenibles."
+    ),
+    how_pros_analyze=(
+        "1. **Pricing power test**: ¿puede subir precios above-"
+        "inflation sin perder volume? See's lo hizo 50 años seguidos.\n"
+        "2. **Market share trend**: marcas fuertes mantienen o "
+        "ganan share. Si pierden, el brand equity erosiona.\n"
+        "3. **Gross margin durability**: marcas premium >50% gross. "
+        "Genérico ~25%. La diferencia ES el brand premium.\n"
+        "4. **Advertising intensity**: ad spend / revenue. Marcas "
+        "consolidadas pueden bajarlo (no necesitan reforzar tanto). "
+        "Marcas declinantes lo suben para defender share.\n"
+        "5. **Geographic diversification**: una marca global vs "
+        "regional tiene optionality distinta.\n"
+        "6. **Generational test**: ¿la próxima generación la "
+        "consume? Boomers vs Gen Z. Coca-Cola en problemas con Gen Z; "
+        "Apple no."
+    ),
+    key_metrics=[
+        ("Gross margin (%)",
+         ">55% strong brand · 35-55% normal · <35% commoditized."),
+        ("Operating margin (%)",
+         "Premium brands 20-30%. Mass market 8-15%."),
+        ("Ad spend / Revenue (%)",
+         "Established brands 5-10% · declining brands 12%+ "
+         "(defensive)."),
+        ("Brand equity rankings",
+         "Interbrand, BrandZ, Forbes — valuación tercerista. Top "
+         "100 = compounders típicos."),
+        ("Same-store sales (consumer retail)",
+         "Healthy brand: SSS positivo 3+ years. Declining: SSS "
+         "negativo sostained."),
+        ("Volume vs price split",
+         "Premium brands: ambos positivos. Commoditized: volume "
+         "neg, price flat."),
+    ],
+    bullish_vs_bearish=[
+        ("Gross margin >55% sostained",
+         "Gross margin erosionándose (commoditization)"),
+        ("Pricing positivo + volume positivo",
+         "Solo crece por descuentos / promociones"),
+        ("Market share estable o creciendo",
+         "Market share erosionándose ante private label"),
+        ("Generational reach (Boomers + Gen Z)",
+         "Sin tracción en Gen Z (brand aging)"),
+        ("Ad spend %  declining (no necesita reforzar)",
+         "Ad spend % increasing (defensive)"),
+    ],
+    valuation_impact=(
+        "Consumer brands cotizan a multiples premium: Coca-Cola "
+        "P/E 24, P&G 25, LVMH 25 vs S&P promedio 20. El premium "
+        "refleja predictability + pricing power. En recesiones, "
+        "consumer staples brands son defensivos — gente sigue "
+        "comprando Coca-Cola aunque pierda el trabajo. Eso justifica "
+        "premium en discount rate (beta más bajo). En DCF, asumir "
+        "competitive advantage period largo (20+ años) está "
+        "justificado para marcas top-tier."
+    ),
+    case_study=(
+        "**LVMH 2010-2024**: revenue 4x, op margin 26%+. La "
+        "estrategia: comprar marcas establecidas (Louis Vuitton, "
+        "Dior, Tiffany), aplicar disciplina operativa, mantener "
+        "pricing power. Cada brand premium se compounde. Stock 8x "
+        "en 14 años. Caso textbook de cómo se monetiza brand "
+        "equity sin diluir el premium.\n\n"
+        "**Contraejemplo — Tupperware Brands**: marca legendaria "
+        "consumer 1960s-1990s. Pero el modelo (direct sales, "
+        "parties) no transicionó a digital + Gen X / Millennials. "
+        "Revenue stagnated 20 años, eventualmente declared "
+        "bankruptcy 2024. Lección: brand equity sin relevancia "
+        "generacional se erosiona — invisible hasta que es muy "
+        "tarde."
+    ),
+    common_mistakes=[
+        "Asumir que brand awareness = brand equity. Awareness alta de marca declinante (Sears, Kodak) no salva.",
+        "Pagar 'brand multiples' por empresas con marca débil real (private label exposure).",
+        "Ignorar el demographic shift. Brands que captura Boomers pueden estar muriendo silenciosamente con Gen Z.",
+        "Confundir DTC growth con brand strength. Many DTCs crecen vía paid acquisition, no brand pull.",
+        "Pasar por alto que algunas categorías son inherentemente commoditizadas (gasoline, sugar, basic apparel) — ahí brand investing no funciona.",
+    ],
+    mental_model=(
+        "Test final de marca (Buffett): 'si te diera $100B y te "
+        "dijera que destruyas Coca-Cola, ¿podrías? La respuesta es "
+        "no'. La marca está en la cabeza del consumidor — "
+        "tanto que no la pueden replicar con capital. Eso es el "
+        "moat más duradero que existe. Pero requiere check periódico "
+        "de relevancia generacional."
+    ),
+    books=[_BOOK_BUFFETT_LETTERS, _BOOK_FISHER,
+           Book(title="Building Strong Brands",
+                author="David Aaker", year=1996,
+                chapter_hint="Caps. 1-6 — brand equity model",
+                why="Texto académico fundacional de brand strategy."),
+           Book(title="Predictably Irrational",
+                author="Dan Ariely", year=2008,
+                chapter_hint="Cap. 6 — el efecto del placebo en pricing",
+                why="Por qué las marcas crean valor real psicológicamente.")],
+    videos=[_VIDEO_BUFFETT_1996,
+            Video(title="The Power of Branding — Coca-Cola Case",
+                  channel="CFA Institute", minutes=45, url="",
+                  why="Análisis profundo de brand equity en KO.")],
+    quotes=[
+        _Q_BUFFETT_MOAT,
+        Quote(text="In the long run, a brand is the most valuable "
+                   "asset a company can own. It outlasts factories, "
+                   "patents, and people.",
+              author="Howard Schultz",
+              source="Pour Your Heart Into It (Starbucks)"),
+        Quote(text="If you don't have a brand, you have a "
+                   "commodity. And commodities compete on price.",
+              author="Philip Kotler",
+              source="Marketing Management (10th ed.)"),
+    ],
+))
+# ---------- Network effects ----------
+_add(Lesson(
+    slug="network_effects",
+    label=_label_for("network_effects"),
+    category=_cat_for("network_effects"),
+    hook=_hook_for("network_effects"),
+    definition=(
+        "Network effect ocurre cuando el valor del producto/servicio "
+        "AUMENTA con cada usuario adicional. Más usuarios = más "
+        "valor para todos = más razón para usar (loop reinforce).\n\n"
+        "Tipos:\n"
+        "  · **Direct network effect**: cada usuario nuevo agrega "
+        "valor a los existentes (Telegram, WhatsApp).\n"
+        "  · **Indirect / two-sided**: marketplaces donde dos lados "
+        "se atraen (Uber drivers ↔ riders, Visa merchants ↔ "
+        "cardholders).\n"
+        "  · **Data network effect**: más usuarios = más data = "
+        "mejor producto (Google, Tesla autopilot).\n"
+        "  · **Social network effect**: el valor proviene de las "
+        "conexiones sociales (Meta, LinkedIn).\n\n"
+        "El network effect produce 'winner-takes-most' markets — "
+        "típicamente 1-2 jugadores capturan 70%+ del valor."
+    ),
+    why_matters=(
+        "Los moats más anchos de la era moderna son network effects. "
+        "Microsoft (Windows + Office), Visa, Mastercard, Meta, "
+        "Google, Amazon marketplace — todos compounded décadas "
+        "porque cada usuario nuevo refuerza el moat. En valuación, "
+        "una empresa con network effect demostrado merece "
+        "competitive advantage period MUY largo (20+ años) y ROIC "
+        "steady-state alto. Ignorar network effects = subestimar "
+        "intrinsic value 30-50%."
+    ),
+    how_pros_analyze=(
+        "1. **Identify the loop**: ¿qué exactamente refuerza el loop? "
+        "Para Visa: más merchants accept → más razón para tener "
+        "tarjeta → más cardholders → más razón para merchants "
+        "accept.\n"
+        "2. **Critical mass threshold**: cada network tiene un punto "
+        "de inflexión donde el effect se vuelve self-sustaining. "
+        "Facebook lo cruzó ~2007; Uber ~2013.\n"
+        "3. **Local vs global**: Uber es network effect LOCAL (la "
+        "red en SF no ayuda al user de Buenos Aires). Visa es "
+        "GLOBAL. Local networks tienen menos defensibilidad.\n"
+        "4. **Multi-homing**: ¿usan los users solo este o varios? "
+        "Drivers Uber + Lyft simultáneamente = network effect "
+        "diluido. WhatsApp single-homing (casi nadie tiene 2 chat "
+        "apps) = network effect fuerte.\n"
+        "5. **Reverse network effects**: cuando user growth degrada "
+        "experience (Twitter pre-Musk spam, MySpace post-2008). "
+        "Network effects pueden invertir."
+    ),
+    key_metrics=[
+        ("Network density",
+         "% del market potencial covered. Saturation = mature; "
+         "low penetration = runway."),
+        ("Engagement per user trend",
+         "Si más users → más engagement por user, network effect "
+         "intact. Si decreasing, deteriorating."),
+        ("Multi-homing ratio",
+         "% users que usan también competitors. <20% = strong; "
+         ">50% = diluted."),
+        ("CAC trend with scale",
+         "Bajando con scale = organic + network effects fuerte. "
+         "Subiendo = saturando + paying for growth."),
+        ("Take rate (marketplaces)",
+         "% commission. Visa 0.05% pero ubicuo; eBay 13%. "
+         "Sustainability depende del moat."),
+        ("Retention curve",
+         "Sticky users (engagement nivela en plateau alto) = "
+         "network effect strong."),
+    ],
+    bullish_vs_bearish=[
+        ("Critical mass cruzado + organic growth",
+         "Pre-critical mass / paying for every user"),
+        ("Single-homing (los users solo usan este)",
+         "Multi-homing rampant (el switching es cero)"),
+        ("Engagement per user CRECE con scale",
+         "Engagement per user DECRECE con scale (signo de saturation)"),
+        ("Global network (defensible globally)",
+         "Local network (vulnerable a competition local)"),
+        ("Data feedback loop activo (más data → mejor product)",
+         "Sin data flywheel (solo marketplace transactional)"),
+    ],
+    valuation_impact=(
+        "Una empresa con verdadero network effect demostrado puede "
+        "justificar EV/Revenue 10-20x, P/E 30-50x. Visa/Mastercard "
+        "son ejemplos: P/E 30+ sustained porque el moat se "
+        "ensancha cada año. Pero hay que verificar que el network "
+        "effect es REAL y no narrativa. Yelp, Groupon, Pinterest "
+        "fueron pitched como network effects que turned out menos "
+        "defensibles. En DCF, asumir CAP de 20+ años solo después "
+        "de validar el network effect empíricamente."
+    ),
+    case_study=(
+        "**Visa 1958-presente**: el ejemplo canónico de network "
+        "effect en payment. Empezó como 'BankAmericard' en una sola "
+        "ciudad. Expandió bancos uno por uno hasta cruzar critical "
+        "mass ~1975 (suficientes merchants + cardholders en US). "
+        "Una vez cruzado, el lock-in se volvió permanente. ROIC "
+        "60-85% sostenido durante 50+ años. Compounded ~16% CAGR "
+        "desde IPO 2008.\n\n"
+        "**Contraejemplo — MySpace 2003-2008**: tenía el network "
+        "effect social más grande del mundo en 2007. Facebook tomó "
+        "share en <3 años. Por qué: switching cost bajo, no "
+        "investment del user en la plataforma (a diferencia de "
+        "Facebook con fotos, friend tree, history). Lección: network "
+        "effects sociales sin switching costs son frágiles."
+    ),
+    common_mistakes=[
+        "Confundir 'tener muchos users' con network effect. Spotify tiene millones de users pero NO tiene network effect (más users no agrega valor a otros users).",
+        "Aplicar 'network effect' a cualquier marketplace. Solo aplica si hay verdadero feedback loop.",
+        "Asumir que network effects son permanentes. Tech paradigm shifts (mobile, web3) pueden disolverlos.",
+        "Ignorar el reverse network effect. Demasiado growth puede degradar la experiencia (spam, low quality content).",
+        "Pagar multiples de network effect sin validar empíricamente (engagement growing, organic CAC declining).",
+    ],
+    mental_model=(
+        "Andrew Chen (a16z): 'el cold start problem es el más "
+        "difícil — el chicken-and-egg de cualquier network'. Una vez "
+        "resuelto, el network se vuelve casi imposible de "
+        "desplazar. Pensá en cuántos competidores intentaron "
+        "desplazar a Visa, Microsoft Office, Facebook social graph — "
+        "casi todos fallaron. Esos moats son las opportunities "
+        "compounders más valiosas del siglo XXI."
+    ),
+    books=[
+        Book(title="The Cold Start Problem",
+             author="Andrew Chen", year=2021,
+             chapter_hint="Toda la parte I",
+             why="Cómo se construyen y se rompen los network effects."),
+        Book(title="Information Rules",
+             author="Carl Shapiro & Hal Varian", year=1998,
+             chapter_hint="Caps. 7-9 — network effects económicos",
+             why="Texto académico fundacional, escrito por el chief "
+                  "economist de Google."),
+        _BOOK_BUFFETT_LETTERS,
+    ],
+    videos=[
+        Video(title="James Currier · NFX on Network Effects",
+              channel="NFX (VC)", minutes=30, url="",
+              why="VC especializado en network effects explica los "
+                   "13 tipos."),
+        _VIDEO_BUFFETT_1996,
+    ],
+    quotes=[
+        Quote(text="The most valuable companies of the 21st century "
+                   "are those built on network effects. They compound "
+                   "value faster than any other business model.",
+              author="James Currier",
+              source="NFX research"),
+        Quote(text="Networks tip towards winners-take-most outcomes.",
+              author="W. Brian Arthur",
+              source="Increasing Returns and Path Dependence (1994)"),
+        _Q_BUFFETT_MOAT,
+    ],
+))
 
 # Valuación (stubs)
-_stub("multiples_overview",
-      [_BOOK_DAMODARAN_VALUATION, _BOOK_MCKINSEY_VALUATION],
-      [_VIDEO_DAMODARAN_VALUATION], [_Q_DAMODARAN_STORY])
+# ---------- Multiples overview ----------
+_add(Lesson(
+    slug="multiples_overview",
+    label=_label_for("multiples_overview"),
+    category=_cat_for("multiples_overview"),
+    hook=_hook_for("multiples_overview"),
+    definition=(
+        "Los múltiplos son ratios de valuación que comparan el precio "
+        "(o EV) con una métrica fundamental. Cada uno te dice algo "
+        "distinto:\n\n"
+        "**Equity multiples** (sobre Market Cap):\n"
+        "  · **P/E** = Price / EPS — earnings-based\n"
+        "  · **P/B** = Price / Book Value — asset-based\n"
+        "  · **P/S** = Price / Sales — revenue-based\n"
+        "  · **P/FCF** = Price / Free Cash Flow — cash-based\n\n"
+        "**Enterprise multiples** (sobre EV, neutral al leverage):\n"
+        "  · **EV/EBITDA** — operating cash earnings\n"
+        "  · **EV/EBIT** — operating earnings (con D&A real)\n"
+        "  · **EV/Revenue** — útil para growth companies sin "
+        "earnings positivos\n"
+        "  · **EV/FCFF** — más honesto que EV/EBITDA\n\n"
+        "**Sector-specific**: P/TBV bancos, P/AUM asset managers, "
+        "EV/EBITDAR airlines, P/FFO REITs."
+    ),
+    why_matters=(
+        "Los multiples son la 'lingua franca' del valuation porque "
+        "permiten comparación rápida entre empresas. Pero también "
+        "son la fuente #1 de errores — usar el wrong multiple para "
+        "el wrong tipo de empresa. P/E en banks, EV/EBITDA en "
+        "REITs, P/B en software — todos errores comunes. Damodaran "
+        "insiste: el multiple correcto depende del modelo de negocio "
+        "y del estado del ciclo."
+    ),
+    how_pros_analyze=(
+        "1. **Multiple selection driven by business model**: "
+        "    · Asset-heavy → P/B, EV/EBITDA\n"
+        "    · Earnings-stable → P/E\n"
+        "    · High-growth no profit → P/S, EV/Revenue\n"
+        "    · Cash-heavy → P/FCF, EV/FCFF\n"
+        "    · Banks → P/TBV + ROTE\n"
+        "    · REITs → P/FFO\n"
+        "2. **Compare vs peers, no abstract**: P/E 25 es alto vs S&P "
+        "(20) pero bajo vs software peers (30+).\n"
+        "3. **Compare vs own history**: Z-score. ¿Estás cotizando 1 "
+        "std arriba de tu propio 10y mean?\n"
+        "4. **Cross-check múltiples**: si P/E dice cheap pero EV/EBITDA "
+        "dice expensive, hay leverage. Si P/FCF dice cheap pero P/E "
+        "dice expensive, accruals están inflando earnings.\n"
+        "5. **Forward vs trailing**: forward para growth, trailing "
+        "para mature stable.\n"
+        "6. **Adjust for cycle**: en cyclicals usar through-cycle, "
+        "no LTM."
+    ),
+    key_metrics=[
+        ("P/E (trailing)",
+         "Earnings predictable. NO bancos ni cyclicals."),
+        ("P/B",
+         "Asset-heavy (banks, insurers, REITs). Tangible Book "
+         "preferible (ROTE)."),
+        ("EV/EBITDA",
+         "Comparison across capital structures. NO bancos."),
+        ("EV/FCFF",
+         "Más honest que EV/EBITDA (incluye CapEx)."),
+        ("P/S, EV/Revenue",
+         "Growth pre-profitability. Usar con NRR / unit economics."),
+        ("PEG",
+         "P/E ÷ growth rate. <1 cheap given growth; >2 expensive."),
+    ],
+    bullish_vs_bearish=[
+        ("Multiple < peer median + sector avg",
+         "Multiple > peer median + sector premium"),
+        ("Multiple normalizado por through-cycle earnings",
+         "Multiple sobre LTM peak earnings (value trap)"),
+        ("Cross-check múltiples consistente",
+         "Múltiples diverging (EV/EBITDA cheap, P/FCF expensive)"),
+        ("Multiple < own historical Z (mean reversion play)",
+         "Multiple > own historical Z (priced for perfection)"),
+    ],
+    valuation_impact=(
+        "Los multiples son tools de TRIAGE, no de valuación final. "
+        "Te dicen rápido si algo es worth deep-diving. Pero el "
+        "intrinsic value real viene del DCF + fundamental análisis. "
+        "Usar solo multiples = comprar 'lo barato' que típicamente "
+        "es barato por razones (value traps). Combinar multiples + "
+        "DCF + cualitativo = research completo."
+    ),
+    case_study=(
+        "**Buffett comprando Apple 2016**: Apple cotizaba P/E ~10-12 "
+        "(barato vs S&P P/E 18). Net cash $100B+ — ex-cash el P/E "
+        "era ~7. Múltiples gritaban 'cheap'. Lo que el mercado "
+        "missed: el ecosystem moat (switching cost iOS), services "
+        "revenue growth, FCF generation power. Buffett pagó ~$36/share. "
+        "10x return en 8 años. Multiple expansion + earnings growth.\n\n"
+        "**Contraejemplo — Sears 2005-2018**: cotizaba P/B 0.4 (40% "
+        "de book). 'Deep value' aparente. Lo que escondía: book era "
+        "real estate sobrevalorado y inventory obsoleto. P/B "
+        "engañaba. Quiebra 2018. Lección: cada multiple tiene su "
+        "trampa específica."
+    ),
+    common_mistakes=[
+        "Aplicar P/E a banks. Usar P/TBV.",
+        "Aplicar EV/EBITDA a REITs. Usar P/FFO.",
+        "Comparar multiples entre industrias sin ajustar.",
+        "Confiar en multiple LTM en cyclicals.",
+        "Ignorar que multiples pueden persist por años antes de mean-reverting.",
+    ],
+    mental_model=(
+        "Multiples son atajos — útiles pero peligrosos. Damodaran: "
+        "'a multiple is implicit DCF assumptions wrapped in a single "
+        "number'. Cuando usás P/E 20, estás implícitamente asumiendo "
+        "ciertas cosas sobre growth, ROIC, WACC. Antes de comprar/"
+        "vender por un multiple, preguntate: ¿qué assumptions están "
+        "embedded? ¿son razonables?"
+    ),
+    books=[_BOOK_DAMODARAN_VALUATION, _BOOK_MCKINSEY_VALUATION,
+           _BOOK_CFA],
+    videos=[_VIDEO_DAMODARAN_VALUATION,
+            Video(title="The 5 Most Important Multiples",
+                  channel="Aswath Damodaran", minutes=30, url="",
+                  why="Damodaran framework para elegir multiple "
+                       "correcto.")],
+    quotes=[
+        _Q_DAMODARAN_STORY,
+        Quote(text="A multiple is a shortcut to a DCF — but every "
+                   "shortcut has a price.",
+              author="Aswath Damodaran",
+              source="Investment Valuation"),
+        _Q_BUFFETT_PRICE_VALUE,
+    ],
+))
 # ---------- EV/EBITDA ----------
 _add(Lesson(
     slug="ev_ebitda",
@@ -3108,12 +4353,267 @@ _add(Lesson(
               source="Investment Valuation"),
     ],
 ))
-_stub("peg",
-      [_BOOK_LYNCH, _BOOK_DAMODARAN_VALUATION],
-      [], [_Q_LYNCH_INVERT])
-_stub("sotp",
-      [_BOOK_DAMODARAN_VALUATION, _BOOK_MCKINSEY_VALUATION],
-      [], [])
+# ---------- PEG ----------
+_add(Lesson(
+    slug="peg",
+    label=_label_for("peg"),
+    category=_cat_for("peg"),
+    hook=_hook_for("peg"),
+    definition=(
+        "PEG (Price/Earnings to Growth) = P/E ÷ EPS growth rate. "
+        "Es el intento de Peter Lynch de normalizar P/E por growth "
+        "— una empresa con P/E 30 creciendo 30% (PEG = 1.0) sería "
+        "comparable a una con P/E 15 creciendo 15% (también PEG 1.0). "
+        "Lynch: '**a fair price for a stock is one where P/E equals "
+        "growth rate** (PEG = 1)'.\n\n"
+        "Versiones:\n"
+        "  · **PEG simple**: P/E LTM ÷ next year EPS growth\n"
+        "  · **PEG forward**: forward P/E ÷ 3-5y projected growth\n"
+        "  · **PEG yield-adjusted**: (P/E) ÷ (growth + dividend yield)\n\n"
+        "Regla de Lynch: PEG <1 cheap · 1-2 fair · >2 expensive."
+    ),
+    why_matters=(
+        "PEG resuelve parcialmente la trampa del P/E aislado — "
+        "growth companies con P/E alto pueden ser cheap si el "
+        "growth justifica. Pero PEG mal usado es peligroso: P/E 50 "
+        "con growth 50% (PEG 1) NO necesariamente es 'fair' — el "
+        "growth alto rara vez es sostenible 10 años. Lynch enfocaba "
+        "growth companies de mediano tamaño con visibility — no "
+        "high-flying tech."
+    ),
+    how_pros_analyze=(
+        "1. **Usar growth RATE realista**: no el peak temporal. "
+        "Empresas con growth 50% en un año típicamente no lo sostienen. "
+        "Usar 3-5y forward growth, no 1y.\n"
+        "2. **Verificar growth quality**: ¿es orgánico o por M&A? "
+        "Sostenible o cyclical?\n"
+        "3. **PEG no aplica en cyclicals**: en peak earnings el growth "
+        "se desploma, PEG explota.\n"
+        "4. **PEG yield-adjusted** para dividend payers: añadir "
+        "dividend yield al denominador.\n"
+        "5. **Compare PEG vs sector**: PEG 1.0 puede ser cheap en "
+        "high-growth tech (peers 2-3) y expensive en utilities "
+        "(peers <1).\n"
+        "6. **Watch out**: si P/E altas + growth high projected, "
+        "PEG bajos. Pero proyecciones de growth tienen MUCHO error — "
+        "sensitivity matters."
+    ),
+    key_metrics=[
+        ("PEG (trailing)",
+         "P/E LTM ÷ NTM EPS growth. <1 cheap por Lynch."),
+        ("PEG (forward)",
+         "Forward P/E ÷ 3-5y projected growth. Más útil para growth."),
+        ("PEG yield-adjusted",
+         "P/E ÷ (growth + div yield). Aplica a dividend stocks."),
+        ("Growth durability",
+         "¿Cuántos años puede sostener este growth? Probability check."),
+        ("Implied PEG of market",
+         "S&P PEG ~2 históricamente. <1.5 cheap market-wide."),
+    ],
+    bullish_vs_bearish=[
+        ("PEG <1 con growth sostenible (visibility 3+ años)",
+         "PEG <1 pero growth temporal / unsustainable"),
+        ("Growth orgánico de calidad",
+         "Growth via M&A o non-recurring items"),
+        ("Forward P/E + realistic growth assumptions",
+         "Trailing P/E + peak growth = false signal"),
+        ("Yield-adjusted PEG razonable",
+         "PEG bajo solo por dividend yield alto (banderas value trap)"),
+    ],
+    valuation_impact=(
+        "PEG es útil como screening tool — identificar candidates "
+        "que merecen deep-dive. PERO no es valuation methodology "
+        "completa. Lynch insistía: usar PEG <1 como FILTRO, después "
+        "investigar a fondo. Mecánicamente PEG asume que el growth "
+        "actual continúa indefinidamente — eso casi nunca es cierto. "
+        "Empresas growth tienden a mean-revert a 5-10% growth eventually."
+    ),
+    case_study=(
+        "**Amazon 2003**: P/E 50, growth proyectado 30% → PEG 1.7 "
+        "(no cheap). Pero la mayoría del growth venía de "
+        "reinvestment masivo (margens low por inversión). PEG "
+        "missed it — Lynch's framework no captura las empresas que "
+        "deliberadamente sacrifican margen por growth. Amazon "
+        "100x desde ahí.\n\n"
+        "**Contraejemplo — Las 'Nifty Fifty' 1972**: empresas growth "
+        "blue chip (Polaroid, Xerox, Avon) con P/E 50-90 "
+        "justificados por 'growth durable'. PEG ~1.5-2 que parecía "
+        "razonable. 1973-74 mercado: cayeron 60-80% cuando el growth "
+        "no sostuvo. Lección: PEG bajo solo justifica si el growth "
+        "es realmente durable."
+    ),
+    common_mistakes=[
+        "Usar peak / single-year growth en el denominator. Casi siempre overestima.",
+        "Aplicar PEG en cyclicals (industriales, semis, energy) — distorsiona en peak.",
+        "Confiar en sell-side growth projections sin verificar el track record histórico.",
+        "Olvidar que PEG implícitamente asume growth perpetuo — irreal.",
+        "Aplicar PEG en deep-value plays (banks, REITs) donde growth no es el driver.",
+    ],
+    mental_model=(
+        "Lynch: 'el inversor de éxito busca empresas que el mercado "
+        "subestima por aburridas pero que tienen growth real "
+        "underneath'. PEG es la versión cuantitativa de esa idea — "
+        "P/E que parece alto pero growth lo justifica. Pero como "
+        "todo screen, es un punto de entrada para research, no la "
+        "conclusión final. PEG <1 con quality y duración → "
+        "winner. PEG <1 con quality dudosa → trampa."
+    ),
+    books=[_BOOK_LYNCH, _BOOK_DAMODARAN_VALUATION,
+           Book(title="Beating the Street", author="Peter Lynch",
+                year=1993, chapter_hint="Cap. sobre PEG en práctica",
+                why="Lynch's sequel con ejemplos de PEG aplicado.")],
+    videos=[
+        Video(title="Peter Lynch's Growth Investing",
+              channel="William Green / The Acquirers Podcast",
+              minutes=60, url="",
+              why="Discussion profunda del framework de Lynch."),
+    ],
+    quotes=[
+        _Q_LYNCH_INVERT,
+        Quote(text="The P/E ratio of any company that's fairly priced "
+                   "will equal its growth rate.",
+              author="Peter Lynch",
+              source="One Up On Wall Street, Cap. 13"),
+        Quote(text="If the P/E of Coca-Cola is 15, you'd expect the "
+                   "company to grow at about 15% a year. But if the "
+                   "P/E ratio is less than the growth rate, you may "
+                   "have found yourself a bargain.",
+              author="Peter Lynch",
+              source="One Up On Wall Street"),
+    ],
+))
+# ---------- Sum-of-the-parts (SOTP) ----------
+_add(Lesson(
+    slug="sotp",
+    label=_label_for("sotp"),
+    category=_cat_for("sotp"),
+    hook=_hook_for("sotp"),
+    definition=(
+        "Sum-of-the-parts (SOTP) es la metodología que valora cada "
+        "segmento / línea de negocio separadamente y los suma para "
+        "obtener el valor del consolidado. Aplica especialmente "
+        "para:\n\n"
+        "  · **Conglomerados**: Berkshire, GE pre-spin, "
+        "Liberty Media, Naspers.\n"
+        "  · **Holding companies**: empresas que principalmente "
+        "tienen stakes en otras (Naspers/Tencent, Softbank).\n"
+        "  · **Empresas con divisiones muy distintas**: Disney (parks, "
+        "streaming, ESPN, studios), Microsoft (Office, Azure, Xbox), "
+        "Amazon (retail, AWS, ads).\n\n"
+        "Cada segmento se valora con la metodología apropiada (DCF, "
+        "multiples) y se aplica un descuento por holding company "
+        "típicamente 10-25%."
+    ),
+    why_matters=(
+        "Aplicar un multiple consolidado a una conglomerada con "
+        "divisiones que merecen multiples muy distintos = "
+        "subestimación. Ejemplo: Naspers cotizaba P/E 25 cuando solo "
+        "su stake en Tencent (que cotiza P/E 30+) valía MÁS que el "
+        "market cap entero. SOTP es el método para descubrir "
+        "'hidden value' en holding discounts."
+    ),
+    how_pros_analyze=(
+        "1. **Segment-level financials**: la empresa típicamente "
+        "reporta revenue y operating profit por segmento. Algunas "
+        "reportan total assets per segment.\n"
+        "2. **Apply right multiple per segment**: tech segment → "
+        "tech multiples (15-25x EBITDA), industrial segment → "
+        "industrial multiples (8-12x), real estate → P/FFO.\n"
+        "3. **Net debt + corporate costs**: restar net debt total + "
+        "corporate overhead (allocate or central).\n"
+        "4. **Holding discount**: típicamente 10-25% en conglomerates "
+        "(reflects: opacity, tax inefficiency, no synergies "
+        "demostradas, control premium ausente).\n"
+        "5. **Comparison vs share price**: si SOTP > price + 30%, "
+        "potential break-up value. Activist investors atacan estos.\n"
+        "6. **Watch catalysts**: spin-offs, divestitures, asset sales "
+        "pueden unlock SOTP value."
+    ),
+    key_metrics=[
+        ("Sum of segment values (USD)",
+         "Sumá cada segment valor estimado."),
+        ("Conglomerate / holding discount (%)",
+         "10-15% conglomerate normal · 20-30% complejo / opaco · "
+         "<10% high-quality."),
+        ("SOTP vs Market Cap gap",
+         ">30% gap = hidden value potential. <10% = market priceó "
+         "correctly."),
+        ("Largest segment % of SOTP",
+         "Concentration. >70% = SOTP es básicamente el segment "
+         "dominante."),
+        ("Catalysts visible (spin / sale / restructure)",
+         "Spin-off announced = SOTP discount typically closes."),
+    ],
+    bullish_vs_bearish=[
+        ("SOTP > Market Cap + 30% with visible catalysts",
+         "SOTP > Market Cap pero no catalysts (sustained discount)"),
+        ("Each segment standalone valuable",
+         "One segment subsidizing weak others (forced cross-subsidy)"),
+        ("Conglomerate discount narrowing",
+         "Discount widening (mercado pricing complexity más)"),
+        ("Management open to spin / divest",
+         "Empire-building CEO (Bayer + Monsanto)"),
+        ("Activist involvement / breakup pressure",
+         "No external pressure, status quo permanent"),
+    ],
+    valuation_impact=(
+        "SOTP analysis típicamente revela valor 15-40% encima del "
+        "stock price en conglomerates. PERO el discount puede "
+        "persist años — hasta que aparece catalyst (activist, "
+        "spin-off, management change). Spin-offs históricamente "
+        "outperforman el S&P por ~10pp en los 3 años post-spin "
+        "(estudio de Joel Greenblatt). SOTP analysis es la base "
+        "para identificar candidates."
+    ),
+    case_study=(
+        "**Naspers / Prosus 2018-2024**: Naspers tenía un stake del "
+        "31% en Tencent que valía ~$130B+. El market cap de Naspers "
+        "era ~$75-90B. SOTP discount >40% — uno de los mayores en "
+        "history. Spun-off Prosus 2019 para separar el stake + "
+        "vendió tranches gradualmente. El discount se redujo de 40% "
+        "a 20% sobre 5 años.\n\n"
+        "**Caso clásico — General Electric breakup 2021**: GE "
+        "anunció split en 3 empresas (Healthcare, Aviation, "
+        "Energy). Pre-anuncio cotizaba a P/E 12 (descuento "
+        "conglomerate). Post-anuncio rerated +50% en 6 meses. SOTP "
+        "value se materializó vía corporate action."
+    ),
+    common_mistakes=[
+        "Aplicar consolidated multiples a empresas con divisiones diversas (Disney parks + streaming en mismo P/E).",
+        "Ignorar el holding discount. Sí existe estructuralmente y persiste.",
+        "Aplicar SOTP a empresas sin spin / divest catalyst — el descuento puede sostenerse décadas.",
+        "Olvidar costos corporativos (HQ, no-allocated G&A) en el cálculo.",
+        "Asumir que cada segment valdría su SOTP independientemente — synergies negativas pueden existir.",
+    ],
+    mental_model=(
+        "Buffett: 'a price is only what the market pays — value is "
+        "what the underlying assets generate'. SOTP es la "
+        "encarnación de esa idea: ignorar el ticker price, valorar "
+        "las partes. Pero recordá: una empresa puede tener SOTP >> "
+        "market cap por décadas. El value se monetiza con catalyst, "
+        "no con time. Sin catalyst esperás eternamente."
+    ),
+    books=[_BOOK_DAMODARAN_VALUATION, _BOOK_MCKINSEY_VALUATION,
+           Book(title="You Can Be a Stock Market Genius",
+                author="Joel Greenblatt", year=1997,
+                chapter_hint="Caps. sobre spin-offs",
+                why="El texto sobre special situations — incluye SOTP."),
+           _BOOK_BUFFETT_LETTERS],
+    videos=[_VIDEO_DAMODARAN_VALUATION,
+            Video(title="Joel Greenblatt on Spin-Offs",
+                  channel="Special Situations", minutes=30, url="",
+                  why="El autor de Stock Market Genius explica "
+                       "spin-off mechanics.")],
+    quotes=[
+        _Q_DAMODARAN_STORY,
+        Quote(text="Spin-offs are one of the few corporate actions "
+                   "where management is incentivized to set the right "
+                   "starting price — they own shares in both halves.",
+              author="Joel Greenblatt",
+              source="You Can Be a Stock Market Genius"),
+        _Q_BUFFETT_PRICE_VALUE,
+    ],
+))
 # ---------- Terminal value ----------
 _add(Lesson(
     slug="terminal_value",
@@ -3250,14 +4750,404 @@ _add(Lesson(
               source="Valuation, 7th ed."),
     ],
 ))
-_stub("sensitivity_analysis",
-      [_BOOK_MCKINSEY_VALUATION], [_VIDEO_DAMODARAN_VALUATION], [])
-_stub("scenario_analysis",
-      [_BOOK_MARKS_MOST_IMPORTANT, _BOOK_KLARMAN_MOS],
-      [], [_Q_MARKS_RISK])
-_stub("intrinsic_value",
-      [_BOOK_INTELLIGENT_INVESTOR, _BOOK_BUFFETT_LETTERS, _BOOK_DAMODARAN_VALUATION],
-      [_VIDEO_BUFFETT_1996], [_Q_BUFFETT_PRICE_VALUE])
+# ---------- Sensitivity analysis ----------
+_add(Lesson(
+    slug="sensitivity_analysis",
+    label=_label_for("sensitivity_analysis"),
+    category=_cat_for("sensitivity_analysis"),
+    hook=_hook_for("sensitivity_analysis"),
+    definition=(
+        "Sensitivity analysis es probar cuánto cambia el intrinsic "
+        "value cuando movés UNA assumption clave (manteniendo todo "
+        "lo demás constante). Es el chequeo de robustez del modelo.\n\n"
+        "Para DCF, las assumptions más sensitive son:\n"
+        "  · **WACC**: ±50bp típicamente mueve intrinsic ±10-15%.\n"
+        "  · **g terminal**: ±25bp ≈ ±5-10%.\n"
+        "  · **EBIT margin assumed**: ±100bp ≈ ±15-25%.\n"
+        "  · **Revenue growth rate**: ±100bp ≈ ±8-12%.\n\n"
+        "Output típico: matriz 5×5 donde filas = WACC, columnas = g "
+        "terminal, celdas = intrinsic value per share. Cada celda "
+        "coloreada por upside / downside vs current price."
+    ),
+    why_matters=(
+        "Un DCF que produce un point estimate ($75/share) sin "
+        "sensitivity es engañoso — implica precision que no existe. "
+        "Sensitivity revela cuán FRÁGIL es la tesis. Si moviendo "
+        "WACC 50bp cambia tu valor 40%, el modelo es ruido. Si "
+        "cambia 5%, el modelo es robusto. Damodaran insiste: 'siempre "
+        "presentar sensitivity, nunca un solo número'."
+    ),
+    how_pros_analyze=(
+        "1. **Identify the swing factors**: cuáles assumptions "
+        "mueven más el output. En tech growth: g + margin. En "
+        "industriales: WACC + capex. En banks: NIM + credit losses.\n"
+        "2. **Reasonable ranges per assumption**:\n"
+        "    · WACC: spot ± 100bp (sería ridícula una variación mayor)\n"
+        "    · g terminal: 1-4% (capped por nominal GDP)\n"
+        "    · EBIT margin: ±200bp del histórico through-cycle\n"
+        "3. **Matriz visual**: 5×5 heatmap con verde upside, rojo "
+        "downside. Color drives intuition más que numbers.\n"
+        "4. **Spider chart / tornado**: ranking de assumptions por "
+        "impact. Las top 3 son donde concentrar diligencia.\n"
+        "5. **Combined sensitivities**: una assumption a la vez es "
+        "óptimo para isolation; pero a veces se mueven en conjunto "
+        "(WACC + risk-free rate)."
+    ),
+    key_metrics=[
+        ("Intrinsic value range",
+         "Min y max sobre todas las celdas. Si min < current price, "
+         "no MoS robusto."),
+        ("% celdas con upside positivo",
+         ">75% = robust thesis · 50-75% balanced · <50% bear-leaning."),
+        ("Sensitivity to top-3 inputs",
+         "% Δ value / % Δ input. >2x = high sensitivity."),
+        ("Implied breakeven assumption",
+         "Qué WACC / g implica price = intrinsic. ¿Es plausible "
+         "ese assumption?"),
+    ],
+    bullish_vs_bearish=[
+        ("Matrix mostly green (most cells = upside)",
+         "Matrix mostly red (most cells = downside)"),
+        ("Even pessimistic corner shows ≥0 upside",
+         "Optimistic corner barely shows upside (priced for perfection)"),
+        ("Sensitivity low (model robust)",
+         "Sensitivity high (model fragile)"),
+        ("Top-3 sensitive inputs all in reasonable ranges",
+         "Required assumptions for upside are extreme"),
+    ],
+    valuation_impact=(
+        "Sensitivity analysis NO cambia tu point estimate — cambia "
+        "tu CONFIDENCE en él. Después de hacer sensitivity, podés "
+        "saber: si el modelo dice $100 con ±$30 (rango $70-130 a "
+        "1 std), y current price es $85, tenés MoS modesto contra "
+        "el downside ($70). Si current price es $50, tenés MoS "
+        "amplio. Same point estimate, different decisions."
+    ),
+    case_study=(
+        "**Tesla 2020 — DCF wars**: Damodaran público mostró su "
+        "DCF con sensitivity matrix. Bear case (g 6%, WACC 9%): "
+        "intrinsic $250. Bull case (g 12%, WACC 7%): intrinsic "
+        "$2000. Range = 8x. Tesla cotizaba $400. Conclusión: el "
+        "modelo era extremely sensitive — la 'tesis' dependía "
+        "casi enteramente de qué corner del matrix elegías. Eso "
+        "es definición de modelo frágil — el number no es robusto.\n\n"
+        "**Caso limpio — Coca-Cola DCF**: assumptions reasonable, "
+        "sensitivity moderate. Bear case $50, base $60, bull $72. "
+        "Range solo 44%. Model robust = más confianza en el "
+        "intrinsic."
+    ),
+    common_mistakes=[
+        "Presentar un DCF point estimate sin sensitivity. Ingenuo.",
+        "Sensitivity solo en WACC (ignorar g terminal y margin).",
+        "Rangos de sensitivity extremos (WACC ±500bp). Diluyen el insight.",
+        "No checkear cuán plausibles son los extremes ('bull case' requiere assumptions imposibles).",
+        "Olvidar que múltiples assumptions tienden a moverse juntas (high growth + low WACC unlikely simultáneamente).",
+    ],
+    mental_model=(
+        "Damodaran: 'el output de un DCF es una distribución, no un "
+        "número'. La sensitivity matrix es tu intento de mapear esa "
+        "distribución. Cuanto más amplia, más unsure estás. Cuanto "
+        "más concentrada, más confianza. Y siempre preguntate: "
+        "para que esto valga el current price, ¿qué assumptions "
+        "necesito? Si las assumptions son extremas, hay MoS "
+        "negativa."
+    ),
+    books=[_BOOK_MCKINSEY_VALUATION, _BOOK_DAMODARAN_VALUATION,
+           _BOOK_KLARMAN_MOS],
+    videos=[_VIDEO_DAMODARAN_VALUATION,
+            Video(title="Tornado Charts and Sensitivity in DCF",
+                  channel="Aswath Damodaran", minutes=25, url="",
+                  why="Damodaran's practical guide.")],
+    quotes=[
+        _Q_DAMODARAN_STORY,
+        Quote(text="The output of a DCF is a range of values, not a "
+                   "point estimate. Anyone presenting a single number "
+                   "as 'the value' doesn't understand the model.",
+              author="Aswath Damodaran",
+              source="Investment Valuation"),
+        _Q_MARKS_RISK,
+    ],
+))
+# ---------- Scenario analysis ----------
+_add(Lesson(
+    slug="scenario_analysis",
+    label=_label_for("scenario_analysis"),
+    category=_cat_for("scenario_analysis"),
+    hook=_hook_for("scenario_analysis"),
+    definition=(
+        "Scenario analysis es construir modelos COMPLETOS bajo "
+        "distintas narrativas, no solo mover una variable a la vez "
+        "(eso es sensitivity). Típicamente 3 escenarios:\n\n"
+        "  · **Bull case**: todo sale bien — growth alto sostenido, "
+        "márgenes expansivos, multiples expansion.\n"
+        "  · **Base case**: el escenario más probable — usually "
+        "expansion modesta + estabilidad.\n"
+        "  · **Bear case**: cosas salen mal — recession + margin "
+        "compression + multiple contraction.\n\n"
+        "A cada escenario se le asigna una PROBABILIDAD subjetiva "
+        "(ej. 25% bull / 50% base / 25% bear). El intrinsic value "
+        "probabilizado = Σ (escenario × probabilidad)."
+    ),
+    why_matters=(
+        "Sensitivity isolates una variable; scenario analysis te "
+        "fuerza a pensar de manera COHERENTE — si asumís bull "
+        "growth, también deberías asumir bull margins (operating "
+        "leverage). Klarman: 'no podés tener un escenario donde "
+        "sales bajan pero margins se expanden — eso no es "
+        "escenario, es contradicción'. Scenarios te obligan a "
+        "pensar en términos de narrativas integradas, no de "
+        "variables sueltas."
+    ),
+    how_pros_analyze=(
+        "1. **Define la narrativa primero**: 'bull case = adopción "
+        "rápida de AI, gross margin se mantiene 75%, growth 30%'. "
+        "Luego traducila a inputs cuantitativos consistentes.\n"
+        "2. **Probabilidades disciplinadas**: el bull case típico "
+        "tiene 20-30% prob (no 50%). Si pensás que el bull case es "
+        "60% prob, probablemente estás siendo optimista.\n"
+        "3. **Bear case = recovery to mean, no end-of-world**: "
+        "bear case razonable, no scenario worst-case ridiculous.\n"
+        "4. **Compute weighted intrinsic**: 30% × $80 + 50% × $50 + "
+        "20% × $20 = $52. Eso es tu base estimated.\n"
+        "5. **Watch risk/reward asymmetry**: gain en bull / loss en "
+        "bear. Si gain 60% / loss 40% probability-weighted, "
+        "asymmetry favorable.\n"
+        "6. **Update with new info**: el peso de cada escenario "
+        "debería actualizarse con cada earnings."
+    ),
+    key_metrics=[
+        ("Bull / base / bear scenario values",
+         "Intrinsic per share bajo cada narrativa."),
+        ("Probability weights",
+         "Bull 20-30% · base 40-60% · bear 20-30% es estándar."),
+        ("Weighted intrinsic value",
+         "Σ (value × prob). El central forecast."),
+        ("Bull-to-bear gain/loss ratio",
+         "Upside in bull vs downside in bear. >2x = asymmetry "
+         "favorable."),
+        ("Implied probability of bear case",
+         "Si current price = weighted intrinsic, ¿qué prob de bear "
+         "implica el mercado? Compare vs tu prob."),
+    ],
+    bullish_vs_bearish=[
+        ("Bull case requires plausible assumptions",
+         "Bull case requires heroic assumptions"),
+        ("Bear case downside <30% from current",
+         "Bear case downside >50%"),
+        ("Asymmetry gain/loss > 2:1",
+         "Asymmetry adverse (gain < loss)"),
+        ("Weighted intrinsic > current price con MoS",
+         "Weighted intrinsic ≤ current price"),
+    ],
+    valuation_impact=(
+        "Scenario analysis transforma el 'intrinsic value' de un "
+        "número en una DISTRIBUCIÓN. Es lo que tradicionalmente se "
+        "presenta en research reports: 'price target $80 in base "
+        "case, $120 in bull, $40 in bear'. La decisión de inversión "
+        "depende de las probabilidades — si vos pensás que la prob "
+        "del bull es mayor que la implícita en el price, hay alpha. "
+        "Si menor, hay sell signal."
+    ),
+    case_study=(
+        "**Klarman Baupost — Greek debt 2011**: Baupost compró "
+        "Greek government bonds a 30 cents on dollar. Bull case: "
+        "Greece se restructura, pays 60c — gain 100%. Bear case: "
+        "Greece default total, pays 10c — loss 67%. Klarman estimó "
+        "prob 60% / 40%. Weighted: 60% × $0.60 + 40% × $0.10 = "
+        "$0.40 vs $0.30 cost. 33% upside expected, asymmetric "
+        "favorably. Greece paid 50c eventualmente, Baupost ganó "
+        "60-80%.\n\n"
+        "**Contraejemplo — many growth tech IPOs 2020-2021**: "
+        "scenarios mostraban bull case 3-5x, bear case -50%. Pero "
+        "las probabilidades implícitas del bull case eran 70-80% "
+        "según los pitches — irreal. Cuando bear case materialized, "
+        "stocks cayeron 60-80% (Robinhood, Zoom, Peloton). Lección: "
+        "scenarios disciplinados con prob honestas habrían "
+        "evitado el daño."
+    ),
+    common_mistakes=[
+        "Hacer 'base case' que es prácticamente el bull case (sesgo de optimismo).",
+        "Asignar 60-70% probabilidad al bull case. Casi siempre es 20-30%.",
+        "Confundir scenarios (narrativas integradas) con sensitivity (variable única).",
+        "No updatear probabilidades con new info (anchored a la tesis original).",
+        "Ignorar que el mercado YA tiene una distribución implícita — tu scenario solo agrega valor si difiere materially.",
+    ],
+    mental_model=(
+        "Klarman: 'invertir bien no es predecir el futuro — es "
+        "ponerse en posición de ganar en múltiples futuros'. "
+        "Scenario analysis es el método para hacer eso explícito. "
+        "No buscás certeza (no existe); buscás que la DISTRIBUCIÓN "
+        "de outcomes sea favorable. Pesando probabilities + "
+        "magnitudes, podés decidir aún cuando no sabés qué va a "
+        "pasar."
+    ),
+    books=[_BOOK_MARKS_MOST_IMPORTANT, _BOOK_KLARMAN_MOS,
+           _BOOK_DAMODARAN_VALUATION,
+           Book(title="Thinking in Bets", author="Annie Duke", year=2018,
+                chapter_hint="Caps. 1-4 — decision-making bajo "
+                              "incertidumbre",
+                why="Cómo pensar en términos de probabilidades, no "
+                     "certezas.")],
+    videos=[
+        Video(title="Howard Marks · The Most Important Thing",
+              channel="Oaktree", minutes=60, url="",
+              why="Marks sobre risk + probabilidades en investing."),
+    ],
+    quotes=[
+        _Q_MARKS_RISK,
+        Quote(text="Investing is not about being right or wrong; it's "
+                   "about being right or wrong by enough to matter, "
+                   "weighted by probability.",
+              author="Seth Klarman",
+              source="Margin of Safety"),
+        Quote(text="In the long run, you'll be wrong more than you're "
+                   "right. The key is to be more right when you're "
+                   "right than wrong when you're wrong.",
+              author="Annie Duke",
+              source="Thinking in Bets"),
+    ],
+))
+# ---------- Intrinsic value ----------
+_add(Lesson(
+    slug="intrinsic_value",
+    label=_label_for("intrinsic_value"),
+    category=_cat_for("intrinsic_value"),
+    hook=_hook_for("intrinsic_value"),
+    definition=(
+        "Intrinsic value es el valor verdadero / fundamental de una "
+        "empresa basado en sus cash flows futuros descontados — "
+        "**independiente del precio de mercado actual**. Es el "
+        "concepto central de Graham → Buffett → Damodaran.\n\n"
+        "Williams (1938): 'el valor de cualquier activo es el "
+        "present value de los cash flows que generará en el resto de "
+        "su vida'.\n\n"
+        "Crítico: intrinsic value es **una estimación**, no un hecho. "
+        "Diferentes analistas con misma data pueden llegar a "
+        "intrinsics distintos. Lo importante NO es ser preciso — es "
+        "estar APPROXIMATELY RIGHT en lugar de PRECISELY WRONG."
+    ),
+    why_matters=(
+        "Sin un concepto de intrinsic value, sos un trader — "
+        "comprás cuando esperás que suba, vendés cuando esperás que "
+        "baje. Con intrinsic value, sos un inversor — comprás cuando "
+        "price < intrinsic, vendés cuando price >> intrinsic, y "
+        "ignorás la volatilidad intermedia. Graham: 'the market is "
+        "a weighing machine in the long run' — eventualmente price "
+        "converge al intrinsic."
+    ),
+    how_pros_analyze=(
+        "1. **Multiple methods, single estimate**: combinar DCF + "
+        "comparables + asset-based. Cross-check entre métodos = "
+        "confidence.\n"
+        "2. **Range, not point**: presentar como rango ($60-80) con "
+        "central estimate ($70). El rango captura tu uncertainty.\n"
+        "3. **Update with new info**: intrinsic value cambia con "
+        "cada earnings, cada macro shift, cada competitive change. "
+        "Es living estimate, no static.\n"
+        "4. **Compare to price**: gap > 30% (en cualquier dirección) "
+        "es signal — investigate. Gap < 10% = market priceando "
+        "correctly.\n"
+        "5. **Reverse approach**: si current price implies WACC + g "
+        "+ ROIC para be justified, ¿son those assumptions "
+        "razonables? (Reverse DCF).\n"
+        "6. **Margin of safety on the estimate**: el intrinsic "
+        "value que calculaste tiene su own incertidumbre. MoS te "
+        "protege de ese error."
+    ),
+    key_metrics=[
+        ("Intrinsic value (central estimate)",
+         "Tu best guess. Cross-checked across methods."),
+        ("Intrinsic value range (low-high)",
+         "Captura uncertainty. Range tight = confidence; wide = "
+         "uncertainty."),
+        ("Price-to-intrinsic ratio",
+         "<0.7 = significant undervaluation · 0.7-1.3 = fair · "
+         ">1.3 = overvaluation."),
+        ("Implied assumptions of current price (reverse DCF)",
+         "Si el price implica growth 25% por 10 años, ¿es "
+         "razonable?"),
+        ("Confidence level (high/medium/low)",
+         "Self-assessment basado en data quality + business "
+         "complexity."),
+    ],
+    bullish_vs_bearish=[
+        ("Price << intrinsic (>30% discount) con high confidence",
+         "Price >> intrinsic (>30% premium) con high confidence"),
+        ("Multiple methods converge a similar intrinsic",
+         "Methods divergen wildly (uncertainty)"),
+        ("Intrinsic stable / updating positively over time",
+         "Intrinsic getting cut (deteriorating business)"),
+        ("Mr. Market overreaction (price wrong, intrinsic OK)",
+         "Mr. Market correct (price reflects intrinsic deterioration)"),
+    ],
+    valuation_impact=(
+        "Intrinsic value ES el target de toda valuation. P/E, "
+        "EV/EBITDA, DCF, comparables — todos son métodos para "
+        "estimarlo. Sin un concept de intrinsic value, no podés "
+        "tener convicción para comprar contra-narrativa ('quien "
+        "vende sabe algo que vos no'). Con intrinsic value, podés "
+        "ignorar la volatilidad y mantener positions a través de "
+        "drawdowns — la prueba de fuego del inversor."
+    ),
+    case_study=(
+        "**Buffett comprando Washington Post 1973**: Graham y "
+        "Buffett analyzaron WPO. Market cap ~$80M. Intrinsic value "
+        "estimado por Buffett: $400-500M (basado en cash flows + "
+        "real estate). 5-6x gap. Buffett compró 5-10% de la "
+        "empresa. 30 años después se materializó el intrinsic — "
+        "ganancia >100x. Caso textbook de Mr. Market irrational vs "
+        "fundamental intrinsic value.\n\n"
+        "**Contraejemplo — 'value investors' compraron Sears**: "
+        "Eddie Lampert lo lideró con Bruce Berkowitz acompañándolo. "
+        "Argumento: intrinsic value de real estate + brands > "
+        "market cap. Resultado: el negocio deterioró tan rápido que "
+        "el intrinsic value se redujo más rápido que el price. "
+        "Bankrupt 2018. Lección: intrinsic value DEPENDE de la "
+        "viabilidad del negocio underlying. Si el negocio muere, "
+        "intrinsic dies con él."
+    ),
+    common_mistakes=[
+        "Confundir intrinsic value con un número preciso. Es una estimación.",
+        "Anclarse a un intrinsic value calculado hace 2 años cuando los fundamentals cambiaron.",
+        "Asumir que el mercado eventualmente reconocerá tu intrinsic — puede tardar décadas o nunca.",
+        "Confiar 100% en un solo método (DCF puro / multiples puro). Cross-check con varios.",
+        "Olvidar que el intrinsic value puede ser MENOR al price actual y aún seguir cayendo (value traps).",
+    ],
+    mental_model=(
+        "Damodaran: 'every valuation is wrong; the question is how "
+        "wrong, in which direction, and by how much'. Aceptá que NO "
+        "vas a estimar el intrinsic perfectamente. Tu trabajo es: "
+        "(1) tener un proceso consistent y sin sesgos, (2) cross-"
+        "check entre métodos, (3) margin of safety para el error "
+        "inherente. Una vez que tenés intrinsic estimate, el "
+        "market noise se vuelve oportunidad — porque vos sabés qué "
+        "estás comprando."
+    ),
+    books=[_BOOK_INTELLIGENT_INVESTOR, _BOOK_BUFFETT_LETTERS,
+           _BOOK_DAMODARAN_VALUATION, _BOOK_MCKINSEY_VALUATION,
+           _BOOK_KLARMAN_MOS],
+    videos=[_VIDEO_BUFFETT_1996,
+            _VIDEO_DAMODARAN_VALUATION,
+            Video(title="Damodaran on Intrinsic vs Relative Value",
+                  channel="Aswath Damodaran", minutes=30, url="",
+                  why="El profesor explica cómo combinar both methods.")],
+    quotes=[
+        _Q_BUFFETT_PRICE_VALUE,
+        Quote(text="Intrinsic value is an all-important concept that "
+                   "offers the only logical approach to evaluating the "
+                   "relative attractiveness of investments. Intrinsic "
+                   "value can be defined simply: it is the discounted "
+                   "value of the cash that can be taken out of a "
+                   "business during its remaining life.",
+              author="Warren Buffett",
+              source="Berkshire 2000 letter, owner's manual"),
+        _Q_DAMODARAN_STORY,
+        Quote(text="It is better to be approximately right than "
+                   "precisely wrong.",
+              author="John Maynard Keynes",
+              source="(atribuido — capturado por Buffett a menudo)"),
+    ],
+))
 
 # Sectores (stubs)
 _stub("sector_banks",
