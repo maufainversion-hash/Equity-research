@@ -5149,34 +5149,1106 @@ _add(Lesson(
     ],
 ))
 
-# Sectores (stubs)
-_stub("sector_banks",
-      [_BOOK_DAMODARAN_VALUATION, _BOOK_DALIO_PRINCIPLES],
-      [], [])
-_stub("sector_tech",
-      [Book(title="The Innovator's Dilemma", author="Clayton Christensen",
-            year=1997, chapter_hint="Toda la parte I",
-            why="Por qué las empresas tech grandes pierden contra disruptores.")],
-      [], [])
-_stub("sector_utilities",
-      [_BOOK_CFA, _BOOK_DAMODARAN_VALUATION], [], [])
-_stub("sector_energy",
-      [Book(title="The Prize", author="Daniel Yergin", year=1991,
-            chapter_hint="Cómo se forma el ciclo de oil",
-            why="Historia + estructura de la industria energética.")],
-      [], [])
-_stub("sector_consumer",
-      [_BOOK_FISHER, _BOOK_BUFFETT_LETTERS], [_VIDEO_BUFFETT_1996],
-      [_Q_BUFFETT_MOAT])
-_stub("sector_industrials",
-      [_BOOK_MCKINSEY_VALUATION, _BOOK_MARKS_MARKET_CYCLE], [], [])
-_stub("sector_healthcare",
-      [_BOOK_FISHER, _BOOK_DAMODARAN_VALUATION], [], [])
-_stub("sector_semis",
-      [Book(title="Chip War", author="Chris Miller", year=2022,
-            chapter_hint="Estructura competitiva moderna",
-            why="The book on semis right now.")],
-      [], [])
+# ============================================================
+# Batch 3 — Sectores
+# ============================================================
+
+# ---------- Sector banks ----------
+_add(Lesson(
+    slug="sector_banks",
+    label=_label_for("sector_banks"),
+    category=_cat_for("sector_banks"),
+    hook=_hook_for("sector_banks"),
+    definition=(
+        "Analizar un banco requiere un toolkit completamente "
+        "distinto a una empresa industrial. Por qué: el balance "
+        "ES el negocio — la deuda no es financing, es input. Los "
+        "bancos:\n\n"
+        "  · Tienen leverage estructural ~10x (regulatorio).\n"
+        "  · Hacen plata del **spread** (yield assets − cost "
+        "deposits) — NIM.\n"
+        "  · Tienen regulación intensa (CET1, stress tests, FDIC).\n"
+        "  · Su mayor riesgo NO es operacional, es CREDITO (loan "
+        "losses).\n"
+        "  · Quiebra súbitamente cuando hay run o reserve "
+        "insufficient (Lehman, SVB).\n\n"
+        "Por eso bancos cotizan en P/TBV + ROTE, no P/E, y "
+        "requieren su propio playbook."
+    ),
+    why_matters=(
+        "Bancos son ~12% del S&P y ~25% del MSCI World value. Los "
+        "que no saben analizar bancos están privados de un sector "
+        "enorme. Y los que aplican P/E genérico pierden plata — "
+        "Lehman cotizaba P/E 8 días antes de quebrar. El sistema "
+        "bancario es opaco, regulado y cíclico — entender estos "
+        "três componentes es la base."
+    ),
+    how_pros_analyze=(
+        "1. **ROTE > Cost of Equity**: el equivalente a ROIC > "
+        "WACC. JPM ROTE 18%+ vs Ke 10% = compounder. Citi ROTE 7% "
+        "vs Ke 11% = destrucción de valor.\n"
+        "2. **NIM sensitivity to rates**: asset-sensitive (NIM "
+        "expande con rates subiendo) vs liability-sensitive "
+        "(contracts). Reportado en 10-Qs.\n"
+        "3. **Credit quality**: NPL ratio + PCL (provisions for "
+        "credit losses) + reserve coverage ratio. Subiendo = "
+        "credit cycle deteriorating.\n"
+        "4. **Capital adequacy**: CET1 > regulatory minimum + "
+        "buffer para dividends/buybacks. <10% restringe capital "
+        "return.\n"
+        "5. **Deposit franchise**: CASA ratio + customer "
+        "concentration. Sticky retail = competitive advantage; "
+        "flighty corporate = fragility.\n"
+        "6. **Loan book composition**: residential mortgage, "
+        "commercial, credit card, auto — cada uno con risk "
+        "profile distinto.\n"
+        "7. **Off-balance-sheet**: derivatives, securitizations. "
+        "Pre-2008 era la zona oculta."
+    ),
+    key_metrics=[
+        ("ROTE (%)",
+         ">15% excellent · 10-15% good · <10% subpar."),
+        ("P/TBV",
+         "JPM ~2.0x · BAC ~1.4x · Citi ~0.8x · EM banks ~1-2x."),
+        ("NIM (%)",
+         "US large-cap ~3% · regionals 3.5%+ · IBanks <2%."),
+        ("CET1 ratio (%)",
+         ">13% strong · 10-13% adequate · <10% restricted."),
+        ("Efficiency ratio (%)",
+         "<55% best · 55-65% normal · >70% bloated."),
+        ("NPL ratio (%)",
+         "<1% clean · 1-3% normal · >3% stress."),
+    ],
+    bullish_vs_bearish=[
+        ("ROTE >15% sostained + P/TBV moderate",
+         "ROTE <10% pero P/TBV ya pagando premium"),
+        ("CET1 buffer cómodo (>12%)",
+         "CET1 near regulatory minimum (no buybacks)"),
+        ("NPL ratio estable + reserve coverage alto",
+         "NPL subiendo + reservas no aumentando proporcionalmente"),
+        ("Deposit franchise sticky (high CASA, retail-heavy)",
+         "Funding mix wholesale-heavy / flighty corporate"),
+        ("Loan growth ~ GDP (disciplined)",
+         "Loan growth >> GDP (credit cycle warning)"),
+    ],
+    valuation_impact=(
+        "Bancos cotizan en **P/TBV justificado = (ROTE − g) / (Ke − g)**. "
+        "ROTE > Ke → P/TBV > 1. ROTE < Ke → P/TBV < 1. Esta sola "
+        "ecuación explica casi todo: JPM ROTE 18% justifica P/TBV "
+        "~2x; Citi ROTE 7% justifica P/TBV <1x. Los activistas "
+        "atacan bancos donde el mercado pricea ROTE elevado pero "
+        "el ROTE real es menor."
+    ),
+    case_study=(
+        "**JPMorgan 2008-2024**: ROTE consistente 15%+ a través del "
+        "GFC, COVID, rate cycle 2022-23. CET1 13%+. Diversificación "
+        "(retail + corporate + IB + asset mgmt) suaviza cycles. "
+        "Compounded 5x desde 2009 lows.\n\n"
+        "**Contraejemplo — SVB 2023**: looked profitable (ROE 15%) "
+        "pero deposit franchise era 90% uninsured corporate "
+        "(frágil). Asset-liability mismatch: bonos long-duration vs "
+        "depósitos demandables. Rate hikes 2022 wipearon unrealized "
+        "losses. Run en 48h. Lección: bank profitability sin "
+        "balance discipline es ilusión."
+    ),
+    common_mistakes=[
+        "Aplicar P/E a banks. Usar P/TBV + ROTE.",
+        "Confundir ROE con ROTE — ROE incluye goodwill.",
+        "Confiar en NPL ratios sin verificar reserve coverage.",
+        "Ignorar asset-liability mismatch (SVB 2023, S&L crisis).",
+        "Asumir que big = safe. Tamaño no es sustituto de capital adequacy.",
+    ],
+    mental_model=(
+        "Buffett: 'banking can be a wonderful business — if you "
+        "don't do anything stupid'. Bancos hacen plata tomando "
+        "depósitos baratos y prestando. Lo estúpido: leverage "
+        "excesivo, asset-liability mismatch, exposición a "
+        "credit cycles. Un banco disciplinado compounde 12-15% "
+        "ROTE durante décadas. Uno indisciplinado puede wipear "
+        "el equity en un trimestre."
+    ),
+    books=[_BOOK_DAMODARAN_VALUATION, _BOOK_DALIO_PRINCIPLES,
+           _BOOK_BUFFETT_LETTERS,
+           Book(title="Bank Investing: A Practitioner's Field Guide",
+                author="Jeffrey Davis", year=2021,
+                chapter_hint="Toda la parte sobre frameworks",
+                why="Manual moderno escrito por un bank analyst.")],
+    videos=[
+        Video(title="How to Analyze a Bank Stock",
+              channel="The Plain Bagel", minutes=15, url="",
+              why="Intro accesible a P/TBV + ROTE."),
+    ],
+    quotes=[
+        Quote(text="Banking is a very good business unless you do "
+                   "dumb things.",
+              author="Warren Buffett",
+              source="Berkshire annual meetings"),
+        _Q_BUFFETT_MOAT,
+        _Q_GRAHAM_MOS,
+    ],
+))
+# ---------- Sector tech ----------
+_add(Lesson(
+    slug="sector_tech",
+    label=_label_for("sector_tech"),
+    category=_cat_for("sector_tech"),
+    hook=_hook_for("sector_tech"),
+    definition=(
+        "Tecnológicas no son una industria — son varias industrias "
+        "que se reportan juntas:\n\n"
+        "  · **SaaS / cloud**: revenue recurrente, NRR, gross "
+        "margins 70-80%, capex-light (Salesforce, Snowflake).\n"
+        "  · **Hardware**: cyclical, gross margins 30-50%, "
+        "capex-intensive (Apple parcialmente, Dell).\n"
+        "  · **Semis**: ver lección semis — propio sub-sector.\n"
+        "  · **Platforms / ads**: network effects, take-rates, "
+        "data flywheels (Meta, Google, Amazon ads).\n"
+        "  · **AI / Frontier**: cap-ex masivo, narrative-driven "
+        "(Nvidia, OpenAI ecosystem).\n\n"
+        "Cada subgroup requiere métricas y multiples distintos. "
+        "Aplicar el mismo framework a todas = error."
+    ),
+    why_matters=(
+        "Tech es ~30% del S&P 500 — el sector más grande. Y el "
+        "más volátil en multiples. SaaS pasó de P/S 25 (2021) a "
+        "P/S 8 (2024). Saber qué multiplo y qué métricas usar "
+        "para cada subgroup es la base. Y tech es donde el "
+        "**Innovator's Dilemma** opera más fuerte — los líderes "
+        "incumbentes pierden ante disruptores cada paradigm shift "
+        "(IBM→Microsoft, Microsoft→Google, Google→OpenAI?)."
+    ),
+    how_pros_analyze=(
+        "1. **Sub-classify first**: SaaS / hardware / platform / "
+        "semis / AI infra. Cada uno con framework distinto.\n"
+        "2. **Rule of 40** para SaaS (growth + FCF margin ≥ 40).\n"
+        "3. **NRR > 120%** para SaaS de calidad.\n"
+        "4. **Capital intensity**: hyperscalers (Microsoft, "
+        "Amazon, Google) están en mega-cycle de capex AI. ¿FCF "
+        "compression temporal o permanente?\n"
+        "5. **Disruption risk**: ¿esta empresa es el "
+        "incumbente o el disruptor? Innovator's Dilemma: "
+        "incumbentes pierden cuando aparece mejor product cheaper.\n"
+        "6. **Platform vs application**: platforms (Google, "
+        "Amazon, Apple App Store) capturan más valor que apps. "
+        "Net take-rate de la plataforma matters.\n"
+        "7. **Path-to-profit clarity**: para growth tech "
+        "pre-profit, ¿cuándo + cómo se llega a profitability "
+        "GAAP?"
+    ),
+    key_metrics=[
+        ("Revenue growth + Rule of 40 (SaaS)",
+         "≥40 healthy · ≥50 elite."),
+        ("NRR (SaaS) / Same-store sales (consumer tech)",
+         ">120% NRR · positivo SSS = strong."),
+        ("Gross margin (%)",
+         "SaaS 70-80% · platforms 50-65% · hardware 30-50%."),
+        ("EV/Revenue (growth tech)",
+         "SaaS 5-15x normal · >20x bubble territory."),
+        ("CapEx / Revenue (%)",
+         "Software <5% · platforms 10-15% · hyperscalers 20%+ "
+         "actualmente (AI capex super-cycle)."),
+        ("R&D / Revenue (%)",
+         "Leaders 15-25% · followers <10%."),
+    ],
+    bullish_vs_bearish=[
+        ("Sub-clase correcta + multiplo apropiado",
+         "Applying SaaS multiples to hardware (mispriced)"),
+        ("Platform / network effect demostrado",
+         "Single-product company sin moat estructural"),
+        ("Path-to-profit clara (Rule of 40 trending up)",
+         "Burning cash sin path visible (Peloton, Carvana 2022)"),
+        ("Capex AI investments justified por demand visible",
+         "Capex agresivo sin demand validation (Meta Metaverse 2022)"),
+        ("Disruptor con moat early (Nvidia AI 2022)",
+         "Incumbent ignorando disruption (Intel mobile 2010-15)"),
+    ],
+    valuation_impact=(
+        "Tech multiples son MUY sensibles a rate cycle. Cuando "
+        "rates suben, growth tech se comprime más que value "
+        "(cash flows distantes valen menos). El 2022 fue "
+        "textbook: Nasdaq -33% mientras S&P value -6%. Pero "
+        "platforms con network effects (Visa, Microsoft) tienen "
+        "menos sensitivity porque generan FCF presente fuerte. "
+        "DCF tech requires: visibilidad de growth durability + "
+        "ROIC steady-state plausible + reverse-DCF check."
+    ),
+    case_study=(
+        "**Microsoft 2014-2024 — la transformación cloud**: "
+        "Satya Nadella tomó CEO 2014. Pivot agresivo de license "
+        "model a Azure + cloud subscription. ROIC pasó de 25% a "
+        "30%+. Cloud margins (~70% gross) reemplazaron license "
+        "margins. Stock 12x. Caso textbook de mature tech "
+        "re-inventándose vs Innovator's Dilemma.\n\n"
+        "**Contraejemplo — Intel 2014-2024**: mismo período. "
+        "Negaron mobile, lost foundry edge a TSMC, missed AI "
+        "wave. ROIC pasó de 22% a 4%. Stock cayó 40% mientras "
+        "tech subió 200%+. Innovator's Dilemma en acción."
+    ),
+    common_mistakes=[
+        "Aplicar SaaS multiples a empresas que no son SaaS (transactional, hardware).",
+        "Ignorar el rate cycle. Growth tech es sensitive.",
+        "Asumir que el líder actual será el líder en 10 años. Paradigm shifts matter.",
+        "Pagar multiples 'AI premium' a empresas que solo tocan AI tangencialmente.",
+        "Confundir narrative ('all in on AI') con execution real (revenue contribution).",
+    ],
+    mental_model=(
+        "Christensen: 'el éxito de hoy es enemigo del éxito de "
+        "mañana en tech'. Las empresas líderes optimizan para "
+        "sus customers actuales y missean los disruptors que "
+        "atacan low-end. Pensá: ¿qué startup hoy mira chiquita "
+        "podría ser el Microsoft de la próxima década? Si no "
+        "podés identificar el disrupter, capaz es el incumbent "
+        "que estás analizando."
+    ),
+    books=[
+        Book(title="The Innovator's Dilemma",
+             author="Clayton Christensen", year=1997,
+             chapter_hint="Toda la parte I",
+             why="Por qué los líderes tech pierden contra "
+                  "disruptors."),
+        Book(title="Zero to One", author="Peter Thiel", year=2014,
+             chapter_hint="Caps. 1-5 — monopolio + competition",
+             why="Cómo piensa un founder/VC tech sobre moats."),
+        _BOOK_DAMODARAN_VALUATION,
+        _BOOK_BUFFETT_LETTERS,
+    ],
+    videos=[
+        Video(title="Clayton Christensen · Innovator's Dilemma",
+              channel="Talks at Harvard / TED", minutes=45, url="",
+              why="El autor explica el framework en su own words."),
+        _VIDEO_DAMODARAN_VALUATION,
+    ],
+    quotes=[
+        Quote(text="If you don't cannibalize yourself, someone "
+                   "else will.",
+              author="Steve Jobs (atribuido)",
+              source="Apple Inc."),
+        Quote(text="The best minds of my generation are thinking "
+                   "about how to make people click ads. That sucks.",
+              author="Jeff Hammerbacher",
+              source="(former Facebook engineer, sobre tech moats)"),
+        _Q_BUFFETT_MOAT,
+    ],
+))
+# ---------- Sector utilities ----------
+_add(Lesson(
+    slug="sector_utilities",
+    label=_label_for("sector_utilities"),
+    category=_cat_for("sector_utilities"),
+    hook=_hook_for("sector_utilities"),
+    definition=(
+        "Las utilities (eléctricas, gas, agua) son negocios "
+        "regulated — el regulador define qué retorno pueden "
+        "ganar sobre el 'rate base' (asset base). Características:\n\n"
+        "  · **Rate base × allowed ROE = regulated profit**. Si "
+        "rate base = $20B y allowed ROE = 10%, regulated profit "
+        "≈ $2B/año.\n"
+        "  · **Capex-intensive**: invierten en plants, grids, "
+        "líneas de transmisión. CapEx/revenue 15-25%.\n"
+        "  · **Dividend-heavy**: payout ratios 60-80%. Investors "
+        "los compran por yield, no growth.\n"
+        "  · **Defensive**: demand es relativamente inelástica "
+        "(electricity, water no se renuncia en recession).\n"
+        "  · **Sensible a interest rates**: bonds proxies — "
+        "cuando rates suben, utility valuations comprime."
+    ),
+    why_matters=(
+        "Utilities son el sector más defensive del market. "
+        "Durante recesiones outperform mientras growth se "
+        "comprime. Pero también son los más sensibles a yield "
+        "rate cycle — cuando 10Y treasury sube de 2% a 5%, "
+        "utility yields tienen que subir también, lo que requiere "
+        "que los stocks caigan. Saber el regulatory framework + "
+        "rate base dynamics es la base."
+    ),
+    how_pros_analyze=(
+        "1. **Allowed ROE vs achieved ROE**: si la utility "
+        "consistentemente earns AT or ABOVE allowed ROE, está "
+        "ejecutando bien. Si below, mismanagement.\n"
+        "2. **Rate base growth**: la utility crece como crece su "
+        "asset base. Rate base crece 5-7% típico via CapEx "
+        "approval del regulator.\n"
+        "3. **Regulatory environment**: states pro-utility (Texas, "
+        "Florida) allow ROEs más altos; states adversarial "
+        "(California, NY) menos. ROE allowed varía 8-12%.\n"
+        "4. **Regulated vs unregulated mix**: empresas con "
+        "merchant generation (no regulada) tienen más volatility. "
+        "100% regulated = predictable.\n"
+        "5. **Energy transition exposure**: utilities están "
+        "reemplazando coal/gas con renewable + nuclear. Capex "
+        "cycle masivo 2024-2040.\n"
+        "6. **Dividend safety**: payout ratio + FCF coverage. "
+        "Empresas reduciendo dividend = warning."
+    ),
+    key_metrics=[
+        ("Allowed ROE (%)",
+         "Definida por regulator. 8-12% típico US."),
+        ("Achieved ROE vs Allowed",
+         "Achievement ratio. 100% = ejecutando bien."),
+        ("Rate base growth (%)",
+         "5-7% típico. Subiendo en energy transition."),
+        ("Dividend yield (%)",
+         "3-5% típico. Yield premium sobre 10Y treasury proxy."),
+        ("Payout ratio (%)",
+         "60-80% típico. <60% = retiene más para growth; >85% "
+         "= stress potential."),
+        ("Capex / Depreciation",
+         ">1 = growing rate base · <1 = shrinking (declining "
+         "utility)."),
+    ],
+    bullish_vs_bearish=[
+        ("Achieved ROE = allowed (executing)",
+         "Achieved ROE consistently below allowed"),
+        ("Rate base growth 5%+ via energy transition",
+         "Rate base stagnant / shrinking"),
+        ("Regulatory environment friendly",
+         "Adversarial / political risk (CA wildfire liability)"),
+        ("Dividend coverage healthy (FCF/dividend >1)",
+         "Cutting dividend / payout >90%"),
+        ("Rate cycle bottom (utilities relative-cheap)",
+         "Rate cycle peak (utilities relative-expensive)"),
+    ],
+    valuation_impact=(
+        "Utilities cotizan en P/E 18-24x con divid yield 3-5%. "
+        "Cuando 10Y treasury sube 100bp, utility yields tienen "
+        "que subir ~50bp también → price tiene que caer ~10-15%. "
+        "Por eso utilities tienen alta correlación inversa con "
+        "rates. En DCF, mejor usar regulated cash flow approach: "
+        "rate base × allowed ROE × (1+g)^n, descontado a Ke."
+    ),
+    case_study=(
+        "**NextEra Energy (NEE) 2010-2024**: la utility largest "
+        "US. Energy transition leader (renewable + nuclear). "
+        "Rate base crecida 7%+ CAGR. ROE ~12% sostained. "
+        "Compounded ~13% annual (incl. div) durante 14 años. "
+        "Caso de utility ejecutada bien en un mega-trend.\n\n"
+        "**Contraejemplo — PG&E 2017-2019**: utility California. "
+        "Wildfires causaron liability massive — $30B+. La "
+        "regulación allowed pasar los costos a customers — pero "
+        "el political backlash impidió. Bankrupted 2019. "
+        "Lección: en utilities, el TAIL RISK regulatorio es "
+        "real. Allowed ROE solo cuenta si te pagan."
+    ),
+    common_mistakes=[
+        "Asumir que utilities son 'safe' sin chequear regulatory risk.",
+        "Ignorar el rate cycle. Utilities y rates inversamente correlacionados.",
+        "Aplicar DCF estándar sin reflectar regulated cash flow nature.",
+        "Confiar en dividend yields sin verificar coverage (sustainability).",
+        "Pasar por alto que merchant generation (no regulated) tiene volatility de commodity prices.",
+    ],
+    mental_model=(
+        "Utilities son 'bonds with growth' — pensalas como bonds "
+        "que también crecen el principal 5-7% anual via rate "
+        "base expansion. Cuanto más bond-like (regulated, stable, "
+        "dividend) más sensitive a rate cycle. Cuanto más merchant "
+        "/ unregulated, más equity-like (commodity exposure)."
+    ),
+    books=[_BOOK_CFA, _BOOK_DAMODARAN_VALUATION,
+           Book(title="Utility Investing: An Industry Primer",
+                author="John Hanger", year=2019,
+                chapter_hint="Rate base + allowed ROE mechanics",
+                why="Manual técnico de utility analysis.")],
+    videos=[
+        Video(title="How Utilities Make Money",
+              channel="The Plain Bagel", minutes=12, url="",
+              why="Intro accesible al modelo regulado."),
+    ],
+    quotes=[
+        Quote(text="Utilities are bonds with a bit of growth — and "
+                   "growth that's regulated, predictable, and slow.",
+              author="Warren Buffett (paráfrasis)",
+              source="Berkshire on PacifiCorp + BNSF"),
+        _Q_BUFFETT_PRICE_VALUE,
+    ],
+))
+# ---------- Sector energy ----------
+_add(Lesson(
+    slug="sector_energy",
+    label=_label_for("sector_energy"),
+    category=_cat_for("sector_energy"),
+    hook=_hook_for("sector_energy"),
+    definition=(
+        "Energía (oil & gas, coal, refining) es la industria más "
+        "commodity-driven y cyclical del market. Subcategorías:\n\n"
+        "  · **Upstream (E&P)**: explora + produce. Earnings "
+        "swing brutalmente con oil price.\n"
+        "  · **Midstream**: pipelines + storage. Más fee-based, "
+        "menos cyclical.\n"
+        "  · **Downstream / refining**: refining margins (crack "
+        "spread). Counter-cyclical a veces.\n"
+        "  · **Integrated majors**: XOM, CVX, Shell, BP — todos "
+        "los anteriores.\n"
+        "  · **Services**: Schlumberger, Halliburton. Cycle "
+        "lag de upstream.\n\n"
+        "El driver supreme: precio del subyacente (Brent, WTI, "
+        "natural gas). Forecast el commodity = forecast los "
+        "earnings."
+    ),
+    why_matters=(
+        "Energy es ~4% del S&P pero 8-15% del EM markets. Su "
+        "volatility extrema crea oportunidades y traps. El "
+        "ejemplo más reciente: oil cayó a -$37 (negative!) en "
+        "abril 2020 — los que compraron oil majors ganaron 5x en "
+        "2 años. Pero los que compraron en peak 2014 ($110 oil) "
+        "perdieron 60% durante los 5 años siguientes. Saber "
+        "leer el cycle es la base."
+    ),
+    how_pros_analyze=(
+        "1. **Breakeven price**: a qué oil price cada empresa es "
+        "FCF-positive. Saudi Aramco breakeven ~$30; US shale "
+        "marginal player ~$60. Cuando oil < breakeven, perdiendo "
+        "cash.\n"
+        "2. **Reserves life (R/P ratio)**: Reserves / annual "
+        "production. >15 años = long-lived; <8 = need replacement.\n"
+        "3. **Reserve replacement ratio**: nueva reserves added / "
+        "production. >1.0 = creciendo reserve base; <1.0 = "
+        "shrinking.\n"
+        "4. **Capital discipline**: post-2014, las majors "
+        "aprendieron a NO sobre-invertir en peak. CapEx growth "
+        "<10% incluso con oil >$80 = discipline.\n"
+        "5. **Decarbonization exposure**: gradient. Pure oil = "
+        "exposed; integrated with renewable transition = hedged.\n"
+        "6. **Through-cycle FCF**: en valuation, normalize oil "
+        "price a $60-70 midcycle, no spot."
+    ),
+    key_metrics=[
+        ("Breakeven oil price (USD/bbl)",
+         "Lower = lower-cost producer. Top-tier majors $35-45."),
+        ("Reserves Life (years)",
+         ">15 long-lived (Saudi Aramco 80+) · <8 short-lived."),
+        ("Reserve Replacement Ratio",
+         ">1.0 growing · <1.0 declining."),
+        ("FCF at midcycle oil ($60-70)",
+         "Lo que la empresa genera through-cycle."),
+        ("Dividend yield (%)",
+         "Energy yields típically 3-7%."),
+        ("Net debt / EBITDA (commodity adjusted)",
+         "<1.5x at midcycle = healthy."),
+    ],
+    bullish_vs_bearish=[
+        ("Cheap on through-cycle FCF basis",
+         "Cheap on LTM peak earnings (cycle trap)"),
+        ("Capital discipline (CapEx <50% of CFO)",
+         "Capex bingo at peak prices (XOM 2008)"),
+        ("Reserve replacement >1.0 + reserves long-lived",
+         "Reserves declining / RR ratio <0.8"),
+        ("Low breakeven (top-quartile cost)",
+         "High breakeven (vulnerable in trough)"),
+        ("Sentiment bearish + capex industry cuts",
+         "Sentiment euphoric + capex bingo"),
+    ],
+    valuation_impact=(
+        "Aplicar DCF estándar en energy es trampa — usa midcycle "
+        "FCF. La metodología preferida: NAV (Net Asset Value) of "
+        "reserves + risked development potential. Esto incorpora "
+        "la realidad: la empresa es worth lo que valen sus "
+        "reservas (PV of production), no su LTM earnings. Para "
+        "midstream + downstream, DCF con stable cash flow funciona."
+    ),
+    case_study=(
+        "**Oil majors 2020 trough**: Brent cayó a -$37 abril "
+        "2020 por demand destruction COVID + Saudi-Russia "
+        "production war. XOM dividend yield reached 10%+. Los "
+        "que compraron ese trough ganaron 4-5x para 2022 cuando "
+        "Brent llegó $120 post-Ukraine.\n\n"
+        "**Contraejemplo — Chesapeake Energy 2014-2020**: "
+        "shale producer apalancado. Capex bingo durante "
+        "$100 oil 2011-14. Cuando oil cayó a $40 (2015) y luego "
+        "$30 (2016), no podía servir la deuda. Bankrupted 2020. "
+        "Lección: en commodities, capital discipline + balance "
+        "fortress matters more que growth."
+    ),
+    common_mistakes=[
+        "Usar LTM oil price en DCF. Always midcycle.",
+        "Asumir que oil price actual continúa. Mean reversion potent en commodities.",
+        "Confundir reserves (long-term) con production (current). Una empresa puede tener huge reserves pero declining production.",
+        "Pasar por alto el decarbonization risk. Some reserves never get monetized.",
+        "Comprar majors at peak oil con narrative 'permanent shortage'. Historically siempre wrong.",
+    ],
+    mental_model=(
+        "Howard Marks: 'commodity cycles son la cosa más predecible "
+        "del market — porque siempre van. La cosa más impredecible "
+        "es el timing'. Energía es contrarian play par excellence. "
+        "Comprar cuando hay euphoria de 'permanent shortage' = "
+        "perder. Comprar cuando hay despair de 'industry "
+        "dying' = clásico. Pero requires balance fortress para "
+        "sobrevivir el trough — leverage mata en cíclicas."
+    ),
+    books=[
+        Book(title="The Prize", author="Daniel Yergin", year=1991,
+             chapter_hint="Historia + estructura de la industria",
+             why="Texto definitivo de oil industry."),
+        Book(title="The New Map", author="Daniel Yergin", year=2020,
+             chapter_hint="Energy transition + geopolitics",
+             why="Yergin updated sobre el futuro del sector."),
+        _BOOK_MARKS_MARKET_CYCLE,
+        _BOOK_DAMODARAN_VALUATION,
+    ],
+    videos=[
+        Video(title="The Oil Market Explained",
+              channel="Asianometry / Real Vision",
+              minutes=30, url="",
+              why="Cómo funciona el spot vs futures oil market."),
+    ],
+    quotes=[
+        Quote(text="The best cure for high oil prices is high oil "
+                   "prices. The best cure for low oil prices is low "
+                   "oil prices.",
+              author="Andy Hall (oil trader)",
+              source="Industry adage"),
+        _Q_MARKS_RISK,
+        _Q_BUFFETT_PRICE_VALUE,
+    ],
+))
+# ---------- Sector consumer ----------
+_add(Lesson(
+    slug="sector_consumer",
+    label=_label_for("sector_consumer"),
+    category=_cat_for("sector_consumer"),
+    hook=_hook_for("sector_consumer"),
+    definition=(
+        "Consumer goods se divide en dos categorías muy distintas:\n\n"
+        "  · **Consumer Staples**: comida, bebida, household, "
+        "tobacco. Demanda inelástica — recession-resistant. "
+        "Procter, Coca-Cola, Nestlé. Defensives.\n"
+        "  · **Consumer Discretionary**: ropa, electronics, autos, "
+        "restaurants, viajes. Demand elastic — cyclical. Nike, "
+        "Disney, Tesla. Cyclicals.\n\n"
+        "Drivers comunes: pricing power, brand equity, "
+        "distribution moats. Pero ciclicidad opuesta — staples "
+        "defensives en recession, discretionary se desploma."
+    ),
+    why_matters=(
+        "Consumer goods son ~25% del S&P combinado. Es donde "
+        "Buffett construyó Berkshire (Coca-Cola, See's, Geico "
+        "indirectly). Las grandes brands en staples — Coca-Cola, "
+        "P&G, Nestlé — son compounders de 7-10% real anual "
+        "durante 50+ años. Saber leer brand equity + pricing "
+        "power + distribution = identificar los próximos "
+        "compounders."
+    ),
+    how_pros_analyze=(
+        "1. **Pricing power test**: ¿puede subir precios above-"
+        "inflation sin perder volume? (Ver lección pricing power).\n"
+        "2. **Volume vs price split**: empresas top reportan "
+        "ambos. Pricing positive sostained = strong brand.\n"
+        "3. **Brand market share trend**: stable o growing = "
+        "moat funcional. Erosionándose = competidor (private "
+        "label, DTC disruptors) ganando.\n"
+        "4. **Geographic diversification**: empresas EM-exposed "
+        "tienen growth runway pero FX volatility.\n"
+        "5. **DTC + e-commerce disruption**: traditional CPG "
+        "compite ahora con D2C brands (Glossier, Casper). "
+        "Tracking digital penetration.\n"
+        "6. **Generational relevance**: ¿la próxima generación "
+        "consume? Diet Coke en problemas con Gen Z health-conscious; "
+        "Lululemon yes.\n"
+        "7. **Discretionary cycle**: same-store sales en restaurants, "
+        "transactions count, average ticket. Mid-cycle vs late."
+    ),
+    key_metrics=[
+        ("Same-store sales (SSS, %)",
+         "Restaurants, retail. Positive = healthy."),
+        ("Volume vs Price split",
+         "Strong brand: ambos positivos. Commoditized: solo price."),
+        ("Gross margin (%)",
+         "Brand premium: 50-65% · Mass market: 30-45%."),
+        ("Marketing / Revenue (%)",
+         "5-10% steady · subiendo agresivo = defensive."),
+        ("E-commerce penetration (%)",
+         "% of sales online. Trend matters más que level."),
+        ("Brand equity rankings",
+         "Interbrand, BrandZ ranking. Top 100 = compounders típicos."),
+    ],
+    bullish_vs_bearish=[
+        ("Pricing + volume ambos positivos",
+         "Solo crece por descuentos / promociones"),
+        ("Market share stable o creciendo",
+         "Erosionándose ante private label / DTC"),
+        ("Gross margin durable through inflation",
+         "Gross margin se comprime con cost inflation"),
+        ("Brand relevant con next generation",
+         "Brand aging (Boomers heavy, no Gen Z)"),
+        ("E-commerce capability native",
+         "Stuck en wholesale model legacy"),
+    ],
+    valuation_impact=(
+        "Consumer staples cotizan premium (P/E 22-26) por "
+        "predictability + recession resistance. Defensiva real "
+        "que justifica low beta + low cost of equity. Consumer "
+        "discretionary cotiza más cyclical — multiple expands "
+        "early cycle, comprime late cycle. En recession, staples "
+        "outperform discretionary por 20-30pp."
+    ),
+    case_study=(
+        "**LVMH 2010-2024 — luxury compounding**: revenue 4x, "
+        "operating margin 26%+. Estrategia: comprar brands "
+        "establecidos (LV, Dior, Tiffany), aplicar disciplina, "
+        "mantener pricing premium. Cada brand premium "
+        "compounde. Stock 8x.\n\n"
+        "**Contraejemplo — Bed Bath & Beyond 2015-2023**: "
+        "missed e-commerce shift, perdió brand relevance vs "
+        "Amazon + Wayfair, missed Gen Z. Bankrupted 2023. "
+        "Lección: consumer brands aging mueren silenciosamente "
+        "hasta que es muy tarde."
+    ),
+    common_mistakes=[
+        "Confundir 'big brand' con 'brand moat'. Sears era enorme.",
+        "Aplicar mismos multiples a staples vs discretionary.",
+        "Ignorar generational shift. Brands relevantes a Boomers pueden estar muriendo con Gen Z.",
+        "Pagar premium por consumer staples sin verificar pricing power presente.",
+        "Subestimar disruption D2C / e-commerce a CPG tradicional.",
+    ],
+    mental_model=(
+        "Buffett: 'when I look for businesses, I look for "
+        "products people want to buy because they trust them — "
+        "Coca-Cola, See's, Disney'. Brand consumer = trust + "
+        "habit + emotional connection. Eso es resistente a "
+        "competition mucho más que tech features. Pero requires "
+        "verificar generacionalmente cada decade."
+    ),
+    books=[_BOOK_FISHER, _BOOK_BUFFETT_LETTERS,
+           Book(title="Building Strong Brands",
+                author="David Aaker", year=1996,
+                chapter_hint="Caps. 1-6 — brand equity model",
+                why="Texto fundacional de brand strategy."),
+           Book(title="The Direct-to-Consumer Playbook",
+                author="Mike Stevens", year=2023,
+                chapter_hint="DTC vs traditional retail",
+                why="Disrupción moderna explicada.")],
+    videos=[_VIDEO_BUFFETT_1996,
+            Video(title="LVMH Case Study",
+                  channel="Wharton / CFA Institute",
+                  minutes=30, url="",
+                  why="Brand compounding en luxury.")],
+    quotes=[
+        _Q_BUFFETT_MOAT,
+        Quote(text="If you give me $100 billion and ask me to take "
+                   "away the soft drink leadership of Coca-Cola, I "
+                   "can't do it.",
+              author="Warren Buffett",
+              source="2007 Berkshire annual meeting"),
+        _Q_BUFFETT_PRICE_VALUE,
+    ],
+))
+# ---------- Sector industrials ----------
+_add(Lesson(
+    slug="sector_industrials",
+    label=_label_for("sector_industrials"),
+    category=_cat_for("sector_industrials"),
+    hook=_hook_for("sector_industrials"),
+    definition=(
+        "Industriales (machinery, defense, aerospace, transports) "
+        "son sector cyclical donde la demanda viene de **capex de "
+        "otras empresas** (B2B). Sub-categorías:\n\n"
+        "  · **Capital goods**: Caterpillar, Deere, "
+        "Honeywell — vendem maquinaria.\n"
+        "  · **Aerospace/Defense**: Boeing, Lockheed, RTX. "
+        "Mixed cycle (commercial cyclical, defense counter).\n"
+        "  · **Transports**: UPS, FedEx, railroads. Sensible al "
+        "GDP + freight cycle.\n"
+        "  · **Building products**: Sherwin-Williams, Vulcan. "
+        "Housing cycle.\n\n"
+        "Métricas centrales: **backlog**, **book-to-bill ratio**, "
+        "**lead times**. Estos leading indicators preceden "
+        "revenue por 6-18 meses."
+    ),
+    why_matters=(
+        "Industriales son el barómetro de la economía real — "
+        "cuando Caterpillar guides up, hay capex cycle "
+        "acelerando. Cuando Boeing announces order cancellations, "
+        "demand softening. Saber leer estos signals temprano "
+        "permite anticipar el ciclo broader."
+    ),
+    how_pros_analyze=(
+        "1. **Backlog growth**: orders en queue not yet shipped. "
+        "Sostained growth = revenue visibility 2-3 años.\n"
+        "2. **Book-to-bill**: orders received / orders shipped. "
+        ">1 building backlog · <1 burning through it.\n"
+        "3. **Operating leverage**: industriales tienen high "
+        "fixed costs (plants, R&D). Small revenue moves "
+        "amplifican earnings.\n"
+        "4. **Capex cycle position**: ISM PMI new orders = "
+        "leading indicator. Subiendo desde <50 = early "
+        "expansion (best for industrials).\n"
+        "5. **Geographic mix**: US-only vs global. China "
+        "exposure es double-edged (huge market + geopolitical).\n"
+        "6. **Aftermarket revenue**: parts + services. "
+        "Recurring + high margin. Mejor que solo OEM.\n"
+        "7. **Defense vs commercial split**: defense es counter-"
+        "cyclical (budget driven), commercial procyclical."
+    ),
+    key_metrics=[
+        ("Backlog (USD)",
+         "Pipeline future revenue. Trend matters."),
+        ("Book-to-bill ratio",
+         ">1.05 expanding · 0.95-1.05 stable · <0.95 contracting."),
+        ("Aftermarket / Total revenue (%)",
+         ">30% = sticky business · <15% = pure transactional."),
+        ("Operating margin (%)",
+         "Industriales: 12-20% best-in-class · 8-12% normal."),
+        ("ROIC (%)",
+         "Best industrials (Honeywell, Roper): 15-20%. Average "
+         "industrials: 8-12%."),
+        ("Capex / Revenue (%)",
+         "15-25% típico para machinery. Heavy capex during cycle peaks."),
+    ],
+    bullish_vs_bearish=[
+        ("Backlog growing + book-to-bill >1",
+         "Backlog shrinking + book-to-bill <1"),
+        ("ISM PMI rising from <50 (early cycle)",
+         "ISM PMI falling from >55 (late cycle)"),
+        ("Aftermarket % growing (more sticky revenue)",
+         "Aftermarket flat (only transactional)"),
+        ("Capital discipline (CapEx normalizado)",
+         "Capex bingo at cycle peak"),
+        ("Diversified end markets",
+         "Single-end-market concentration (housing-only)"),
+    ],
+    valuation_impact=(
+        "Industriales cotizan en P/E 15-22 con cyclical "
+        "compression/expansion. Best-in-class (Honeywell, "
+        "Roper, RTX) premium por mix de aftermarket + tech. "
+        "Pure-play cyclicals (Caterpillar, Deere) trade at "
+        "discount through-cycle. Usar normalized through-cycle "
+        "earnings en valuation."
+    ),
+    case_study=(
+        "**Honeywell 2003-2024**: transformación de cyclical "
+        "industrial a aerospace + automation + software. ROIC "
+        "subió de 10% a 17%. Margin expansion via mix shift. "
+        "Stock 6x. Caso de industrial mejor que cyclical "
+        "average via portfolio management.\n\n"
+        "**Contraejemplo — Boeing 2018-2024**: 737 MAX grounding "
+        "+ COVID + 787 quality issues + supply chain. Backlog "
+        "intact pero delivery rate cayó. FCF negativo 5 años "
+        "seguidos. Stock cayó 60%. Lección: industriales high "
+        "operating leverage + high financial leverage = "
+        "double exposed."
+    ),
+    common_mistakes=[
+        "Comprar industriales en peak earnings (low P/E cyclical trap).",
+        "Ignorar backlog + book-to-bill — leading indicators.",
+        "Pagar premium por industrials sin verificar aftermarket sticky revenue.",
+        "Subestimar el effect del rate cycle on capex demand (rates up = capex down 6m later).",
+        "No diferencias defense (acyclical) de commercial aerospace (procyclical).",
+    ],
+    mental_model=(
+        "Industriales son the canary in the coal mine para el "
+        "economic cycle. Cuando Caterpillar dice 'mining demand "
+        "soft', sabés que commodity cycle peaking. Cuando "
+        "Honeywell aerospace orders surging, knows aircraft "
+        "production accelerating. Pensá industriales no solo "
+        "como inversión — son INFORMACIÓN sobre el broader cycle."
+    ),
+    books=[_BOOK_MCKINSEY_VALUATION, _BOOK_MARKS_MARKET_CYCLE,
+           _BOOK_DALIO_PRINCIPLES,
+           Book(title="Industrial Mega Trends",
+                author="Jonathan Schramm", year=2021,
+                chapter_hint="Caps. on automation + electrification",
+                why="Trends modernos que reshape industriales.")],
+    videos=[
+        Video(title="Reading PMI for Investment Insights",
+              channel="ISM / CFA Institute", minutes=20, url="",
+              why="Cómo usar PMI como leading indicator."),
+    ],
+    quotes=[
+        Quote(text="Industrials are the steel thread that runs "
+                   "through the entire economy. When they're "
+                   "humming, the economy hums.",
+              author="Anonymous PM",
+              source="Industry adage"),
+        _Q_MARKS_RISK,
+        _Q_BUFFETT_MOAT,
+    ],
+))
+# ---------- Sector healthcare ----------
+_add(Lesson(
+    slug="sector_healthcare",
+    label=_label_for("sector_healthcare"),
+    category=_cat_for("sector_healthcare"),
+    hook=_hook_for("sector_healthcare"),
+    definition=(
+        "Healthcare es el sector más heterogéneo del market. "
+        "Sub-categorías:\n\n"
+        "  · **Big Pharma**: Pfizer, J&J, Eli Lilly, Merck. "
+        "Patent cliff cycles + pipeline R&D.\n"
+        "  · **Biotech**: pre-revenue clinical trials. Binary "
+        "outcomes — phase 3 success/fail.\n"
+        "  · **Medical devices**: Medtronic, Boston Scientific. "
+        "Steady, consumable revenue.\n"
+        "  · **Managed care / health insurance**: UnitedHealth, "
+        "Humana. Combined ratio + medical loss ratio (MLR).\n"
+        "  · **Services / hospitals**: HCA, Tenet. Reimbursement "
+        "+ procedure volume.\n\n"
+        "Cada uno requiere framework distinto. Aplicar pharma "
+        "metrics a managed care = error."
+    ),
+    why_matters=(
+        "Healthcare es ~13% del S&P y ~18% del US GDP — uno de "
+        "los sectores más grandes del economy. Tendencias "
+        "macro (aging population, GLP-1 obesity drugs, AI "
+        "drug discovery) lo convierten en mega-cycle. Pero "
+        "patent cliffs, FDA risks, payer pressure crean tail "
+        "risks específicos del sector."
+    ),
+    how_pros_analyze=(
+        "1. **Pipeline analysis** (pharma): drugs en phase 2-3, "
+        "expected revenue contribution, peak sales projections. "
+        "Pipeline thin = patent cliff coming.\n"
+        "2. **Patent expiry calendar**: blockbusters perdiendo "
+        "exclusivity. Humira (AbbVie) perdió $20B+ revenue in "
+        "2023-24. Patent cliff = bear thesis.\n"
+        "3. **Trial probabilities** (biotech): phase 1→2 "
+        "success rate ~60%, 2→3 ~30%, 3→approval ~50%. "
+        "Compound probability matters.\n"
+        "4. **MLR (managed care)**: medical losses / premiums. "
+        "Industry target 80-85%. Lower = profitable but "
+        "regulatory backlash.\n"
+        "5. **Payer mix** (hospitals): Medicare/Medicaid vs "
+        "commercial. Commercial is high-margin; gov't lower.\n"
+        "6. **R&D efficiency**: $ invested per drug approved. "
+        "Big Pharma struggling here — productivity declining "
+        "decades."
+    ),
+    key_metrics=[
+        ("R&D intensity (%)",
+         "Big pharma 15-25% · biotech can be 100%+ pre-revenue · "
+         "medical devices 5-10%."),
+        ("Pipeline NPV / Market Cap",
+         "Pharma valuation foundation. Pipeline > 50% MC = "
+         "high R&D-dependent."),
+        ("Patent cliff exposure (%)",
+         "% revenue from drugs losing exclusivity in next 5y."),
+        ("Medical Loss Ratio (managed care)",
+         "80-85% target · <80% high profitability · >85% margin "
+         "compression."),
+        ("Phase 3 success probability (biotech)",
+         "Historical 50%. Some indications higher (oncology lower, "
+         "metabolic higher)."),
+        ("ROIC (pharma)",
+         "Best (Lilly with GLP-1): 30%+. Average: 10-15%."),
+    ],
+    bullish_vs_bearish=[
+        ("Pipeline robust + patent cliff distant",
+         "Pipeline thin + patent cliff <2y away"),
+        ("Successful phase 3 trial + FDA approval visible",
+         "Trial failure / FDA setback"),
+        ("MLR managed (managed care)",
+         "MLR creciendo + regulatory pressure"),
+        ("Aging population mega-trend exposure",
+         "Reimbursement pressure / drug pricing legislation"),
+        ("Diversified pipeline / multiple indications",
+         "Single-drug dependency (binary outcome)"),
+    ],
+    valuation_impact=(
+        "Pharma valuation requires DCF on existing drugs + "
+        "risked NPV de pipeline drugs. Biotechs pre-revenue: "
+        "risked NPV de cada drug × prob of success. Managed care "
+        "es más como insurance (P/E + MLR analysis). El error "
+        "común: aplicar simple P/E sin pipeline analysis = "
+        "subestimar pharma con strong pipeline o sobreestimar "
+        "with patent cliff coming."
+    ),
+    case_study=(
+        "**Eli Lilly 2020-2024 — GLP-1 revolution**: developed "
+        "Mounjaro/Zepbound (semaglutide competitor). Mercado de "
+        "obesity (~70M Americans clinically obese). Revenue "
+        "projection 2030 GLP-1 globally $100B+. Stock 5x en 4 "
+        "años, P/E pasó de 25 a 65. Caso de pipeline asset "
+        "transformacional.\n\n"
+        "**Contraejemplo — Bausch + Lomb / Valeant 2015-2017**: "
+        "growth via acquisitions con drugs price-gouged + heavy "
+        "debt. Cuando regulatory + customer backlash hit, stock "
+        "cayó 95%. Lección: pharma growth via pricing "
+        "agresivo = transitorio, no sostenible."
+    ),
+    common_mistakes=[
+        "Comprar pharma sin understanding patent cliff calendar.",
+        "Sub-estimar trial failure probability (biotechs son binary).",
+        "Confiar en management's peak sales projections sin validar.",
+        "Aplicar P/E genérico a managed care (usar MLR + insurance metrics).",
+        "Ignorar reimbursement dynamics (Medicare pricing power growing).",
+    ],
+    mental_model=(
+        "Healthcare es donde science meets business — y donde la "
+        "ciencia es **probabilística**. Pensá en términos de "
+        "expected value: pipeline drug con phase 3 trial = NPV × "
+        "probability of success. Don't fall in love con una "
+        "story; toda thesis pharma puede flame out por un "
+        "single trial. Diversification across indications es el "
+        "mecanismo de risk management natural."
+    ),
+    books=[_BOOK_FISHER, _BOOK_DAMODARAN_VALUATION,
+           Book(title="The Pharmaceutical Industry",
+                author="Frederick Frank", year=2020,
+                chapter_hint="R&D economics + patent cycles",
+                why="Manual técnico del sector."),
+           Book(title="The Truth About the Drug Companies",
+                author="Marcia Angell", year=2004,
+                chapter_hint="Cómo funciona la economía pharma",
+                why="Visión crítica + entendimiento profundo del "
+                     "modelo.")],
+    videos=[
+        Video(title="How Drug Discovery Works",
+              channel="Vox / CNBC", minutes=20, url="",
+              why="Intro accesible al pipeline + FDA process."),
+    ],
+    quotes=[
+        Quote(text="Drug discovery is like baseball — you fail "
+                   "70% of the time and people still call you a "
+                   "star.",
+              author="Anonymous pharma executive",
+              source="Industry folklore"),
+        _Q_MARKS_RISK,
+        _Q_BUFFETT_PRICE_VALUE,
+    ],
+))
+# ---------- Sector semis ----------
+_add(Lesson(
+    slug="sector_semis",
+    label=_label_for("sector_semis"),
+    category=_cat_for("sector_semis"),
+    hook=_hook_for("sector_semis"),
+    definition=(
+        "Semiconductores son la industria más cíclica + más "
+        "geopolitically charged del tech stack. Estructura "
+        "competitiva moderna:\n\n"
+        "  · **Fabless designers**: Nvidia, AMD, Qualcomm. "
+        "Diseñan chips, no manufacturan. Asset-light, R&D-heavy.\n"
+        "  · **Foundries**: TSMC, Samsung Foundry. Manufacturan "
+        "para fabless. Capital-intensive ($30B+ fab cost).\n"
+        "  · **IDMs (Integrated Device Manufacturers)**: Intel "
+        "tradicionalmente, Samsung memory. Diseñan + manufacturan.\n"
+        "  · **Equipment**: ASML (EUV monopoly), Applied "
+        "Materials, Lam Research. Suministran a foundries.\n"
+        "  · **Memory**: Micron, SK Hynix. Commoditized, "
+        "ultra-cyclical.\n\n"
+        "Geopolitics matter — TSMC Taiwan concentration, China "
+        "ambitions, US export controls."
+    ),
+    why_matters=(
+        "Semis representan el TECH STACK underlying todo lo demás "
+        "(AI, autos, IoT, consumer electronics). Pero son "
+        "cyclically extremes: Nvidia +800% en 2023, AMD -60% "
+        "en 2022. El AI super-cycle 2023-2030 + geopolitical "
+        "shifts crean opportunities masivas — y trampas. "
+        "Saber leer este sector requires entendiment del ciclo "
+        "AND del competitive landscape."
+    ),
+    how_pros_analyze=(
+        "1. **Cycle position**: book-to-bill, lead times, "
+        "inventory days. (Ver lección semis_metrics detallada).\n"
+        "2. **Competitive position**: ¿líder en design (TSMC 3nm, "
+        "Nvidia AI), o follower? Followers tienen tougher "
+        "economics.\n"
+        "3. **R&D intensity**: 15-25% es leader (Nvidia, ASML, "
+        "TSMC). <10% = ceding ground.\n"
+        "4. **Capital intensity**: foundries 30%+ capex/revenue; "
+        "fabless <10%. Capex-light has better through-cycle FCF.\n"
+        "5. **Geographic / customer concentration**: TSMC mfg "
+        "Taiwan + customer Apple/NVDA concentrated. Tail risks.\n"
+        "6. **End-market exposure**: AI/data center growing 30%+; "
+        "PC/mobile stagnant; auto growing 10-15%. Mix matters.\n"
+        "7. **Geopolitical**: US-China escalation impact on "
+        "specific players (semis equipment China-restricted; "
+        "TSMC Taiwan exposure)."
+    ),
+    key_metrics=[
+        ("Book-to-bill ratio",
+         ">1.1 expanding · <0.9 contracting."),
+        ("R&D / Revenue (%)",
+         "Leaders 15-25% · followers <10%."),
+        ("Gross margin (%)",
+         "Foundries 50-55% · Nvidia AI 75%+ · memory cyclical "
+         "20-50%."),
+        ("Capex / Revenue (%)",
+         "Foundries 30%+ · fabless <10%."),
+        ("AI revenue % (2024)",
+         "Nvidia ~75% · Broadcom ~25% · AMD ~15% · Intel <10%."),
+        ("Geographic exposure to China",
+         "Restricted for advanced nodes. Material impact for many."),
+    ],
+    bullish_vs_bearish=[
+        ("Líder competitivo + AI exposure growing",
+         "Lagging competitive position (Intel 2014-24)"),
+        ("Book-to-bill >1 sostenido (upcycle)",
+         "Book-to-bill <1 (downcycle starting)"),
+        ("Diversified end markets",
+         "Concentrated customer / Single market exposed"),
+        ("R&D intensity sostained (preserving lead)",
+         "R&D cuts (ceding tech edge)"),
+        ("Geopolitical winner (US-aligned, fab diversification)",
+         "Geopolitical loser (China-exposed, Taiwan concentrated)"),
+    ],
+    valuation_impact=(
+        "Semis multiples swing wildly through cycle. Forward "
+        "P/E puede ir de 12 (trough) a 40 (peak euphoria). "
+        "Through-cycle normalization es essential. AI super-"
+        "cycle players (Nvidia, AVGO, TSMC) merecen premium "
+        "actualmente — pero su sostained depende de AI capex "
+        "durability (uncertain post 2027)."
+    ),
+    case_study=(
+        "**TSMC 2010-2024 — foundry monopoly**: only company "
+        "world manufacturing leading-edge (3nm, 2nm). All major "
+        "fabless customers (Apple, Nvidia, AMD, Broadcom). ROIC "
+        "30%+ sostained. Stock 8x. Geopolitical concentration "
+        "(Taiwan) es el solo risk material.\n\n"
+        "**Contraejemplo — Intel 2014-2024**: lost manufacturing "
+        "edge a TSMC (couldn't deliver 10nm/7nm timely). Lost "
+        "mobile (no chips iPhone). Missed AI wave (no GPUs). "
+        "ROIC pasó de 22% a 4%. Stock cayó 50% mientras "
+        "industry subió 300%+. Lección: en semis, manufacturing "
+        "execution matters tanto como design."
+    ),
+    common_mistakes=[
+        "Comprar en peak earnings (low P/E cyclical trap).",
+        "Asumir AI demand continues forever sin chequear capex digestion 2027+.",
+        "Subestimar geopolitical risk (TSMC Taiwan).",
+        "Confundir all-semis con AI-semis (very different end markets).",
+        "Pasar por alto R&D intensity — losing tech edge takes years to manifest pero killer when materializes.",
+    ],
+    mental_model=(
+        "Semis es una industria where the timing of cycles "
+        "doesn't matter — sus ciclos son inevitables, pero el "
+        "winner-vs-loser dynamic es PERSISTENT. Líderes (TSMC, "
+        "ASML, Nvidia hoy) tienden a sostained leads decades; "
+        "losers (Intel, MIPS, others) rarely vuelven. Identify "
+        "los winners structurally, then time el cycle entry."
+    ),
+    books=[
+        Book(title="Chip War", author="Chris Miller", year=2022,
+             chapter_hint="Estructura competitiva moderna",
+             why="The book on semis right now."),
+        _BOOK_DAMODARAN_VALUATION,
+        Book(title="The Last Wave",
+             author="Walter Isaacson", year=2014,
+             chapter_hint="Caps. sobre Intel + semis history",
+             why="Historia del sector + key players."),
+    ],
+    videos=[
+        Video(title="The Semiconductor Cycle Explained",
+              channel="Asianometry", minutes=25, url="",
+              why="Channel especializado en semis."),
+        Video(title="Chris Miller · Chip War",
+              channel="Talks at Google", minutes=60, url="",
+              why="El autor explica la geopolítica."),
+    ],
+    quotes=[
+        Quote(text="In semiconductors, the only constant is "
+                   "cyclicality. The companies that survive are the "
+                   "ones that prepare for the downcycle when "
+                   "everyone is partying at the peak.",
+              author="Morris Chang",
+              source="Founder of TSMC"),
+        Quote(text="Whoever controls the design of advanced chips "
+                   "controls the future of technology.",
+              author="Chris Miller",
+              source="Chip War"),
+        _Q_MARKS_RISK,
+    ],
+))
 
 # Macro (stubs)
 _stub("interest_rates",
