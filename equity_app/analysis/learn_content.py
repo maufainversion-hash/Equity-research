@@ -7666,59 +7666,1484 @@ _add(Lesson(
     ],
 ))
 
-# Mercado (stubs)
-_stub("risk_on_off",
-      [_BOOK_MARKS_MOST_IMPORTANT, _BOOK_MARKS_MARKET_CYCLE], [],
-      [_Q_MARKS_RISK])
-_stub("positioning",
-      [_BOOK_MARKS_MARKET_CYCLE,
-       Book(title="Reminiscences of a Stock Operator",
-            author="Edwin Lefèvre", year=1923, chapter_hint="Cualquiera",
-            why="Cómo pensaba un trader profesional (Jesse Livermore) sobre positioning.")],
-      [], [])
-_stub("sentiment",
-      [_BOOK_MARKS_MOST_IMPORTANT,
-       Book(title="The Little Book of Behavioral Investing",
-            author="James Montier", year=2010,
-            chapter_hint="Caps. 1-5", why="Sesgos cognitivos en inversión.")],
-      [], [_Q_MARKS_RISK])
-_stub("volatility",
-      [_BOOK_MARKS_MOST_IMPORTANT,
-       Book(title="The Volatility Smile", author="Emanuel Derman",
-            year=2016, chapter_hint="Caps. introductorios",
-            why="Cómo entender vol surface — denso pero el original.")],
-      [], [])
-_stub("earnings_season",
-      [_BOOK_LYNCH, _BOOK_BUFFETT_LETTERS],
-      [_VIDEO_BUFFETT_1996], [_Q_LYNCH_INVERT])
-_stub("institutional_flows",
-      [_BOOK_JPM_GUIDE,
-       Book(title="Pioneering Portfolio Management",
-            author="David Swensen", year=2009,
-            chapter_hint="Asset allocation institutional",
-            why="Cómo piensa el CIO de Yale sobre flows + asset classes.")],
-      [], [])
-_stub("market_regimes",
-      [_BOOK_MARKS_MARKET_CYCLE, _BOOK_DALIO_PRINCIPLES], [],
-      [_Q_MARKS_RISK])
-_stub("factor_investing",
-      [Book(title="Your Complete Guide to Factor-Based Investing",
-            author="Larry Swedroe", year=2016,
-            chapter_hint="Caps. 1-8 — value, momentum, quality, size",
-            why="Resumen accesible del literature académico.")],
-      [Video(title="Ben Felix · Factor Investing",
-             channel="Common Sense Investing", minutes=15, url="",
-             why="El YouTuber que mejor explica factors a retail.")],
-      [])
-_stub("momentum",
-      [Book(title="Quantitative Momentum",
-            author="Wesley Gray & Jack Vogel", year=2016,
-            chapter_hint="Caps. 1-4",
-            why="El factor con evidence empírico más robusto, explicado.")],
-      [], [])
-_stub("growth_vs_value",
-      [_BOOK_INTELLIGENT_INVESTOR, _BOOK_FISHER, _BOOK_BUFFETT_LETTERS],
-      [_VIDEO_BUFFETT_1996], [_Q_BUFFETT_PRICE_VALUE])
+# ============================================================
+# Batch 5 — Mercado
+# ============================================================
+
+# ---------- Risk-on vs risk-off ----------
+_add(Lesson(
+    slug="risk_on_off",
+    label=_label_for("risk_on_off"),
+    category=_cat_for("risk_on_off"),
+    hook=_hook_for("risk_on_off"),
+    definition=(
+        "Risk-on / risk-off describe el RÉGIMEN dominante del "
+        "market — quién está ganando, perdiendo, y por qué.\n\n"
+        "**Risk-on**: investors buscan rendimiento, no protección.\n"
+        "  · Equities rally (especialmente growth/small-cap)\n"
+        "  · Credit spreads tighten\n"
+        "  · USD weakens, EM appreciates\n"
+        "  · Commodities + crypto suben\n"
+        "  · Bond yields suben (selling safe-haven)\n\n"
+        "**Risk-off**: investors corren a safety.\n"
+        "  · Equities sell off (especialmente cyclicals)\n"
+        "  · Credit spreads widen\n"
+        "  · USD strengthens (safe-haven)\n"
+        "  · Treasury bonds rally + gold rallies\n"
+        "  · VIX spikes\n\n"
+        "El régimen puede cambiar en horas o persist meses."
+    ),
+    why_matters=(
+        "Saber identificar el régimen es la base del macro "
+        "positioning. La misma empresa puede outperform en risk-on "
+        "y underperform en risk-off según su factor exposure. "
+        "Los inversores professional re-rotan continuamente — "
+        "retail muchas veces compra lo correcto al wrong moment "
+        "del cycle."
+    ),
+    how_pros_analyze=(
+        "1. **Cross-asset confirmation**: ¿equities + credit + "
+        "commodities + EM se mueven juntos? Cuando 4-5 se mueven "
+        "en sincronía, es régimen genuino.\n"
+        "2. **VIX nivel + trend**: bajo y declining = risk-on; "
+        "elevado y rising = risk-off.\n"
+        "3. **Defensive vs cyclical leadership**: cuando "
+        "utilities + staples + healthcare outperform, regime "
+        "shifting to risk-off; tech + small-cap + EM "
+        "outperforming = risk-on.\n"
+        "4. **USD direction**: risk-on típicamente USD weak; "
+        "risk-off USD strong (safe-haven).\n"
+        "5. **Credit spreads**: leading indicator. Spreads "
+        "widening BEFORE equity selloff = early warning.\n"
+        "6. **Bond-equity correlation**: typically negative "
+        "(rate cuts help equities). When BOTH selling = stress "
+        "(2022)."
+    ),
+    key_metrics=[
+        ("VIX level",
+         "<15 complacency · 15-20 normal · 20-30 elevated · "
+         ">30 stress."),
+        ("HY credit spreads (bp)",
+         "<400 tight (risk-on) · >700 stress (risk-off)."),
+        ("Defensives vs cyclicals 60d performance",
+         "Cyclicals leading = risk-on · defensives leading = "
+         "risk-off."),
+        ("USD (DXY)",
+         "Strong USD typically risk-off · weak USD risk-on."),
+        ("EM equities vs S&P",
+         "EM outperforming = risk-on · underperforming = "
+         "risk-off."),
+        ("Bitcoin vs Gold",
+         "Risk-on: BTC over gold · risk-off: gold over BTC."),
+    ],
+    bullish_vs_bearish=[
+        ("Cross-asset confirmation risk-on (equity + credit + EM + DXY weak)",
+         "Cross-asset risk-off (equity sell + spreads widen + "
+         "USD strong)"),
+        ("VIX low + declining",
+         "VIX high + rising"),
+        ("Cyclicals + growth leading",
+         "Defensives + value leading"),
+        ("Credit spreads tightening",
+         "Credit spreads widening"),
+        ("USD weak + EM rallying",
+         "USD strong + EM selling"),
+    ],
+    valuation_impact=(
+        "En risk-on, multiple expansion en growth + cyclicals. "
+        "En risk-off, multiple compression masiva — "
+        "especially en duración-sensitive (long-duration growth). "
+        "Para alpha: positioning correctly para el regime "
+        "matters tanto como stock selection. Muchos returns "
+        "vienen de regime rotation, no de single-stock alpha."
+    ),
+    case_study=(
+        "**2020 risk-on → risk-off → risk-on en 12 meses**: "
+        "Jan-Feb 2020 risk-on. March 2020 risk-off extremo "
+        "(VIX 80+, spreads 1100bp, USD surge). Apr-Dec 2020 "
+        "risk-on extremo (Fed QE, fiscal stimulus). Caso de "
+        "cambios de régimen rápidos y violentos.\n\n"
+        "**2022 risk-off year**: VIX averaged 25+, HY spreads "
+        "widened to 600bp, USD surged 19% (DXY 95→114). "
+        "Defensives outperformed by 30pp. EM crushed. Lección: "
+        "cuando 4+ indicators confirm regime shift, "
+        "positioning matters more than stock-picking."
+    ),
+    common_mistakes=[
+        "Confiar en un solo indicator. Use cross-asset confirmation.",
+        "Reacción tardía. Los regime shifts pueden suceder en días.",
+        "Asumir que regime persistirá. Mean-reverting con extremes.",
+        "Pasar por alto las divergences (e.g., equities up but credit selling).",
+        "Confundir individual stock movement con regime signal.",
+    ],
+    mental_model=(
+        "Marks: 'el péndulo del market oscila entre euphoria y "
+        "depression, raramente parado en el medio'. Risk-on / "
+        "risk-off es la manifestación operacional de ese "
+        "péndulo. Cuando everyone es bullish, regime está peak "
+        "risk-on (cosa para reducir). Cuando everyone bearish, "
+        "peak risk-off (cosa para añadir). Contrarian thinking "
+        "drivado por cross-asset confirmation."
+    ),
+    books=[_BOOK_MARKS_MOST_IMPORTANT, _BOOK_MARKS_MARKET_CYCLE,
+           _BOOK_DALIO_PRINCIPLES],
+    videos=[
+        Video(title="Howard Marks on Market Cycles",
+              channel="Oaktree", minutes=45, url="",
+              why="Marks framework de cycle psychology."),
+    ],
+    quotes=[
+        _Q_MARKS_RISK,
+        Quote(text="The market is a pendulum that forever swings "
+                   "between unsustainable optimism and unjustified "
+                   "pessimism. The intelligent investor is a "
+                   "realist who sells to optimists and buys from "
+                   "pessimists.",
+              author="Benjamin Graham",
+              source="The Intelligent Investor"),
+        _Q_BUFFETT_PRICE_VALUE,
+    ],
+))
+# ---------- Positioning ----------
+_add(Lesson(
+    slug="positioning",
+    label=_label_for("positioning"),
+    category=_cat_for("positioning"),
+    hook=_hook_for("positioning"),
+    definition=(
+        "Positioning = cómo están allocados los profesionales "
+        "actualmente — long, short, neutral, en qué sectores. "
+        "Tres fuentes principales:\n\n"
+        "  · **CFTC Commitment of Traders (COT)**: futures "
+        "positioning weekly. Net long/short de hedge funds, "
+        "commercials, etc.\n"
+        "  · **Dealer gamma**: how much option dealers están "
+        "long/short volatility. Negative gamma days → "
+        "volatile (selling exacerba selling).\n"
+        "  · **Fund flows**: dinero entrando/saliendo de ETFs "
+        "+ mutual funds (Lipper, EPFR data).\n"
+        "  · **Survey data**: BofA Global Fund Manager Survey, "
+        "AAII retail sentiment.\n\n"
+        "Crowded positioning + adverse catalyst = violent "
+        "unwind (long covering or short squeeze)."
+    ),
+    why_matters=(
+        "Positioning explica MUCHO del short-term price action — "
+        "más que fundamentals. Cuando todos están long, hay no "
+        "marginal buyer (price can only fall). Cuando todos "
+        "están short, no marginal seller (squeeze potential). "
+        "Pro flow analysts trackean positioning para timing "
+        "entries/exits en mismos fundamentals."
+    ),
+    how_pros_analyze=(
+        "1. **CFTC COT extremes**: cuando net long o short > 2 "
+        "std devs vs history = setup for reversal.\n"
+        "2. **Dealer gamma**: GEX (gamma exposure) <0 = "
+        "negative gamma = volatile. >$10B positive = pinned, "
+        "low realized vol.\n"
+        "3. **Fund flows**: persistent inflows to specific "
+        "ETF/sector → buying pressure. Sudden reversals "
+        "(2020 March) = stress.\n"
+        "4. **BofA FMS**: monthly survey of ~250 PMs. Cash "
+        "levels >5% = bearish; <3% = euphoric.\n"
+        "5. **AAII retail**: extreme bull (>50%) usually "
+        "marks tops; extreme bear (>50%) usually marks "
+        "bottoms.\n"
+        "6. **Short interest as % float**: high short = "
+        "squeeze risk (GameStop 2021)."
+    ),
+    key_metrics=[
+        ("CFTC net positioning (Z-score vs 3y)",
+         ">+2 extremely long · -2 extremely short."),
+        ("Dealer GEX ($B)",
+         "Negative = volatile · large positive = pinned."),
+        ("BofA FMS cash level (%)",
+         ">5% bearish/defensive · <3.5% euphoric."),
+        ("AAII bull-bear spread",
+         ">+30 euphoric (top warning) · <-25 capitulation "
+         "(bottom)."),
+        ("Short interest / float (%)",
+         ">15% high (squeeze risk) · <3% complacent."),
+        ("ETF cumulative flows (1m)",
+         "Direction of professional + retail money."),
+    ],
+    bullish_vs_bearish=[
+        ("Positioning bearish extreme (contrarian buy)",
+         "Positioning euphoric extreme (contrarian sell)"),
+        ("BofA FMS cash >5% (skepticism = upside)",
+         "BofA FMS cash <3.5% (no marginal buyer)"),
+        ("Heavy short interest + improving fundamentals "
+         "(squeeze potential)",
+         "Crowded long + weakening fundamentals (unwind risk)"),
+        ("Dealer gamma positive (low vol pinned)",
+         "Dealer gamma negative (vol explosion risk)"),
+        ("AAII bull-bear -20 (pessimism extreme)",
+         "AAII bull-bear +35 (euphoria extreme)"),
+    ],
+    valuation_impact=(
+        "Positioning afecta short-term price action más que "
+        "fundamentals. Pero NO afecta long-term intrinsic "
+        "value. Para holding-period <6 months, positioning "
+        "matters tremendously. Para >2 años, fundamentals "
+        "dominate. Mejor uso: identify positioning extremes "
+        "as ENTRY/EXIT timing within fundamental thesis."
+    ),
+    case_study=(
+        "**GameStop short squeeze Jan 2021**: short interest "
+        "140% of float (alguien shorted shares lent and "
+        "re-shorted). Reddit retail coordinated buying. "
+        "Stock 20x in 2 weeks. Forced unwind of shorts "
+        "(some hedge funds blew up — Melvin Capital lost "
+        "53% in a month). Caso textbook of positioning "
+        "extreme + catalyst.\n\n"
+        "**March 2020 bottom**: BofA FMS cash level spiked "
+        "to 5.9% (highest desde 2008). AAII bears 52%+ "
+        "(extreme). Positioning bearish capitulation = "
+        "perfect contrarian buy signal en retrospect. "
+        "S&P rallied 60% in 6 months."
+    ),
+    common_mistakes=[
+        "Confiar solo en survey data sin checking actual flows.",
+        "Asumir que positioning extreme inmediately = reversal. Can persist.",
+        "Confundir retail positioning con professional positioning.",
+        "Pasar por alto que positioning is symptom, not cause.",
+        "Trading positioning extremes sin fundamentals supporting.",
+    ],
+    mental_model=(
+        "Buffett: 'be fearful when others are greedy, greedy "
+        "when others are fearful'. Positioning data te dice "
+        "QUIÉN está greedy o fearful, y cuán extreme está. "
+        "Es la quantification del contrarian thinking. Pero "
+        "extremes can persist longer than you can be liquid."
+    ),
+    books=[_BOOK_MARKS_MARKET_CYCLE,
+           Book(title="Reminiscences of a Stock Operator",
+                author="Edwin Lefèvre", year=1923,
+                chapter_hint="Cualquiera",
+                why="Cómo pensaba un trader profesional sobre "
+                     "positioning."),
+           Book(title="The Education of a Speculator",
+                author="Victor Niederhoffer", year=1997,
+                chapter_hint="Cap. 1-3 sobre crowd behavior",
+                why="Cómo pro trader thinks about crowded "
+                     "trades.")],
+    videos=[
+        Video(title="The Anatomy of a Short Squeeze",
+              channel="Bloomberg / CFA Institute",
+              minutes=20, url="",
+              why="Mechanics + GME case dissection."),
+    ],
+    quotes=[
+        Quote(text="Be fearful when others are greedy, and greedy "
+                   "when others are fearful.",
+              author="Warren Buffett",
+              source="Berkshire 2004 letter"),
+        _Q_MARKS_RISK,
+        Quote(text="The four most dangerous words in investing "
+                   "are: 'This time it's different.'",
+              author="John Templeton",
+              source="(atribuido — aplica a positioning "
+                     "extremes)"),
+    ],
+))
+# ---------- Sentiment ----------
+_add(Lesson(
+    slug="sentiment",
+    label=_label_for("sentiment"),
+    category=_cat_for("sentiment"),
+    hook=_hook_for("sentiment"),
+    definition=(
+        "Market sentiment es la **psychology agregada** de los "
+        "participants — bullish, bearish, fearful, greedy. "
+        "Múltiples métricas:\n\n"
+        "  · **VIX** (fear gauge): implied 30-day vol del S&P. "
+        "Spikes en panic.\n"
+        "  · **Put/call ratio**: ratio of puts to calls traded. "
+        "High puts = fearful; high calls = euphoric.\n"
+        "  · **AAII survey**: retail investor sentiment.\n"
+        "  · **CNN Fear & Greed Index**: composite of 7 "
+        "indicators.\n"
+        "  · **News + social media tone**: Twitter + Reddit "
+        "sentiment scoring.\n\n"
+        "Sentiment es CONTRARIAN indicator at extremes — "
+        "everyone bullish = sell signal; everyone bearish = "
+        "buy signal."
+    ),
+    why_matters=(
+        "Marks: 'the pendulum of investor psychology swings "
+        "between euphoria and depression — and at extremes "
+        "creates the best opportunities'. Sentiment extremes "
+        "señalan turning points casi infallibly. Pero "
+        "intermediate sentiment es noise. Saber diferenciar "
+        "extreme vs normal = saber timing."
+    ),
+    how_pros_analyze=(
+        "1. **Composite over single**: VIX + AAII + put/call "
+        "+ news → if 3+ extreme, signal strong.\n"
+        "2. **Trend vs level**: VIX 25 going from 15 (rising) "
+        "vs from 35 (declining) very different.\n"
+        "3. **Retail vs institutional sentiment**: often "
+        "divergent. Retail at peak euphoria = top warning; "
+        "institutional cautious during retail euphoria = "
+        "warning.\n"
+        "4. **Fear & Greed at extremes (>75 greed o <25 "
+        "fear)**: contrarian signal historically.\n"
+        "5. **Sentiment in context of fundamentals**: extreme "
+        "fear + improving fundamentals = generational buy. "
+        "Extreme greed + deteriorating fundamentals = "
+        "generational sell.\n"
+        "6. **Watch the magazine cover indicator**: cuando "
+        "appears en Time, Newsweek, Economist front pages = "
+        "consensus reached extreme = reverse."
+    ),
+    key_metrics=[
+        ("VIX",
+         "<15 complacency · 15-20 normal · 20-30 elevated · "
+         ">30 stress · >40 panic."),
+        ("Put/Call ratio (CBOE)",
+         "<0.7 calls dominante (greed) · >1.2 puts dominante "
+         "(fear) · >1.5 extreme fear."),
+        ("AAII bull-bear spread",
+         "Extremes: >+30 euphoric (top) · <-25 capitulation "
+         "(bottom)."),
+        ("CNN Fear & Greed Index",
+         "0-100. <25 fear · 25-75 neutral · >75 greed. "
+         "Extremes signal."),
+        ("BofA Bull-Bear indicator",
+         "Custom score 0-10. >8 sell signal · <2 buy signal."),
+        ("Sentiment vs fundamentals divergence",
+         "Sentiment euphoric + fundamentals deteriorating "
+         "= warning."),
+    ],
+    bullish_vs_bearish=[
+        ("Extreme fear (VIX >30, AAII bears 50%+) + "
+         "fundamentals OK",
+         "Extreme greed (VIX <12, AAII bulls 50%+) + "
+         "fundamentals deteriorating"),
+        ("Magazine cover bearish ('stocks are dead')",
+         "Magazine cover euphoric ('new era')"),
+        ("CNN F&G < 25 (fear extreme)",
+         "CNN F&G > 75 (greed extreme)"),
+        ("Put/call >1.2 con improving fundamentals",
+         "Put/call <0.5 con weakening fundamentals"),
+        ("Retail bearish + institutional adding",
+         "Retail euphoric + institutional reducing"),
+    ],
+    valuation_impact=(
+        "Sentiment afecta short-term price action sin afectar "
+        "intrinsic value. Pero sentiment extremes crean los "
+        "mejores entry/exit windows. Best practice: use "
+        "sentiment para timing positions DENTRO de tu "
+        "fundamental thesis — don't trade sentiment alone. "
+        "Buy quality at fear extreme; reduce positions at "
+        "greed extreme."
+    ),
+    case_study=(
+        "**March 2020 — peak fear**: VIX 80+ (highest ever "
+        "intraday). AAII bears 52%. CNN F&G = 5 (extreme "
+        "fear). Magazine covers 'Death of capitalism'. "
+        "Contrarian signal extreme. S&P rallied 60% en 6 "
+        "meses. Perfect fear-extreme buy.\n\n"
+        "**Late 2021 — peak euphoria**: VIX 12. AAII bulls "
+        "57%. CNN F&G = 78. Magazine covers 'Crypto kings'. "
+        "Meme stocks rally. Extreme greed → S&P -19% in "
+        "2022. Contrarian signal validated.\n\n"
+        "**Lección**: extremes son rare pero high-conviction "
+        "signals."
+    ),
+    common_mistakes=[
+        "Trading on intermediate sentiment shifts. Only extremes signal.",
+        "Confiar en single indicator. Use composite.",
+        "Ignorar fundamentals. Sentiment + fundamentals aligned = "
+        "real signal.",
+        "Buying fear extreme en company with deteriorating "
+        "fundamentals (catching falling knife).",
+        "Selling greed extreme en company with accelerating "
+        "fundamentals.",
+    ],
+    mental_model=(
+        "Buffett: 'be fearful when others are greedy, greedy "
+        "when others are fearful'. Sentiment es la "
+        "operationalization de ese principio. Pero contrarianism "
+        "solo funciona when respaldo by fundamentals. Pura "
+        "contrarianism = catastrophic. Quality + contrarian "
+        "timing = generational alpha."
+    ),
+    books=[_BOOK_MARKS_MOST_IMPORTANT,
+           Book(title="The Little Book of Behavioral Investing",
+                author="James Montier", year=2010,
+                chapter_hint="Caps. 1-5",
+                why="Sesgos cognitivos en inversión."),
+           Book(title="Thinking, Fast and Slow",
+                author="Daniel Kahneman", year=2011,
+                chapter_hint="Parte sobre prospect theory",
+                why="Por qué el mercado overreacts en sentiment "
+                     "extremes.")],
+    videos=[
+        Video(title="Howard Marks on Investor Psychology",
+              channel="Oaktree memos", minutes=45, url="",
+              why="Marks framework de cycle psychology."),
+    ],
+    quotes=[
+        _Q_MARKS_RISK,
+        Quote(text="Be fearful when others are greedy, and greedy "
+                   "when others are fearful.",
+              author="Warren Buffett",
+              source="Berkshire 2004 letter"),
+        Quote(text="The most important quality for an investor is "
+                   "temperament, not intellect.",
+              author="Warren Buffett",
+              source="Multiple interviews"),
+    ],
+))
+# ---------- Volatility ----------
+_add(Lesson(
+    slug="volatility",
+    label=_label_for("volatility"),
+    category=_cat_for("volatility"),
+    hook=_hook_for("volatility"),
+    definition=(
+        "Volatility = how much asset prices fluctuate. Distinguir:\n\n"
+        "  · **Historical / realized vol**: medido sobre returns "
+        "pasados. Backward-looking.\n"
+        "  · **Implied vol (IV)**: lo que el options market "
+        "espera. Forward-looking.\n"
+        "  · **VIX**: 30-day forward S&P implied vol. The "
+        "'fear index'.\n"
+        "  · **Term structure**: vol curve over time horizons. "
+        "Backwardation (front > back) = stress; contango = "
+        "calm.\n"
+        "  · **Skew**: difference between put IV and call IV. "
+        "High put skew = downside fear.\n"
+        "  · **Vol-of-vol** (VVIX): how volatile is volatility "
+        "itself."
+    ),
+    why_matters=(
+        "Vol regime determines: option pricing, drawdown risk, "
+        "risk-parity portfolios sizing, leverage available. "
+        "High vol regime = de-risk; low vol regime = lever up "
+        "(but be careful — low vol attracts leverage that "
+        "amplifies next move). Vol regimes shift suddenly — "
+        "Feb 2018 'Volmageddon' vapor de vol shorts en hours. "
+        "Knowing vol structure is risk management."
+    ),
+    how_pros_analyze=(
+        "1. **VIX level + trend**: <15 complacency · 15-20 "
+        "normal · 20-30 elevated · >30 stress.\n"
+        "2. **VIX vs realized**: cuando VIX > realized vol "
+        "significantly = priced for stress (potential mean "
+        "reversion lower).\n"
+        "3. **Term structure shape**: contango (normal market) "
+        "vs backwardation (stress). Steep backwardation "
+        "= immediate stress.\n"
+        "4. **Skew (put/call IV diff)**: high skew = market "
+        "buying downside protection — bearish signal.\n"
+        "5. **VVIX**: vol-of-vol. When VVIX spikes, vol moves "
+        "are violent + persistent.\n"
+        "6. **Vol regime persistence**: low vol regimes can "
+        "last years (2017), high vol regimes typically "
+        "compress faster."
+    ),
+    key_metrics=[
+        ("VIX",
+         "<15 complacency · 15-20 normal · 20-30 elevated · "
+         ">30 stress · >40 panic."),
+        ("VIX − 30-day realized vol (S&P)",
+         "Spread positive normal. Negative = vol underpriced "
+         "(setup for spike)."),
+        ("VIX term structure (1m vs 3m)",
+         "Contango = calm · Backwardation = stress."),
+        ("Skew index",
+         "100 = neutral · >115 = high put demand (bearish)."),
+        ("VVIX (vol of VIX)",
+         "<80 calm · >100 violent regime."),
+        ("Realized 30-day vol (S&P)",
+         "<10 calm · 15-20 normal · >25 elevated."),
+    ],
+    bullish_vs_bearish=[
+        ("VIX low and stable (risk-on)",
+         "VIX rising trend (regime shift)"),
+        ("Contango term structure",
+         "Backwardation (immediate stress)"),
+        ("Skew normal (~100-110)",
+         "Skew elevated (>120) — heavy put buying"),
+        ("Realized vol low + falling",
+         "Realized vol rising fast"),
+        ("VVIX <80 (vol regime stable)",
+         "VVIX >100 (vol regime breakdown)"),
+    ],
+    valuation_impact=(
+        "Higher vol → higher cost of equity (CAPM beta x ERP). "
+        "Implied vol changes don't change intrinsic value "
+        "directly, pero changes WACC en valuation. For options "
+        "+ hedging strategies, IV es input directo del pricing. "
+        "Para portfolio sizing, target volatility approaches "
+        "(risk-parity) usan vol to scale positions."
+    ),
+    case_study=(
+        "**February 2018 'Volmageddon'**: VIX había estado "
+        "<15 por 2 años. Sí, leveraged inverse VIX ETFs (XIV) "
+        "popularized. Cuando VIX subió de 14 a 50 en 2 días, "
+        "XIV collapsed >95% — terminated. Forced unwind of "
+        "vol shorts created cascading sell. S&P -10% in "
+        "2 days. Lección: low vol regimes attract leverage "
+        "that amplifies the eventual breakout.\n\n"
+        "**March 2020 vol spike**: VIX intraday 85 (highest "
+        "ever). Term structure inverted hard. Skew extreme. "
+        "Realized vol 80%+. Caso de regime change rapidísimo. "
+        "Took 4-6 meses para vol normalize back to <20."
+    ),
+    common_mistakes=[
+        "Confundir realized con implied. Different things.",
+        "Selling vol when low. 'Picking up nickels in front of "
+        "steamroller' — works hasta que no.",
+        "Asumir que low vol persists forever. Reverts.",
+        "Ignorar skew. Implied vol headline (ATM) doesn't capture "
+        "downside protection demand.",
+        "Trading VIX directly. ETFs (VXX, UVXY) suffer contango "
+        "decay — pierden valor over time.",
+    ],
+    mental_model=(
+        "Howard Marks: 'sometimes the market is calm and sometimes "
+        "it's stormy — and the calm periods set up the storms'. "
+        "Pensá vol como las condiciones climáticas. Cuando "
+        "everyone parties en la beach (low vol), hurricane "
+        "está formando offshore. Vol regimes set up successive "
+        "regimes — low vol attracts leverage which sets up the "
+        "spike."
+    ),
+    books=[_BOOK_MARKS_MOST_IMPORTANT,
+           Book(title="The Volatility Smile",
+                author="Emanuel Derman", year=2016,
+                chapter_hint="Caps. introductorios",
+                why="Cómo entender vol surface — denso pero el "
+                     "original."),
+           Book(title="Trading Volatility",
+                author="Colin Bennett", year=2014,
+                chapter_hint="Caps. 1-5",
+                why="Manual practical para entender vol products.")],
+    videos=[
+        Video(title="What Is VIX Really Measuring?",
+              channel="CBOE / CFA Institute",
+              minutes=20, url="",
+              why="Mechanics de cómo se calcula VIX."),
+    ],
+    quotes=[
+        _Q_MARKS_RISK,
+        Quote(text="Volatility is not the same thing as risk — "
+                   "risk is permanent loss of capital, volatility "
+                   "is temporary price movement.",
+              author="Howard Marks",
+              source="The Most Important Thing"),
+        Quote(text="Volatility scares enough people out of the "
+                   "market to generate superior returns for those "
+                   "who stay in.",
+              author="Jeremy Siegel",
+              source="Stocks for the Long Run"),
+    ],
+))
+# ---------- Earnings season ----------
+_add(Lesson(
+    slug="earnings_season",
+    label=_label_for("earnings_season"),
+    category=_cat_for("earnings_season"),
+    hook=_hook_for("earnings_season"),
+    definition=(
+        "Earnings season = los 4-6 semanas trimestrales donde "
+        "las empresas reportan resultados. Calendarios:\n\n"
+        "  · **Q1**: mid-April to mid-May\n"
+        "  · **Q2**: mid-July to mid-August\n"
+        "  · **Q3**: mid-October to mid-November\n"
+        "  · **Q4 / Full Year**: late January to late February\n\n"
+        "Cada reporte tiene 5 components clave:\n"
+        "  · **Headline beat/miss** (revenue + EPS vs consensus)\n"
+        "  · **Forward guidance** (lo que más mueve el price)\n"
+        "  · **Margins** (gross + operating trends)\n"
+        "  · **Commentary** (qualitative — earnings call)\n"
+        "  · **Capital allocation** (buybacks, dividends, M&A)"
+    ),
+    why_matters=(
+        "Las acciones suben o caen 5-15% típicamente en days "
+        "around earnings — más que en weeks de trading normal. "
+        "El driver del movimiento NO es el headline number — "
+        "es típicamente el guidance + commentary. Saber leer "
+        "earnings reports é la base del fundamental analysis. "
+        "Para portfolio managers, earnings season concentra "
+        "decisions: rebalance, add/trim, exit."
+    ),
+    how_pros_analyze=(
+        "1. **Beat/miss vs whisper number**: consensus is one "
+        "thing; 'whisper' (informal expectations) often higher. "
+        "Beat consensus pero miss whisper = stock cae.\n"
+        "2. **Forward guidance vs consensus**: guide UP vs "
+        "current consensus = bullish. Guide IN-LINE = soft "
+        "warning. Guide DOWN = bearish.\n"
+        "3. **Margin trajectory**: improving, stable, "
+        "deteriorating. Margin compression = bear thesis.\n"
+        "4. **Commentary tone**: 'macroeconomic headwinds', "
+        "'softening', 'uncertain' = bearish. 'Robust', "
+        "'accelerating', 'visibility' = bullish.\n"
+        "5. **Question tone in Q&A**: aggressive analyst Qs "
+        "= concerns. Soft Qs = consensus confident.\n"
+        "6. **Track record context**: empresa de beat-and-raise "
+        "pattern? Pattern broken = signal.\n"
+        "7. **After-hours / next-day reaction**: market verdict. "
+        "But fade extreme reactions (overshooting common)."
+    ),
+    key_metrics=[
+        ("Revenue beat/miss (vs consensus)",
+         "%. >2% beat positive, miss negative."),
+        ("EPS beat/miss (vs consensus)",
+         "$ amount + %. Quality matters more than amount."),
+        ("Forward guidance revision",
+         "Raise / maintain / lower. Most price-moving "
+         "factor."),
+        ("Operating margin YoY",
+         "Improving = scaling well. Compressing = concern."),
+        ("Stock reaction 1-day post-earnings",
+         "%, +/-. Magnitude reveals positioning + thesis "
+         "validation."),
+        ("Beat-and-raise pattern history",
+         "% of last 8 quarters with beat + guide-up. "
+         ">70% = quality management."),
+    ],
+    bullish_vs_bearish=[
+        ("Beat + guide up + margins expanding",
+         "Miss + guide down + margins compressing"),
+        ("Commentary confident + 'accelerating'",
+         "Commentary hedged + 'softening' / 'uncertain'"),
+        ("Beat-and-raise pattern intact (8+ quarters)",
+         "Pattern broken — first guide-down in years"),
+        ("Margin beat especially on op margin",
+         "Revenue beat pero margin miss (volume mix issues)"),
+        ("Capital return increased (buybacks/dividend up)",
+         "Capital return reduced / paused (cash preservation)"),
+    ],
+    valuation_impact=(
+        "Earnings drivean both EPS forecasts (numerator) AND "
+        "multiples (denominator perception). A miss + guide "
+        "down → analysts cut estimates → forward P/E sube → "
+        "multiple compression. Por eso una empresa puede caer "
+        "15% on earnings y un trimestre después estar -25% "
+        "(rolling effect). Best practice: track guidance "
+        "revisions trend, not headline."
+    ),
+    case_study=(
+        "**Meta Feb 2022**: Q4 beat revenue, but TikTok "
+        "competition + iOS privacy hit guidance materially. "
+        "Stock -26% en un día — record $232B market cap "
+        "lost. Showed: guidance > headline. Then Q3 2023 "
+        "guide-up = stock +20% en un día. Mismo company, "
+        "opposite trajectory based on guidance trajectory.\n\n"
+        "**Nvidia Q2 2023**: revenue guide $11B vs $7B "
+        "consensus — record beat. AI demand surge. Stock "
+        "+28% en una sesión. Caso de mega-beat changing "
+        "long-term narrative."
+    ),
+    common_mistakes=[
+        "Reacción instantánea al headline sin reading guidance.",
+        "Mirar solo P&L. Cash flow statement + balance reveals "
+        "earnings quality.",
+        "Trading on post-earnings momentum. Often fades.",
+        "Confundir un buen trimestre con tendency. One Q doesn't "
+        "make trend.",
+        "Olvidar pre-announces. Companies dropping early hints "
+        "are often signaling concerns.",
+    ],
+    mental_model=(
+        "Lynch: 'companies don't usually surprise you — but "
+        "you can surprise yourself by missing the signals'. "
+        "Earnings season es donde los fundamentals encuentran "
+        "expectations. Cuando reality > expectations = stock "
+        "up; <  = down. Tu job es analizar si reality va a "
+        "exceder expectations en el FUTURO. Earnings calls "
+        "son la fuente data más rica de qualitative + "
+        "quantitative info por trimestre."
+    ),
+    books=[_BOOK_LYNCH, _BOOK_BUFFETT_LETTERS,
+           Book(title="Quality Investing",
+                author="Lawrence Cunningham", year=2016,
+                chapter_hint="Caps. sobre reading earnings calls",
+                why="Cómo evaluate management quality via "
+                     "earnings calls.")],
+    videos=[
+        _VIDEO_BUFFETT_1996,
+        Video(title="Reading Earnings Call Transcripts",
+              channel="CFA Institute", minutes=30, url="",
+              why="Tono + omissions + hedging language."),
+    ],
+    quotes=[
+        _Q_LYNCH_INVERT,
+        Quote(text="The most important thing on the earnings call "
+                   "is what management DOESN'T say.",
+              author="Peter Lynch (paráfrasis)",
+              source="One Up On Wall Street"),
+        Quote(text="Owners' earnings, not headline EPS, are what "
+                   "matter.",
+              author="Warren Buffett",
+              source="Berkshire 1986 letter"),
+    ],
+))
+# ---------- Institutional flows ----------
+_add(Lesson(
+    slug="institutional_flows",
+    label=_label_for("institutional_flows"),
+    category=_cat_for("institutional_flows"),
+    hook=_hook_for("institutional_flows"),
+    definition=(
+        "Institutional flows = movements de capital de "
+        "professional investors. Distinguen:\n\n"
+        "  · **Mutual funds**: retail-facing pero allocated "
+        "by professionals. Net flows weekly (ICI data).\n"
+        "  · **ETFs**: passive index-tracking + active. "
+        "Inflows en SPY, QQQ, IWM = sector preferences.\n"
+        "  · **Hedge funds**: 13F filings (45 days post-"
+        "quarter). Lag indicator pero reveals positioning.\n"
+        "  · **Sovereign wealth funds**: Norway, GIC "
+        "Singapore, etc. Mega-flows.\n"
+        "  · **Pension funds**: rebalance quarterly. Predictable "
+        "month-end effects.\n"
+        "  · **Insurance / annuities**: long-duration "
+        "bonds + income equities."
+    ),
+    why_matters=(
+        "Institutional money es ~80% del trading volume — "
+        "es lo que move prices. Retail moves matter only en "
+        "specific stocks (GME-style). Saber qué están comprando + "
+        "vendendo los institucionales = saber el dirección "
+        "marginal del market. Y los flow patterns de ETF en "
+        "particular son data en tiempo real (no lag de 13F)."
+    ),
+    how_pros_analyze=(
+        "1. **ETF flows daily**: SPY, QQQ, IWM, sector ETFs. "
+        "Trends matter más que single days.\n"
+        "2. **13F analysis**: hedge fund quarterly holdings. "
+        "Track 'whale watching' — what Berkshire, Soros, "
+        "Bridgewater added/sold. Beware: 45-day lag.\n"
+        "3. **Sector rotation tracking**: cuando dinero "
+        "rotates de cyclicals to defensives = cycle late.\n"
+        "4. **Foreign vs domestic flows**: TIC data shows "
+        "foreign buying US assets (or selling).\n"
+        "5. **Quarter-end / month-end effects**: pension "
+        "funds rebalance → predictable buying/selling.\n"
+        "6. **Crowded longs / shorts**: 13F overlap = "
+        "concentration risk. Cuando crowded gets disturbed "
+        "= violent unwinds."
+    ),
+    key_metrics=[
+        ("US equity ETF net flows (weekly, $B)",
+         "Positive = buying · negative = selling."),
+        ("Sector ETF rotation",
+         "Cyclicals → Defensives = late cycle signal."),
+        ("13F changes Top 20 holdings",
+         "Berkshire, Tiger Global, Citadel, etc. Aggregated."),
+        ("Foreign holdings of US Treasuries (TIC data)",
+         "China + Japan trends matter for rates."),
+        ("Pension fund target allocations",
+         "60/40 portfolios rebalance quarterly — predictable "
+         "flows."),
+        ("Short interest aggregation",
+         "Crowded shorts = squeeze risk."),
+    ],
+    bullish_vs_bearish=[
+        ("ETF inflows consistent + broad-based",
+         "ETF outflows + concentrated in single sector"),
+        ("Foreign buying US equity (TIC positive)",
+         "Foreign selling US equity (capital outflows)"),
+        ("13F new positions / additions in quality",
+         "13F exits / reductions in quality names"),
+        ("Hedge fund cash levels low (deployed)",
+         "Hedge fund cash levels high (defensive)"),
+        ("Crowded longs not extreme (room to add)",
+         "Crowded longs extreme (no marginal buyer)"),
+    ],
+    valuation_impact=(
+        "Institutional flows drivean short-term y medium-"
+        "term price action. Pure passive flows ($1T+ "
+        "annually into index ETFs) provide structural bid "
+        "para large-cap. Active flows determine relative "
+        "performance + sector rotation. Long-term, "
+        "fundamentals win — but institutional flows determine "
+        "WHEN value gets realized. Cuando 13Fs show "
+        "professional capital adding to YOUR thesis, "
+        "confirmation strong."
+    ),
+    case_study=(
+        "**Berkshire selling Apple Q2 2024**: 13F revealed "
+        "Buffett sold ~half of his Apple stake. Caused 5% "
+        "Apple drop on filing. Pero más importante: signaled "
+        "que el 'tech megacap' trade was crowded. Followed "
+        "by AI-trade rotation in subsequent months.\n\n"
+        "**ARK funds 2020-2024**: massive inflows 2020-2021 "
+        "drove ARKK +150%. Inflows reversed 2022 — outflows "
+        "exacerbated price decline. Caso de flow-driven "
+        "asset class movements unrelated a fundamentals."
+    ),
+    common_mistakes=[
+        "Copying 13F holdings blindly. 45-day lag — positioning "
+        "may have changed.",
+        "Confiar en single fund's positioning. Diversify across "
+        "professional opinions.",
+        "Reacting to daily ETF flows. Use weekly/monthly trends.",
+        "Confundir passive flows (indexing) with directional "
+        "professional opinion.",
+        "Pasar por alto que institutional flows can self-correct "
+        "(crowded becomes unwound).",
+    ],
+    mental_model=(
+        "David Swensen (Yale CIO): 'asset allocation drivea "
+        "85% of long-term returns'. Institutional flows son "
+        "the manifestation de cómo aggregated professional "
+        "intelligence está allocating capital. No es perfect "
+        "(institutional bias toward consensus), pero es "
+        "the smartest aggregated data point available."
+    ),
+    books=[_BOOK_JPM_GUIDE,
+           Book(title="Pioneering Portfolio Management",
+                author="David Swensen", year=2009,
+                chapter_hint="Asset allocation institutional",
+                why="Cómo piensa el CIO de Yale sobre flows + "
+                     "asset classes."),
+           Book(title="The Investment Checklist",
+                author="Michael Shearn", year=2011,
+                chapter_hint="Caps. on tracking smart money",
+                why="Process para track institutional positioning.")],
+    videos=[
+        Video(title="How to Read 13F Filings",
+              channel="WhaleWisdom / CFA Institute",
+              minutes=20, url="",
+              why="Practical guide to whale watching."),
+    ],
+    quotes=[
+        Quote(text="Asset allocation is responsible for over 85% "
+                   "of long-term returns. Stock selection is "
+                   "secondary.",
+              author="David Swensen",
+              source="Pioneering Portfolio Management"),
+        _Q_BUFFETT_MOAT,
+        Quote(text="Follow smart money, but verify their thesis "
+                   "before acting on it.",
+              author="Michael Shearn",
+              source="The Investment Checklist"),
+    ],
+))
+# ---------- Market regimes ----------
+_add(Lesson(
+    slug="market_regimes",
+    label=_label_for("market_regimes"),
+    category=_cat_for("market_regimes"),
+    hook=_hook_for("market_regimes"),
+    definition=(
+        "Market regime es el ENTORNO estructural del market — "
+        "determines qué strategies funcionan, qué factors "
+        "outperform, qué risk to take.\n\n"
+        "Regímenes principales:\n"
+        "  · **Bull market**: trend alcista 6+ meses. Risk-on "
+        "favorable. Growth + small-cap typically lead.\n"
+        "  · **Bear market**: -20%+ desde peak. Risk-off. "
+        "Defensives + cash outperform.\n"
+        "  · **Range-bound / sideways**: trading rangos sin "
+        "trend. Stock-picking matters más que beta.\n"
+        "  · **High inflation regime** (1970s, 2021-22): value "
+        "+ commodities outperform.\n"
+        "  · **Disinflation regime** (1982-2020): growth + "
+        "duration outperform.\n"
+        "  · **Recession**: ciclo distinto a anteriores.\n\n"
+        "Cada regime requiere distinta strategy. La misma "
+        "thesis fundamental puede be winner en un regime y "
+        "loser en otro."
+    ),
+    why_matters=(
+        "Marks: 'identifying which regime we're in is more "
+        "important than picking individual stocks'. Regime "
+        "rotation matters más que stock selection — 80% del "
+        "retorno viene del 'market environment', 20% del "
+        "stock-picking. Saber el regime determina TODA la "
+        "asset allocation."
+    ),
+    how_pros_analyze=(
+        "1. **Macro overlay**: inflation regime + monetary "
+        "stance + business cycle position = current regime "
+        "identification.\n"
+        "2. **Asset class winners**: en cada regime, certain "
+        "asset classes outperform. Disinflation: long-"
+        "duration + growth. Inflation: commodities + value.\n"
+        "3. **Style rotation timing**: growth vs value, large vs "
+        "small, US vs international. Each regime has dominant "
+        "factor.\n"
+        "4. **Cross-asset volatility**: low vol regimes attract "
+        "leverage; high vol regimes wash out leverage.\n"
+        "5. **Long-term return regime**: 1966-1982 = 0% real "
+        "returns; 1982-2000 = +13% real; 2000-2009 = 0%. Each "
+        "regime determines whether stocks compound or not.\n"
+        "6. **Forward-looking adjustments**: be willing to "
+        "abandon previous regime's playbook when conditions "
+        "change."
+    ),
+    key_metrics=[
+        ("Inflation regime (CPI YoY)",
+         "<2% disinflation · 2-3% normal · >4% inflation regime."),
+        ("Monetary regime (real Fed Funds)",
+         "<0% accommodative · 1-2% neutral · >2% restrictive."),
+        ("Business cycle phase",
+         "Early / mid / late expansion · recession · recovery."),
+        ("Vol regime (VIX avg 90-day)",
+         "<15 low · 15-20 normal · >20 high."),
+        ("Style leadership (Value vs Growth · Large vs Small)",
+         "Direction of rotation. Persistent leadership defines "
+         "regime."),
+        ("Cross-asset correlation",
+         "Stocks-bonds correlation. Positive = inflation regime; "
+         "negative = disinflation regime."),
+    ],
+    bullish_vs_bearish=[
+        ("Identify current regime correctly + position",
+         "Apply previous regime's playbook to current"),
+        ("Asset allocation aligned con regime",
+         "Style misaligned (growth en inflation regime)"),
+        ("Recognize regime change early",
+         "Anchored to past regime"),
+        ("Diversified across regimes (risk parity)",
+         "Concentrated en single regime exposure"),
+        ("Macro overlay consistent",
+         "Macro overlay confused"),
+    ],
+    valuation_impact=(
+        "Discount rates + multiples are regime-specific. "
+        "Disinflation regime 1982-2020: rates falling, "
+        "multiples expanding, S&P P/E 7 → 25. Inflation "
+        "regime 1966-1982: rates rising, multiples compressing, "
+        "P/E 22 → 7. Same companies, very different valuations "
+        "across regimes. Saber el regime determines whether "
+        "buy-and-hold works."
+    ),
+    case_study=(
+        "**1966-1982 vs 1982-2000**: same S&P 500 companies "
+        "produced 0% real returns in first period, +13% real "
+        "in second. Difference: regime. First period was high "
+        "inflation, rising rates, multiple compression. Second "
+        "was disinflation, falling rates, multiple expansion. "
+        "Lección: regime > stock-picking for long-term "
+        "returns.\n\n"
+        "**2022 regime transition**: from low-rate disinflation "
+        "(2009-2021) to high-rate inflation (2022+). Growth "
+        "tech crashed -33%. Energy +60%. Same companies, "
+        "opposite directions, driven by regime change."
+    ),
+    common_mistakes=[
+        "Anchored to past regime. 2022 playbook is different "
+        "from 2009-2021.",
+        "Confiar 'soft landing' as regime extension. Soft "
+        "landings rare.",
+        "Confundir cyclical phase with regime change.",
+        "Aplicar same valuation multiples across regimes.",
+        "Ignorar volatility regime. Low-vol regimes don't last "
+        "forever.",
+    ],
+    mental_model=(
+        "Howard Marks: 'the most important thing is to "
+        "calibrate your investments to the market environment'. "
+        "Cada regime tiene un playbook óptimo distinto. El "
+        "error más caro es aplicar el playbook anterior to "
+        "the new regime. Best: identify regime, position "
+        "accordingly, stay flexible to regime changes."
+    ),
+    books=[_BOOK_MARKS_MARKET_CYCLE, _BOOK_DALIO_PRINCIPLES,
+           _BOOK_MARKS_MOST_IMPORTANT,
+           Book(title="Mastering the Investment Cycle",
+                author="Howard Marks", year=2018,
+                chapter_hint="Toda la parte II",
+                why="Marks' main treatise on regime "
+                     "investing.")],
+    videos=[
+        Video(title="Howard Marks on Market Cycles",
+              channel="Oaktree", minutes=45, url="",
+              why="Marks framework para regime identification."),
+        Video(title="Ray Dalio · Long-Term Debt Cycles",
+              channel="Bridgewater", minutes=40, url="",
+              why="Dalio sobre regime change long-term."),
+    ],
+    quotes=[
+        _Q_MARKS_RISK,
+        Quote(text="The most important thing isn't picking the "
+                   "right stocks — it's calibrating to the right "
+                   "environment.",
+              author="Howard Marks",
+              source="Oaktree memos"),
+        Quote(text="Bull markets are born on pessimism, grow on "
+                   "skepticism, mature on optimism and die on "
+                   "euphoria.",
+              author="John Templeton",
+              source="Investment legend"),
+    ],
+))
+# ---------- Factor investing ----------
+_add(Lesson(
+    slug="factor_investing",
+    label=_label_for("factor_investing"),
+    category=_cat_for("factor_investing"),
+    hook=_hook_for("factor_investing"),
+    definition=(
+        "Factor investing es invertir según characteristics "
+        "específicas (factors) que históricamente han produced "
+        "excess returns. Los factors clásicos validados "
+        "académicamente:\n\n"
+        "  · **Value**: P/B bajo, P/E bajo (Fama-French 1992).\n"
+        "  · **Momentum**: stocks subiendo continúan subiendo "
+        "(Jegadeesh-Titman 1993).\n"
+        "  · **Quality**: high ROE, low debt, stable earnings.\n"
+        "  · **Size**: small caps beat large caps long-term "
+        "(small premium has weakened).\n"
+        "  · **Low volatility**: low-vol stocks > high-vol "
+        "(anomaly persistent).\n"
+        "  · **Profitability**: high gross profitability "
+        "outperforms (Novy-Marx 2013).\n\n"
+        "Cada factor tiene risk-return profile distinto + "
+        "ciclos de outperformance/underperformance."
+    ),
+    why_matters=(
+        "Factor investing es la **manera más rigurosa** de "
+        "explicar y systematize el alpha. ETFs por factor "
+        "($1T+ AUM) democratizaron access. Pero factors tienen "
+        "long cycles — value subperformed 10 years (2009-2020), "
+        "momentum crashes brutally en regime changes. Saber "
+        "factors es la base del modern portfolio theory."
+    ),
+    how_pros_analyze=(
+        "1. **Factor evidence is empirical**: validated across "
+        "decades, countries, asset classes. Real, not "
+        "narrative.\n"
+        "2. **But: factors are cyclical**. Value 1979-2000 "
+        "outperformed; 2009-2020 underperformed. Cycle "
+        "length 10+ años.\n"
+        "3. **Factor crowding** (Asness, AQR): cuando $$$ "
+        "pours into a factor, future returns diminish. 2017-"
+        "2019 value crash blamed on smart-beta crowding.\n"
+        "4. **Multi-factor combinations**: value + quality + "
+        "momentum together better than single. Capturing "
+        "diversification.\n"
+        "5. **Implementation matters**: smart-beta ETFs (VLUE, "
+        "MTUM, QUAL) imperfect. Direct factor portfolios "
+        "(AQR, Dimensional) better.\n"
+        "6. **Persistence test**: factor existed 1927-now? "
+        "Si yes, more likely real. Factor solo 2010-2020 = "
+        "data mining."
+    ),
+    key_metrics=[
+        ("Value premium (HML)",
+         "Historical 4-6% annually. Recently weak."),
+        ("Momentum premium (UMD)",
+         "Historical 8%+ annually. Strongest empirical "
+         "factor."),
+        ("Quality (QMJ)",
+         "5-7% annually. Defensive bias."),
+        ("Size (SMB)",
+         "3-4% historically, weak recent decades."),
+        ("Low vol",
+         "Excess return ~2%+ con MUCH lower volatility."),
+        ("Profitability (RMW)",
+         "Novy-Marx ~3-4% annually."),
+    ],
+    bullish_vs_bearish=[
+        ("Factor with multi-decade evidence",
+         "Factor only emerging recent years (data mining "
+         "risk)"),
+        ("Multi-factor diversified (value + quality + "
+         "momentum)",
+         "Single-factor concentrated"),
+        ("Factor at relative cheap valuation (mean revert)",
+         "Factor at extreme overvaluation"),
+        ("Factor underperformed 5+ years (cycle bottom)",
+         "Factor outperformed 5+ years (peak)"),
+        ("Direct implementation (low cost)",
+         "ETF tracking error material"),
+    ],
+    valuation_impact=(
+        "Factors explain ~80% of cross-sectional return "
+        "differences (Fama-French + Carhart). For individual "
+        "stocks, knowing factor loadings tells you what "
+        "regime drives the stock. For portfolios, multi-"
+        "factor diversification reduces idiosyncratic risk + "
+        "captures multiple risk premia. Cliff Asness: 'factors "
+        "ARE the alpha — once you know about them'."
+    ),
+    case_study=(
+        "**Value's lost decade 2009-2020**: value (HML) "
+        "returned ~0% annually vs growth +14%. Underperformance "
+        "extreme. Many declared 'value is dead'. Then 2021-22: "
+        "value rebounded +30% relative. Reverted hard. "
+        "Lección: factor cycles are LONG — patience required.\n\n"
+        "**Momentum crash Mar 2009 + 2020 + 2022**: cuando "
+        "regime change, momentum reverses violently (winners "
+        "become losers fast). MTUM ETF lost 25% in days "
+        "during regime shifts. Momentum is high-Sharpe but "
+        "subject to drawdowns."
+    ),
+    common_mistakes=[
+        "Chasing recent factor outperformer. Mean reverts.",
+        "Confiar single-factor strategies. Diversify.",
+        "Asumir factors work continuously. Cycles 5-15 años.",
+        "Confiar in 'newly discovered' factors (data mining risk).",
+        "Confundir factor returns with absolute returns. Factor positive but market negative still loses.",
+    ],
+    mental_model=(
+        "Fama: 'factors capture systematic risk premia. They "
+        "should exist long-term porque represent compensation "
+        "para risks investors aren't willing to bear'. Pensá "
+        "factors como sources de structural alpha, not as "
+        "perfect predictors. Bear them through cycles to "
+        "harvest premia. Cycles donde factor underperforms = "
+        "the cost of accessing the premium."
+    ),
+    books=[
+        Book(title="Your Complete Guide to Factor-Based Investing",
+             author="Larry Swedroe", year=2016,
+             chapter_hint="Caps. 1-8 — value, momentum, quality, "
+                            "size",
+             why="Resumen accesible del literature académico."),
+        Book(title="Quantitative Equity Portfolio Management",
+             author="Ludwig Chincarini & Daehwan Kim",
+             year=2006, chapter_hint="Caps. on factor "
+                                       "construction",
+             why="Texto técnico para portfolio managers."),
+        Book(title="Asset Management",
+             author="Andrew Ang", year=2014,
+             chapter_hint="Caps. on factor risk premia",
+             why="The academic + practitioner bridge on factors."),
+    ],
+    videos=[
+        Video(title="Ben Felix · Factor Investing Series",
+              channel="Common Sense Investing", minutes=15,
+              url="", why="El YouTuber que mejor explica "
+                            "factors a retail."),
+        Video(title="Cliff Asness on Factors",
+              channel="AQR / Capital Allocators",
+              minutes=60, url="",
+              why="Founder of AQR discusses factor implementation."),
+    ],
+    quotes=[
+        Quote(text="Factors are the alpha — once you know about "
+                   "them, they're systematic, not "
+                   "discretionary.",
+              author="Cliff Asness",
+              source="AQR co-founder, multiple interviews"),
+        Quote(text="The factor premiums exist because they are "
+                   "compensation for bearing risks that other "
+                   "investors avoid.",
+              author="Eugene Fama",
+              source="Nobel laureate, papers on factor models"),
+        _Q_MARKS_RISK,
+    ],
+))
+# ---------- Momentum ----------
+_add(Lesson(
+    slug="momentum",
+    label=_label_for("momentum"),
+    category=_cat_for("momentum"),
+    hook=_hook_for("momentum"),
+    definition=(
+        "Momentum: stocks que han subido en los últimos 6-12 "
+        "meses tienden a seguir subiendo otros 6-12 meses. "
+        "Stocks que han bajado tienden a seguir bajando. "
+        "Discovered en Jegadeesh-Titman 1993 paper, validated "
+        "across 200+ años + multiple asset classes.\n\n"
+        "Construcción típica:\n"
+        "  · Ranking stocks por past 12-month return "
+        "(excluyendo último mes — short-term reversal).\n"
+        "  · Buy top quintile, sell bottom quintile.\n"
+        "  · Rebalance monthly.\n\n"
+        "Momentum es THE FACTOR with strongest empirical "
+        "evidence — pero también el más volatile + subject "
+        "to crashes."
+    ),
+    why_matters=(
+        "Asness: 'momentum is the premier anomaly in finance — "
+        "documented across centuries, countries, asset classes'. "
+        "Annualized excess return ~8% historically. But: "
+        "momentum crashes (Mar 2009, Apr 2020, Jan 2023) "
+        "destroy years of returns en weeks. Saber momentum + "
+        "saber cuándo NO seguirlo = key skill."
+    ),
+    how_pros_analyze=(
+        "1. **12-1 momentum**: past 12 months excluding last "
+        "month. Last month tends to mean revert.\n"
+        "2. **Cross-sectional vs time-series momentum**: "
+        "cross-sectional = stocks vs each other. Time-series "
+        "= asset vs itself.\n"
+        "3. **Volatility-scaled momentum**: scale positions "
+        "by realized vol. Improves risk-adjusted returns.\n"
+        "4. **Combine with fundamentals**: momentum + value, "
+        "or momentum + quality. Less drawdown.\n"
+        "5. **Watch for crash signals**: cuando market vol "
+        "spikes during regime change, momentum reverses "
+        "(winners become losers).\n"
+        "6. **Implementation cost**: high turnover → high "
+        "transaction costs. ETFs (MTUM) attempt to capture "
+        "factor cheaply."
+    ),
+    key_metrics=[
+        ("12-1 month return",
+         "Sort all stocks. Top quintile = momentum longs."),
+        ("Momentum factor return (UMD historical)",
+         "~8% annually. Highest Sharpe of major factors."),
+        ("Volatility-scaled momentum",
+         "Better Sharpe than naive momentum."),
+        ("Momentum drawdown",
+         "Crashes en regime changes. Mar 2009 -25%, Apr "
+         "2020 -15%, Jan 2023 -10%."),
+        ("Momentum factor crowding",
+         "Cuando demasiado capital chases momentum, future "
+         "returns diminish."),
+        ("Correlation con other factors",
+         "Negative con value typically. Positive con quality."),
+    ],
+    bullish_vs_bearish=[
+        ("Trending market (winners continue)",
+         "Choppy / range-bound market (momentum chops)"),
+        ("Bull market mid-cycle (momentum strongest)",
+         "Regime transition (momentum crashes)"),
+        ("Volatility regime stable",
+         "Vol regime shifting (momentum reversal)"),
+        ("Momentum + quality combined",
+         "Pure momentum (more drawdown)"),
+        ("Vol-scaled momentum",
+         "Naive momentum (no risk management)"),
+    ],
+    valuation_impact=(
+        "Momentum is largely UNRELATED to fundamental "
+        "valuation. Stocks can be expensive on fundamentals "
+        "and continue to rise on momentum. Stocks can be "
+        "cheap and continue to fall. Pure momentum traders "
+        "ignore fundamentals. Value investors hate momentum. "
+        "Reality: combinar ambos (momentum + value or "
+        "momentum + quality) produces best risk-adjusted "
+        "returns."
+    ),
+    case_study=(
+        "**1999-2000 internet momentum**: tech stocks doubled "
+        "on momentum alone. Then March 2000 crashed. "
+        "Momentum traders made fortunes 1995-Feb 2000, lost "
+        "them March 2000-Apr 2001.\n\n"
+        "**2020 COVID rally**: tech momentum was extreme "
+        "(MTUM +30% vs S&P +18%). Continued through 2021. "
+        "Then 2022 regime change → momentum unwound brutally "
+        "(MTUM -28% in 6 months).\n\n"
+        "**Lección**: momentum produces strong returns over "
+        "long horizons + violent drawdowns during regime "
+        "transitions. Position sizing + crash protection "
+        "essential."
+    ),
+    common_mistakes=[
+        "Pure momentum sin risk management.",
+        "Confiar that momentum continues forever. Crashes are inevitable.",
+        "Confundir momentum (factor) with momentum trading "
+        "(short-term technicals).",
+        "Pasar por alto transaction costs. High turnover hurts "
+        "net returns.",
+        "Ignoring que momentum crashes are violent + sudden.",
+    ],
+    mental_model=(
+        "Cliff Asness: 'momentum is the best evidence we have "
+        "of behavioral biases creating sustainable returns'. "
+        "Investors under-react to good news initially → "
+        "momentum continues. Eventually they over-react → "
+        "mean reversion. Captura the gap entre reaction "
+        "speed y full price discovery. Pero sabé que esa gap "
+        "puede cerrarse violently."
+    ),
+    books=[
+        Book(title="Quantitative Momentum",
+             author="Wesley Gray & Jack Vogel", year=2016,
+             chapter_hint="Caps. 1-4",
+             why="El factor con evidence empírico más robusto, "
+                  "explicado."),
+        Book(title="What Works on Wall Street",
+             author="James O'Shaughnessy", year=2011,
+             chapter_hint="Caps. sobre momentum",
+             why="Historical evidence across decades."),
+        Book(title="The Intelligent Asset Allocator",
+             author="William Bernstein", year=2000,
+             chapter_hint="Caps. on factor diversification",
+             why="Combinar momentum con other factors."),
+    ],
+    videos=[
+        Video(title="The Momentum Anomaly Explained",
+              channel="Ben Felix / Common Sense Investing",
+              minutes=15, url="",
+              why="Best retail-accessible explanation."),
+        Video(title="Cliff Asness on Momentum",
+              channel="AQR insights", minutes=30, url="",
+              why="The pro view from a momentum implementer."),
+    ],
+    quotes=[
+        Quote(text="Momentum is the premier anomaly — documented "
+                   "everywhere we look, persistent across "
+                   "decades.",
+              author="Cliff Asness",
+              source="AQR papers"),
+        Quote(text="The trend is your friend until the end when "
+                   "it bends.",
+              author="Trader folklore",
+              source="Aplica perfectamente a momentum crashes"),
+        _Q_MARKS_RISK,
+    ],
+))
+# ---------- Growth vs value ----------
+_add(Lesson(
+    slug="growth_vs_value",
+    label=_label_for("growth_vs_value"),
+    category=_cat_for("growth_vs_value"),
+    hook=_hook_for("growth_vs_value"),
+    definition=(
+        "Growth vs value es la rotation más famosa del market. "
+        "Conceptualmente:\n\n"
+        "  · **Value**: stocks cotizando 'cheap' on multiples "
+        "(P/E low, P/B low). Graham + Buffett heritage. "
+        "Typically: financials, energy, consumer staples, "
+        "industriales.\n"
+        "  · **Growth**: stocks con high earnings growth "
+        "expectations. Higher P/E justified by future "
+        "expansion. Fisher + modern tech investors. Typically: "
+        "tech, biotech, consumer discretionary.\n\n"
+        "Pero CRÍTICO: la distinction es OVERLY simplistic. "
+        "Buffett: 'growth and value are joined at the hip — "
+        "growth is a component of the value calculation'. La "
+        "real pregunta es: growth at qué price?"
+    ),
+    why_matters=(
+        "Growth vs value rotation explica MUCHO del relative "
+        "performance entre sectores y indices. Value "
+        "outperformed 1979-2000, underperformed 2009-2020, "
+        "rebounded 2021-22, recently mixed. Estos cycles "
+        "rotation duran 10+ años. Saber positioning correctly "
+        "respect to current regime determines if your portfolio "
+        "outperforms by 10pp annually."
+    ),
+    how_pros_analyze=(
+        "1. **Both styles work long-term**, but cycle. Value "
+        "outperforms 60% of decades; growth 40%. Both have "
+        "positive long-run expected returns.\n"
+        "2. **Rate regime matters**: low rates favor growth "
+        "(future cash flows worth more). High rates favor "
+        "value.\n"
+        "3. **Economic cycle matters**: early recovery favors "
+        "value cyclicals. Late cycle / recession favors "
+        "growth + quality.\n"
+        "4. **Don't confuse cheap with value**: value trap = "
+        "stock cheap because business deteriorating. Real "
+        "value = stock cheap despite OK business.\n"
+        "5. **Don't confuse expensive with growth**: just "
+        "because P/E 30 doesn't mean growth. Verify the "
+        "growth is real + sustainable.\n"
+        "6. **Quality intersects both**: best is QARP — "
+        "Quality At Reasonable Price. Both growth + value "
+        "can be quality."
+    ),
+    key_metrics=[
+        ("Value spread (P/B value − growth)",
+         "Cuando spread extreme, mean revert. Tracker para "
+         "rotation timing."),
+        ("Russell 1000 Value vs Growth performance",
+         "Direction shows current leadership."),
+        ("P/E ratio relative (growth premium)",
+         "Historical avg 1.5x. Currently >2x = growth "
+         "premium extreme."),
+        ("Forward earnings growth differential",
+         "Growth stocks: 15%+ projected · Value: 5-8%."),
+        ("Rate sensitivity",
+         "Growth more rate-sensitive. 100bp rate move = "
+         "10-20% growth multiple compression."),
+    ],
+    bullish_vs_bearish=[
+        ("Value en cycle low (mean revert opportunity)",
+         "Value at cycle high (mean revert risk)"),
+        ("Growth at reasonable P/E vs growth rate (PEG <2)",
+         "Growth at extreme P/E (>50) with decelerating "
+         "growth"),
+        ("Quality across both styles",
+         "Cheap garbage (value trap) or expensive hype "
+         "(growth trap)"),
+        ("Rate regime favorable (low + stable for growth; "
+         "high + stable for value)",
+         "Rate regime against (growth in rising rates; value "
+         "in falling)"),
+        ("Diversified across both styles",
+         "Concentrated en single style"),
+    ],
+    valuation_impact=(
+        "Growth stocks typically valued via DCF + reverse "
+        "DCF (what growth justifies the price?). Value stocks "
+        "via multiples (P/B, P/E, EV/EBITDA) + asset-based "
+        "approaches. La key insight de Damodaran: 'value e "
+        "growth no son frameworks distintos — son lenses "
+        "distintos sobre el mismo intrinsic value calculation'. "
+        "Buffett evolved de pure-value (Graham) to "
+        "quality-growth (con influencia Fisher) — el famous "
+        "'85% Graham + 15% Fisher'."
+    ),
+    case_study=(
+        "**Value's lost decade 2009-2020**: Russell 1000 Value "
+        "returned 11% annually vs Russell 1000 Growth 16% — "
+        "5pp underperformance compounded over 11 años = HUGE "
+        "gap. Tech megacaps dominated. Value managers blown "
+        "up.\n\n"
+        "**Value rebound 2022**: rates rose, growth compressed. "
+        "Value outperformed growth by ~25pp en un año. Best "
+        "year for value vs growth since 2000. Lección: "
+        "extremes always revert eventually.\n\n"
+        "**Buffett's evolution**: Graham (pure value, "
+        "cigar-butts) → Munger influence → Fisher influence → "
+        "Apple ($150B+ position, growth-tech). Buffett demostró "
+        "que value framework can accommodate growth con quality + "
+        "moat."
+    ),
+    common_mistakes=[
+        "Tribal allegiance to one style. Both work.",
+        "Confundir 'cheap' con 'value'. Cheap garbage isn't "
+        "value.",
+        "Confundir 'growth' con 'good stock'. Growth at any "
+        "price destroys capital.",
+        "Ignorar quality intersection. Quality always matters.",
+        "Anchoring to current regime. Cycles 10+ years.",
+    ],
+    mental_model=(
+        "Buffett: 'value and growth are not opposites — growth "
+        "is part of the value calculation. The real question "
+        "is what growth costs and what quality of business "
+        "produces it'. Pensá NOT value VS growth — pensá "
+        "**quality + valuation discipline** across BOTH styles. "
+        "Best investors compound both into 'quality at "
+        "reasonable price'."
+    ),
+    books=[_BOOK_INTELLIGENT_INVESTOR, _BOOK_FISHER,
+           _BOOK_BUFFETT_LETTERS, _BOOK_DAMODARAN_VALUATION,
+           Book(title="Quality Investing",
+                author="Lawrence Cunningham", year=2016,
+                chapter_hint="Caps. on quality factor",
+                why="The intersection of both styles via "
+                     "quality.")],
+    videos=[
+        _VIDEO_BUFFETT_1996,
+        Video(title="Damodaran on Value vs Growth",
+              channel="NYU Stern", minutes=30, url="",
+              why="Damodaran arguments la distinction "
+                   "es overstated."),
+    ],
+    quotes=[
+        _Q_BUFFETT_PRICE_VALUE,
+        Quote(text="Growth and value investing are joined at "
+                   "the hip — they're not opposing strategies but "
+                   "two sides of the same coin.",
+              author="Warren Buffett",
+              source="Berkshire 1992 letter"),
+        Quote(text="It's far better to buy a wonderful company "
+                   "at a fair price than a fair company at a "
+                   "wonderful price.",
+              author="Warren Buffett",
+              source="Berkshire 1989 letter — la transición "
+                     "de pure Graham value to quality-growth"),
+    ],
+))
 
 
 # ============================================================
