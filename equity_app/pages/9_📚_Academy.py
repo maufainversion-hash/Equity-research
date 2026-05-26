@@ -71,34 +71,156 @@ def _go_topic(slug: str) -> None:
 
 
 # ============================================================
-# CSS — styling for buttons + cards
+# CSS — clickable wrapper trick:
+# A native st.button is overlaid (position:absolute) on top of an
+# HTML card. The button text is invisible (white-on-same-bg with
+# opacity 0) but it still receives the click event. Result: pretty
+# cards that act as one big button each, no full-page reload, no
+# URL change.
 # ============================================================
 st.markdown(
     """
 <style>
-/* Make all native Streamlit buttons inside Academy feel like cards */
+/* Card visual — same look we had with the <a href> version */
+.aca-card-wrapper {
+  position:relative;
+  margin-bottom:12px;
+}
+.aca-card {
+  background:#0f172a;
+  border:1px solid #334155;
+  border-radius:10px;
+  padding:18px 20px;
+  transition:transform 0.15s ease, border-color 0.15s ease,
+             background 0.15s ease;
+  pointer-events:none;             /* the overlay button handles clicks */
+}
+.aca-card-wrapper:hover .aca-card {
+  border-color:#475569;
+  background:#0b1220;
+  transform:translateY(-2px);
+}
+.aca-cat-card { position:relative; overflow:hidden; }
+.aca-cat-card .aca-glow {
+  position:absolute; top:-30%; right:-20%;
+  width:160px; height:160px;
+  border-radius:50%;
+  filter:blur(40px);
+  opacity:0.35;
+  pointer-events:none;
+}
+.aca-pill {
+  display:inline-block;
+  padding:2px 8px;
+  border-radius:4px;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+}
+.aca-topic-card-inner {
+  background:#0f172a;
+  border:1px solid #334155;
+  border-left:3px solid var(--accent, #94A3B8);
+  border-radius:8px;
+  padding:14px 16px;
+  position:relative;
+  transition:transform 0.12s ease, border-color 0.15s ease;
+  pointer-events:none;
+}
+.aca-card-wrapper:hover .aca-topic-card-inner {
+  border-color:#64748B;
+  transform:translateX(2px);
+}
+.aca-complete-dot {
+  position:absolute;
+  top:10px;
+  right:12px;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#10B981;
+}
+
+/* Overlay button: invisible (transparent) but covers the whole
+   card. Click anywhere on the card → click on this button. */
+.aca-card-wrapper div[data-testid="stButton"] {
+  position:absolute;
+  top:0; left:0; right:0; bottom:0;
+  margin:0 !important;
+}
+.aca-card-wrapper div[data-testid="stButton"] > button {
+  width:100% !important;
+  height:100% !important;
+  background:transparent !important;
+  border:none !important;
+  color:transparent !important;
+  cursor:pointer;
+  padding:0 !important;
+  margin:0 !important;
+  border-radius:10px !important;
+}
+.aca-card-wrapper div[data-testid="stButton"] > button:hover,
+.aca-card-wrapper div[data-testid="stButton"] > button:focus {
+  background:transparent !important;
+  border:none !important;
+  box-shadow:none !important;
+  outline:none !important;
+}
+/* Hide the (transparent) button label / p children */
+.aca-card-wrapper div[data-testid="stButton"] > button > * {
+  opacity:0 !important;
+}
+
+/* Default button look across the whole Academy page: a compact CTA
+   that visually attaches to the card above it (no border-top,
+   rounded only on the bottom). */
 div[data-testid="stButton"] > button {
-  background:#0f172a !important;
+  background:#131826 !important;
   border:1px solid #334155 !important;
-  color:#F3F4F6 !important;
-  border-radius:8px !important;
-  padding:14px 18px !important;
-  text-align:left !important;
-  font-weight:500 !important;
-  transition:transform 0.12s ease, border-color 0.15s ease,
-             background 0.15s ease !important;
+  border-top:none !important;
+  color:#cbd5e1 !important;
+  border-radius:0 0 10px 10px !important;
+  padding:10px 14px !important;
+  text-align:center !important;
+  font-weight:600 !important;
+  font-size:12px !important;
   white-space:normal !important;
   height:auto !important;
-  line-height:1.4 !important;
+  letter-spacing:0.04em !important;
+  text-transform:uppercase !important;
+  width:100% !important;
+  margin-top:-12px !important;
+  transition:background 0.15s ease, color 0.15s ease,
+             border-color 0.15s ease;
 }
 div[data-testid="stButton"] > button:hover {
-  border-color:#64748B !important;
   background:#0b1220 !important;
-  transform:translateY(-1px);
+  border-color:#64748B !important;
+  color:#F3F4F6 !important;
 }
-div[data-testid="stButton"] > button p {
+div[data-testid="stButton"] > button:focus {
+  outline:none !important;
+  box-shadow:none !important;
+}
+
+/* Cards without a CTA button below (eg. inside breadcrumb / search
+   summary) keep all four corners rounded. */
+.aca-card-standalone .aca-card,
+.aca-card-standalone .aca-topic-card-inner {
+  border-radius:10px;
+}
+
+/* Breadcrumb buttons are independent — un-pin them from the generic
+   card-CTA style (which assumes there's a card right above). */
+.bc-row div[data-testid="stButton"] > button {
+  border:1px solid #334155 !important;
+  border-radius:8px !important;
+  margin-top:0 !important;
+  text-transform:none !important;
+  letter-spacing:0 !important;
   font-size:13px !important;
-  line-height:1.4 !important;
+  text-align:left !important;
 }
 
 .lesson-section {
@@ -217,7 +339,11 @@ text-transform:uppercase;">cero API calls</div>
 # Breadcrumb (always rendered when not on landing)
 # ============================================================
 def _breadcrumb() -> None:
-    """Sticky navigation row: home / category / topic links."""
+    """Sticky navigation row: home / category / topic links.
+
+    Wrapped in a `.bc-row` div so we can override the generic
+    Academy button style (which would otherwise eat the
+    margin-top: -12px and clip these buttons up into the hero)."""
     cat = st.session_state["academy_cat"]
     topic_slug = st.session_state["academy_topic"]
     topic_label = ""
@@ -226,25 +352,25 @@ def _breadcrumb() -> None:
         if t is not None:
             topic_label = t[2]
 
+    st.markdown('<div class="bc-row">', unsafe_allow_html=True)
     cols = st.columns([1, 1, 1, 4])
     with cols[0]:
-        if st.button("🏠 Inicio", key="bc_home", use_container_width=True):
+        if st.button("🏠 Inicio", key="bc_home"):
             _go_landing()
             st.rerun()
     if cat:
         with cols[1]:
-            if st.button(f"← {cat}", key="bc_cat",
-                          use_container_width=True):
-                # Going back to the category clears the topic.
+            if st.button(f"← {cat}", key="bc_cat"):
                 st.session_state["academy_topic"] = None
                 st.rerun()
     if topic_label:
         with cols[2]:
             st.markdown(
-                f'<div style="padding:14px 18px;color:#F3F4F6;'
+                f'<div style="padding:10px 14px;color:#F3F4F6;'
                 f'font-size:13px;font-weight:500;">📖 {topic_label}</div>',
                 unsafe_allow_html=True,
             )
+    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ============================================================
@@ -530,8 +656,9 @@ elif selected_cat and selected_cat in CATALOG:
 
     st.markdown(
         f"""
+<div class="aca-card-standalone">
 <div style="background:#0f172a;border:1px solid #334155;
-border-left:4px solid {theme['accent']};border-radius:8px;
+border-left:4px solid {theme['accent']};border-radius:10px;
 padding:16px 20px;margin-bottom:18px;">
   <h2 style="margin:0;font-size:20px;color:#F3F4F6;font-weight:600;">
     {selected_cat}</h2>
@@ -540,13 +667,15 @@ padding:16px 20px;margin-bottom:18px;">
     completo · sin marca = stub con materiales recomendados
   </div>
 </div>
+</div>
 """,
         unsafe_allow_html=True,
     )
 
-    # Topics as a grid of buttons (3 columns)
+    # Topic cards grid (3 columns, repeated rows)
     topics = CATALOG[selected_cat]
     n_cols = 3
+    accent = theme["accent"]
     for row_start in range(0, len(topics), n_cols):
         cols = st.columns(n_cols, gap="small")
         for col, (slug, label, descr) in zip(
@@ -554,12 +683,22 @@ padding:16px 20px;margin-bottom:18px;">
         ):
             with col:
                 lesson = get_lesson(slug)
-                dot = "● " if (lesson and lesson.is_complete) else ""
-                if st.button(
-                    f"{dot}**{label}**\n\n{descr}",
-                    key=f"topic_btn_{slug}",
-                    use_container_width=True,
-                ):
+                dot = ('<div class="aca-complete-dot"></div>'
+                       if (lesson and lesson.is_complete) else "")
+                st.markdown(
+                    f'<div class="aca-topic-card-inner" '
+                    f'style="--accent:{accent};">'
+                    f'{dot}'
+                    f'<div style="font-size:14px;font-weight:600;'
+                    f'color:#F3F4F6;margin-bottom:6px;padding-right:18px;">'
+                    f'{label}</div>'
+                    f'<div style="font-size:11px;color:#94A3B8;'
+                    f'line-height:1.4;min-height:32px;">{descr}</div>'
+                    f'</div>',
+                    unsafe_allow_html=True,
+                )
+                if st.button("Ver lección →",
+                              key=f"topic_btn_{slug}"):
                     _go_topic(slug)
                     st.rerun()
 
@@ -585,23 +724,39 @@ else:
         else:
             st.caption(f"{len(matches)} resultado(s):")
             n_cols = 3
-            for row_start in range(0, min(len(matches), 30), n_cols):
+            shown = matches[:30]
+            for row_start in range(0, len(shown), n_cols):
                 cols = st.columns(n_cols, gap="small")
                 for col, (cat, slug, label, descr) in zip(
-                    cols, matches[row_start:row_start + n_cols]
+                    cols, shown[row_start:row_start + n_cols]
                 ):
                     with col:
                         lesson = get_lesson(slug)
-                        dot = "● " if (lesson and lesson.is_complete) else ""
-                        if st.button(
-                            f"{dot}**{label}**\n\n{cat}\n\n{descr}",
-                            key=f"search_btn_{slug}",
-                            use_container_width=True,
-                        ):
+                        theme = _theme(cat)
+                        dot = ('<div class="aca-complete-dot"></div>'
+                               if (lesson and lesson.is_complete) else "")
+                        st.markdown(
+                            f'<div class="aca-topic-card-inner" '
+                            f'style="--accent:{theme["accent"]};">'
+                            f'{dot}'
+                            f'<div style="font-size:10px;'
+                            f'color:{theme["accent"]};letter-spacing:0.06em;'
+                            f'text-transform:uppercase;font-weight:700;'
+                            f'margin-bottom:4px;">{cat}</div>'
+                            f'<div style="font-size:14px;font-weight:600;'
+                            f'color:#F3F4F6;margin-bottom:4px;'
+                            f'padding-right:18px;">{label}</div>'
+                            f'<div style="font-size:11px;color:#94A3B8;'
+                            f'line-height:1.4;min-height:32px;">{descr}</div>'
+                            f'</div>',
+                            unsafe_allow_html=True,
+                        )
+                        if st.button("Ver lección →",
+                                      key=f"search_btn_{slug}"):
                             _go_topic(slug)
                             st.rerun()
     else:
-        # Category grid — buttons
+        # Category grid — 3 columns of beautiful HTML cards
         st.markdown(
             '<div class="eq-section-label" style="margin-top:6px;">'
             'EXPLORÁ POR CATEGORÍA</div>',
@@ -616,6 +771,7 @@ else:
                 cols, cats_list[row_start:row_start + n_cols]
             ):
                 with col:
+                    theme = _theme(cat)
                     sample = ", ".join(t[1] for t in topics[:3])
                     if len(topics) > 3:
                         sample += "…"
@@ -623,16 +779,29 @@ else:
                         1 for slug, _, _ in topics
                         if get_lesson(slug) and get_lesson(slug).is_complete
                     )
-                    label = (
-                        f"**{cat}** · {len(topics)} temas\n\n"
-                        f"{sample}\n\n"
-                        f"● {complete_in_cat} completa(s)"
+                    st.markdown(
+                        f'<div class="aca-card aca-cat-card">'
+                        f'<div class="aca-glow" '
+                        f'style="background:{theme["accent"]};"></div>'
+                        f'<div style="display:flex;justify-content:'
+                        f'space-between;align-items:baseline;'
+                        f'margin-bottom:8px;position:relative;">'
+                        f'<div style="font-size:18px;font-weight:700;'
+                        f'color:#F3F4F6;letter-spacing:-0.01em;">{cat}</div>'
+                        f'<span class="aca-pill" '
+                        f'style="background:{theme["tint"]};'
+                        f'color:{theme["accent"]};">{len(topics)} temas</span>'
+                        f'</div>'
+                        f'<div style="font-size:12px;color:#94A3B8;'
+                        f'line-height:1.5;position:relative;'
+                        f'margin-bottom:6px;min-height:36px;">{sample}</div>'
+                        f'<div style="font-size:10px;color:#10B981;'
+                        f'position:relative;font-weight:600;">'
+                        f'● {complete_in_cat} lección(es) completa(s)</div>'
+                        f'</div>',
+                        unsafe_allow_html=True,
                     )
-                    if st.button(
-                        label,
-                        key=f"cat_btn_{cat}",
-                        use_container_width=True,
-                    ):
+                    if st.button("Explorar →", key=f"cat_btn_{cat}"):
                         _go_cat(cat)
                         st.rerun()
 
@@ -665,11 +834,25 @@ else:
                     t = find_topic(slug)
                     if t is None:
                         continue
-                    if st.button(
-                        f"{emoji}\n\n**{label}**",
-                        key=f"feat_btn_{slug}",
-                        use_container_width=True,
-                    ):
+                    cat = t[0]
+                    descr = t[3]
+                    theme = _theme(cat)
+                    st.markdown(
+                        f'<div class="aca-topic-card-inner" '
+                        f'style="--accent:{theme["accent"]};">'
+                        f'<div class="aca-complete-dot"></div>'
+                        f'<div style="display:flex;align-items:baseline;'
+                        f'gap:8px;margin-bottom:6px;padding-right:18px;">'
+                        f'<span style="font-size:18px;">{emoji}</span>'
+                        f'<span style="font-size:14px;font-weight:600;'
+                        f'color:#F3F4F6;">{label}</span>'
+                        f'</div>'
+                        f'<div style="font-size:11px;color:#94A3B8;'
+                        f'line-height:1.4;min-height:32px;">{descr}</div>'
+                        f'</div>',
+                        unsafe_allow_html=True,
+                    )
+                    if st.button("Abrir →", key=f"feat_btn_{slug}"):
                         _go_topic(slug)
                         st.rerun()
 
